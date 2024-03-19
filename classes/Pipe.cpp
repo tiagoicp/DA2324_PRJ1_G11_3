@@ -2,14 +2,14 @@
 
 using namespace std;
 
-Pipe::Pipe(const string& _servicePointA, const string& _servicePointB, int _capacity, bool _direction)
+Pipe::Pipe(const Node& _servicePointA, const Node& _servicePointB, int _capacity, bool _direction)
     : servicePointA(_servicePointA), servicePointB(_servicePointB), capacity(_capacity), direction(_direction) {}
 
-string Pipe::getServicePointA() const {
+Node Pipe::getServicePointA() const {
     return servicePointA;
 }
 
-string Pipe::getServicePointB() const {
+Node Pipe::getServicePointB() const {
     return servicePointB;
 }
 
