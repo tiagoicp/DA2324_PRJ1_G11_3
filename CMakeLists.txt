@@ -10,6 +10,8 @@ include_directories(lib/googletest-master/googlemock/include)
 
 add_executable(
         DA2324_PRJ1_G11_3 main.cpp
+        terminal/TerminalFlow.cpp
+        terminal/TerminalFlow.h
         #App/sky_scannix.cpp
         #Tests/Controllers/query_controller_test.cpp
         #Tests/Lib/csv_parser_test.cpp
