@@ -2,7 +2,8 @@
 
 using namespace std;
 
-void FileReader::addReservoirs(const string &filename, WaterSupply &OurGraph)
+template<typename T>
+void FileReader::addReservoirs(const string &filename, WaterSupply<T> &OurGraph)
 {
     ifstream inputFile(filename);
 
@@ -20,10 +21,10 @@ void FileReader::addReservoirs(const string &filename, WaterSupply &OurGraph)
                 getline(iss, municipality,',') &&
                 getline(iss, id,',') &&
                 getline(iss, code,',') &&
-                getline(iss, maxDelivery,',,'))
+                getline(iss, maxDelivery,'\n'))
             {
                 Reservoir newReservoir = Reservoir(name,municipality,stoi(id),code,stoi(maxDelivery));
-                OurGraph.addReservoir(newReservoir);
+                OurGraph.addNode(newReservoir);
             }
         }
     }
@@ -31,7 +32,8 @@ void FileReader::addReservoirs(const string &filename, WaterSupply &OurGraph)
     inputFile.close();
 }
 
-void FileReader::addStations(const string &filename, WaterSupply &OurGraph)
+template<typename T>
+void FileReader::addStations(const string &filename, WaterSupply<T> &OurGraph)
 {
     ifstream inputFile(filename);
 
@@ -46,10 +48,10 @@ void FileReader::addStations(const string &filename, WaterSupply &OurGraph)
             string id, code;
 
             if( getline(iss, id,',') &&
-                getline(iss, code,',,'))
+                getline(iss, code,'\n'))
             {
                 PumpingStation newStation = PumpingStation(stoi(id),code);
-                OurGraph.addPumpingStation(newStation);
+                OurGraph.addNode(newStation);
             }
         }
     }
@@ -57,7 +59,8 @@ void FileReader::addStations(const string &filename, WaterSupply &OurGraph)
     inputFile.close();
 }
 
-void FileReader::addCities(const string &filename, WaterSupply &OurGraph)
+template<typename T>
+void FileReader::addCities(const string &filename, WaterSupply<T> &OurGraph)
 {
     ifstream inputFile(filename);
 
@@ -75,10 +78,10 @@ void FileReader::addCities(const string &filename, WaterSupply &OurGraph)
                 getline(iss, id,',') &&
                 getline(iss, code,',') &&
                 getline(iss, demand,',') &&
-                getline(iss, population,',,'))
+                getline(iss, population,'\n'))
             {
                 City newCity = City(city,stoi(id),code,stoi(demand),stoi(population));
-                OurGraph.addCity(newCity);
+                OurGraph.addNode(newCity);
             }
         }
     }
@@ -86,7 +89,8 @@ void FileReader::addCities(const string &filename, WaterSupply &OurGraph)
     inputFile.close();
 }
 
-void FileReader::addPipes(const string &filename, WaterSupply &ourGraph)
+template<typename T>
+void FileReader::addPipes(const string &filename, WaterSupply<T> &ourGraph)
 {
     ifstream inputFile(filename);
 
@@ -99,18 +103,19 @@ void FileReader::addPipes(const string &filename, WaterSupply &ourGraph)
         {
             istringstream iss(line);
             string servicePointA, servicePointB, capacity, direction;
-            int capacity;
-            bool direction;
 
             if(getline(iss, servicePointA,',') &&
                getline(iss, servicePointB,',') &&
                getline(iss, capacity,',') &&
-               getline(iss, direction,',,'))
+               getline(iss, direction,'\n'))
             {
-                Reservoir source = ourGraph.findReservoir(servicePointA);
-                Reservoir target = ourGraph.findReservoir(servicePointB);
-                Pipe newPipe = Pipe(source,target,capacity,direction);
-
+                Vertex<T> source = ourGraph.findNode(servicePointA);
+                Vertex<T> target = ourGraph.findNode(servicePointB);
+                if (direction == "0"){
+                    Pipe newPipe = Pipe(target,source,stoi(capacity),stoi(direction));
+                    ourGraph.addPipe(newPipe);
+                }
+                Pipe newPipe = Pipe(source,target,stoi(capacity),stoi(direction));
                 ourGraph.addPipe(newPipe);
             }
         }
