@@ -2,7 +2,7 @@
 #define CITY_H
 
 #include <string>
-#include "../utils/Graph.h"
+#include "Graph.h"
 template <class T>
 class City : public Vertex<T> {
 private:

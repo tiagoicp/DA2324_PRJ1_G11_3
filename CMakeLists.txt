@@ -12,12 +12,8 @@ add_executable(
         DA2324_PRJ1_G11_3 main.cpp
         terminal/TerminalFlow.cpp
         terminal/TerminalFlow.h
-        #App/sky_scannix.cpp
-        #Tests/Controllers/query_controller_test.cpp
-        #Tests/Lib/csv_parser_test.cpp
-        #Tests/Lib/db_loader_test.cpp
-        #Tests/Lib/file_wrapper_test.cpp
-        #Tests/Models/airport_graph_test.cpp
+        utils/FileReader.h
+        tests/utils/file_reader_test.cpp
 )
 
 # Doxygen Build

@@ -2,7 +2,7 @@
 #define RESERVOIR_H
 
 #include <string>
-#include "../utils/Graph.h"
+#include "Graph.h"
 template <class T>
 class Reservoir : public Vertex<T>{
 private:
