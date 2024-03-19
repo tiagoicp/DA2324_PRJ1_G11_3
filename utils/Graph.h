@@ -9,7 +9,7 @@
 #include <queue>
 #include <limits>
 #include <algorithm>
-#include "../data_structures/MutablePriorityQueue.h"
+#include "MutablePriorityQueue.h"
 
 template <class T>
 class Edge;
@@ -22,7 +22,7 @@ template <class T>
 class Vertex {
 public:
     Vertex(T in);
-    bool operator<(Vertex<T> & vertex) const; // // required by MutablePriorityQueue
+    bool operator<(Vertex<T> & vertex) const; // required by MutablePriorityQueue
 
     T getInfo() const;
     std::vector<Edge<T> *> getAdj() const;
