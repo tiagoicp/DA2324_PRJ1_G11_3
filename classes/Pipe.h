@@ -4,22 +4,23 @@
 #include <string>
 #include "Node.h"
 
-class Pipe {
+template <class T>
+class Pipe : public Edge<T> {
 private:
-    Node servicePointA;
+   /* Node servicePointA;
     Node servicePointB;
     int capacity;
-    bool direction;
+    int direction;*/
 
 public:
     // Constructor
-    Pipe(const Node& _servicePointA, const Node& _servicePointB, int _capacity, bool _direction);
+    Pipe(const Node& _servicePointA, const Node& _servicePointB, int _capacity, int _direction);
 
     // Getters
-    Node getServicePointA() const;
-    Node getServicePointB() const;
-    int getCapacity() const;
-    bool getDirection() const;
+   /* Node getServicePointA() const; getOrigin()
+    Node getServicePointB() const;  getDest();
+    int getCapacity() const;    getWeight();
+    int getDirection() const;      Direction == 0 -> add 2 edges / Direction == 1 -> add 1 edge from A to B*/
 };
 
 #endif // PIPE_H

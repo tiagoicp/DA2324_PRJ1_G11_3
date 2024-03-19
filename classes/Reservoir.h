@@ -2,9 +2,9 @@
 #define RESERVOIR_H
 
 #include <string>
-#include "Node.h"
-
-class Reservoir : public Node {
+#include "../utils/Graph.h"
+template <class T>
+class Reservoir : public Vertex<T>{
 private:
     std::string name;
     std::string municipality;

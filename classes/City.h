@@ -2,9 +2,9 @@
 #define CITY_H
 
 #include <string>
-#include "Node.h"
-
-class City : public Node {
+#include "../utils/Graph.h"
+template <class T>
+class City : public Vertex<T> {
 private:
     std::string city;
     int id;

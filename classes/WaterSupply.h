@@ -9,8 +9,8 @@
 #include "City.h"
 #include <unordered_map>
 #include <set>
-
-class WaterSupply : public Graph<Node> {
+template <class T>
+class WaterSupply : public Graph<T> {
 
 private:
     std::vector<Reservoir> reservoirs;
