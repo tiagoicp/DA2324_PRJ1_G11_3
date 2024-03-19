@@ -3,8 +3,9 @@
 
 #include <string>
 #include "Graph.h"
+
 template <class T>
-class Reservoir : public Vertex<T>{
+class Reservoir : public Vertex<T> {
 private:
     std::string name;
     std::string municipality;
@@ -21,7 +22,7 @@ public:
     std::string getName() const;
     std::string getMunicipality() const;
     int getId() const;
-    std::string getCode() const;
+    std::string getCode() const; // Vertex getInfo()
     int getMaxDelivery() const;
 };
 

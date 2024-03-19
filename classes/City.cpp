@@ -2,25 +2,31 @@
 
 using namespace std;
 
-City::City(const string& _city, int _id, const string& _code, int _demand, int _population)
+template<typename T>
+City<T>::City(const string& _city, int _id, const string& _code, int _demand, int _population)
     : city(_city), id(_id), code(_code), demand(_demand), population(_population) {}
 
-string City::getCity() const {
+template<typename T>
+string City<T>::getCity() const {
     return city;
 }
 
-int City::getId() const {
+template<typename T>
+int City<T>::getId() const {
     return id;
 }
 
-string City::getCode() const {
+template<typename T>
+string City<T>::getCode() const {
     return code;
 }
 
-int City::getDemand() const {
+template<typename T>
+int City<T>::getDemand() const {
     return demand;
 }
 
-int City::getPopulation() const {
+template<typename T>
+int City<T>::getPopulation() const {
     return population;
 }

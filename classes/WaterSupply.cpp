@@ -3,41 +3,26 @@
 
 using namespace std;
 
-void WaterSupply::addReservoir(Reservoir& reservoir)
+template <class T>
+void WaterSupply<T>::addNode(Vertex<T>& node)
 {
-    addVertex(reservoir);
-}
-void WaterSupply::removeReservoir(const Reservoir& reservoir)
-{
-    removeVertex(reservoir);
+    addVertex(node);
 }
 
-void WaterSupply::addPumpingStation(PumpingStation& station)
+template <class T>
+void WaterSupply<T>::removeNode(const Vertex<T>& node)
 {
-    addVertex(station);
+    removeVertex(node);
 }
 
-void WaterSupply::removePumpingStation(PumpingStation& station)
+template <class T>
+void WaterSupply<T>::addPipe(Edge<T>& pipe)
 {
-    removeVertex(station);
+    addEdge(pipe.getOrigin(), pipe.getDest(), pipe);
 }
 
-void WaterSupply::addCity(City& city)
+template <class T>
+void WaterSupply<T>::removePipe(Edge<T>& pipe)
 {
-    addVertex(city);
-}
-
-void WaterSupply::removeCity(City& city)
-{
-    removeVertex(city);
-}
-
-void WaterSupply::addPipe(Pipe& pipe)
-{
-    addEdge(pipe.getSource(), pipe.getTarget(), pipe);
-}
-
-void WaterSupply::removePipe(Pipe& pipe)
-{
-    removeEdge(pipe.getSource(), pipe.getTarget());
+    removeEdge(pipe.getOrigin(), pipe.getDest());
 }

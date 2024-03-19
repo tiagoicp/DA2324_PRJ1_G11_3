@@ -2,8 +2,10 @@
 #define PUMPINGSTATION_H
 
 #include <string>
+#include "Graph.h"
 
-class PumpingStation {
+template <class T>
+class PumpingStation : public Vertex<T> {
 private:
     int id;
     std::string code;
@@ -14,7 +16,7 @@ public:
 
     // Getters
     int getId() const;
-    std::string getCode() const;
+    std::string getCode() const; // Vertex getInfo()
 };
 
 #endif // PUMPINGSTATION_H

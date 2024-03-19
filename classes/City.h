@@ -3,6 +3,7 @@
 
 #include <string>
 #include "Graph.h"
+
 template <class T>
 class City : public Vertex<T> {
 private:
@@ -19,7 +20,7 @@ public:
     // Getters
     std::string getCity() const;
     int getId() const;
-    std::string getCode() const;
+    std::string getCode() const; // Vertex getInfo()
     int getDemand() const;
     int getPopulation() const;
 };

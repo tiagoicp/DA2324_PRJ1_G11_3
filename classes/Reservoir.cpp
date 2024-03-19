@@ -2,26 +2,32 @@
 
 using namespace std;
 
-Reservoir::Reservoir(const string& _name, const string& _municipality, int _id,
+template<typename T>
+Reservoir<T>::Reservoir(const string& _name, const string& _municipality, int _id,
                      const string& _code, int _maxDelivery)
     : name(_name), municipality(_municipality), id(_id), code(_code), maxDelivery(_maxDelivery) {}
 
-string Reservoir::getName() const {
+template<typename T>
+string Reservoir<T>::getName() const {
     return name;
 }
 
-string Reservoir::getMunicipality() const {
+template<typename T>
+string Reservoir<T>::getMunicipality() const {
     return municipality;
 }
 
-int Reservoir::getId() const {
+template<typename T>
+int Reservoir<T>::getId() const {
     return id;
 }
 
-string Reservoir::getCode() const {
+template<typename T>
+string Reservoir<T>::getCode() const {
     return code;
 }
 
-int Reservoir::getMaxDelivery() const {
+template<typename T>
+int Reservoir<T>::getMaxDelivery() const {
     return maxDelivery;
 }

@@ -2,13 +2,13 @@
 #define WATERSUPPLY_H
 
 #include "Graph.h"
-#include "Node.h"
 #include "Pipe.h"
 #include "Reservoir.h"
 #include "PumpingStation.h"
 #include "City.h"
 #include <unordered_map>
 #include <set>
+
 template <class T>
 class WaterSupply : public Graph<T> {
 
@@ -20,14 +20,10 @@ private:
     std::unordered_map<std::string, int> cityDemand;
 
 public:
-    void addReservoir(Reservoir& reservoir);
-    void removeReservoir(Reservoir& reservoir);
-    void addPumpingStation(PumpingStation& station);
-    void removePumpingStation(PumpingStation& station);
-    void addCity(City& city);
-    void removeCity(City& city);
-    void addPipe(Pipe& pipe);
-    void removePipe(Pipe& pipe);
+    void addNode(Vertex<T>& node);
+    void removeNode(const Vertex<T>& node);
+    void addPipe(Edge<T>& pipe);
+    void removePipe(Edge<T>& pipe);
     // Getters
     const std::vector<Reservoir>& getReservoirs() const { return reservoirs; }
     const std::vector<PumpingStation>& getPumpingStations() const { return pumpingStations; }
