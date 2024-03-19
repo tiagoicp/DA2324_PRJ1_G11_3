@@ -1,6 +1,25 @@
-/Applications/CLion.app/Contents/bin/cmake/mac/aarch64/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=/Applications/CLion.app/Contents/bin/ninja/mac/aarch64/ninja -G Ninja -S /Users/tiagoloureiro/dev/feup/DA2324_PRJ1_G11_3 -B /Users/tiagoloureiro/dev/feup/DA2324_PRJ1_G11_3/cmake-build-debug
--- Could NOT find Doxygen (missing: DOXYGEN_EXECUTABLE) 
-Doxygen needs to be installed to generate the documentation.
--- Configuring done (0.2s)
--- Generating done (0.0s)
--- Build files have been written to: /Users/tiagoloureiro/dev/feup/DA2324_PRJ1_G11_3/cmake-build-debug
+/snap/clion/265/bin/cmake/linux/x64/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=/snap/clion/265/bin/ninja/linux/x64/ninja -DCMAKE_CXX_COMPILER=/usr/bin/g++ -G Ninja -S /home/joao/DA/DA2324_PRJ1_G11_3 -B /home/joao/DA/DA2324_PRJ1_G11_3/cmake-build-debug
+-- The C compiler identification is GNU 11.4.0
+-- The CXX compiler identification is GNU 11.4.0
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /usr/bin/cc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/g++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Found Python: /usr/bin/python3.10 (found version "3.10.13") found components: Interpreter 
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+-- Found Threads: TRUE  
+-- Found Doxygen: /usr/bin/doxygen (found version "1.9.1") found components: doxygen dot 
+CMake Error: File /home/joao/DA/DA2324_PRJ1_G11_3/docs/Doxyfile does not exist.
+CMake Error at CMakeLists.txt:31 (configure_file):
+  configure_file Problem configuring file
+
+
+Doxygen build started
+-- Configuring incomplete, errors occurred!
