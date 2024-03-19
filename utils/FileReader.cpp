@@ -109,8 +109,8 @@ void FileReader::addPipes(const string &filename, WaterSupply &ourGraph)
             {
                 Reservoir source = ourGraph.findReservoir(servicePointA);
                 Reservoir target = ourGraph.findReservoir(servicePointB);
-
                 Pipe newPipe = Pipe(source,target,capacity,direction);
+
                 ourGraph.addPipe(newPipe);
             }
         }

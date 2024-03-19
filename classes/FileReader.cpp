@@ -99,8 +99,6 @@ void FileReader::addPipes(const string &filename, WaterSupply &ourGraph)
         {
             istringstream iss(line);
             string servicePointA, servicePointB, capacity, direction;
-            int capacity;
-            bool direction;
 
             if(getline(iss, servicePointA,',') &&
                getline(iss, servicePointB,',') &&
@@ -110,7 +108,7 @@ void FileReader::addPipes(const string &filename, WaterSupply &ourGraph)
                 Node source = ourGraph.findNode(servicePointA);
                 Node target = ourGraph.findNode(servicePointB);
 
-                Pipe newPipe = Pipe(source,target,capacity,direction);
+                Pipe newPipe = Pipe(source,target,stoi(capacity),stoi(direction));
                 ourGraph.addPipe(newPipe);
             }
         }
