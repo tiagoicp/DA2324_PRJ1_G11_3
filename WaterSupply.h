@@ -2,7 +2,7 @@
 #define WATERSUPPLY_H
 
 #include "Graph.h"
-#include "Nodes.h"
+#include "Node.h"
 #include "Pipe.h"
 #include "Reservoir.h"
 #include "PumpingStation.h"
@@ -10,7 +10,7 @@
 #include <unordered_map>
 #include <set>
 
-class WaterSupply : public Graph<Nodes> {
+class WaterSupply : public Graph<Node> {
 
 private:
     std::vector<Reservoir> reservoirs;

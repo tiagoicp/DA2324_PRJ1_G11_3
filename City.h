@@ -2,8 +2,9 @@
 #define CITY_H
 
 #include <string>
+#include "Node.h"
 
-class City {
+class City : public Node {
 private:
     std::string city;
     int id;

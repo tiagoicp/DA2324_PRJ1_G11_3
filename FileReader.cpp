@@ -107,11 +107,10 @@ void FileReader::addPipes(const string &filename, WaterSupply &ourGraph)
                getline(iss, capacity,',') &&
                getline(iss, direction,',,'))
             {
-                Reservoir sourceReservoir = ourGraph.findReservoir(servicePointA);
-                Reservoir targetReservoir = ourGraph.findReservoir(servicePointB);
-                Airline airline = ourGraph.getAirline(AirlineCode);
+                Reservoir source = ourGraph.findReservoir(servicePointA);
+                Reservoir target = ourGraph.findReservoir(servicePointB);
 
-                Pipe newPipe = Pipe(servicePointA,servicePointB,airline);
+                Pipe newPipe = Pipe(source,target,capacity,direction);
                 ourGraph.addPipe(newPipe);
             }
         }

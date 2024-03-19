@@ -2,8 +2,9 @@
 #define RESERVOIR_H
 
 #include <string>
+#include "Node.h"
 
-class Reservoir {
+class Reservoir : public Node {
 private:
     std::string name;
     std::string municipality;
