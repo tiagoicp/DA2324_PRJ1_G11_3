@@ -1,6 +1,4 @@
-# Sky Scannix
-
-## AED 2022 - 2nd Group Work
+## AD 2024 - G11_04
  
 Author: Tiago Loureiro (200706716)
 
