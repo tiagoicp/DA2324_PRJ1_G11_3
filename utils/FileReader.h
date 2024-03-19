@@ -1,11 +1,11 @@
 #ifndef FILEREADER_H
 #define FILEREADER_H
 
-#include "Reservoir.h"
-#include "PumpingStation.h"
-#include "City.h"
-#include "WaterSupply.h"
-#include "Pipe.h"
+#include "../classes/Reservoir.h"
+#include "../classes/PumpingStation.h"
+#include "../classes/City.h"
+#include "../classes/WaterSupply.h"
+#include "../classes/Pipe.h"
 #include <iostream>
 #include <fstream>
 #include <string>

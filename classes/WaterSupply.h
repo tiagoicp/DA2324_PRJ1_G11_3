@@ -1,7 +1,7 @@
 #ifndef WATERSUPPLY_H
 #define WATERSUPPLY_H
 
-#include "Graph.h"
+#include "../utils/Graph.h"
 #include "Node.h"
 #include "Pipe.h"
 #include "Reservoir.h"
