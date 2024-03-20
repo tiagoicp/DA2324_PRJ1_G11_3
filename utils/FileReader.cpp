@@ -2,7 +2,7 @@
 
 using namespace std;
 template <class T>
-void FileReader::addReservoirs(const string &filename, WaterSupply<T> &OurGraph)
+void FileReader::addReservoirs(const string &filename, WaterSupply<T> &ourGraph)
 {
     ifstream inputFile(filename);
 
@@ -23,7 +23,7 @@ void FileReader::addReservoirs(const string &filename, WaterSupply<T> &OurGraph)
                 getline(iss, maxDelivery,'\n'))
             {
                 Reservoir<T> newReservoir = Reservoir<T>(name,municipality,stoi(id),code,stoi(maxDelivery));
-                OurGraph.addNode(newReservoir);
+                ourGraph.addNode(newReservoir);
             }
         }
     }
@@ -32,7 +32,7 @@ void FileReader::addReservoirs(const string &filename, WaterSupply<T> &OurGraph)
 }
 
 template<typename T>
-void FileReader::addStations(const string &filename, WaterSupply<T> &OurGraph)
+void FileReader::addStations(const string &filename, WaterSupply<T> &ourGraph)
 {
     ifstream inputFile(filename);
 
@@ -50,7 +50,7 @@ void FileReader::addStations(const string &filename, WaterSupply<T> &OurGraph)
                 getline(iss, code,'\n'))
             {
                 PumpingStation<T> newStation = PumpingStation<T>(stoi(id),code);
-                OurGraph.addNode(newStation);
+                ourGraph.addNode(newStation);
             }
         }
     }
@@ -59,7 +59,7 @@ void FileReader::addStations(const string &filename, WaterSupply<T> &OurGraph)
 }
 
 template <class T>
-void FileReader::addCities(const string &filename, WaterSupply<T> &OurGraph)
+void FileReader::addCities(const string &filename, WaterSupply<T> &ourGraph)
 {
     ifstream inputFile(filename);
 
@@ -80,7 +80,7 @@ void FileReader::addCities(const string &filename, WaterSupply<T> &OurGraph)
                 getline(iss, population,'\n'))
             {
                 City<T> newCity = City<T>(city,stoi(id),code,stoi(demand),stoi(population));
-                OurGraph.addNode(newCity);
+                ourGraph.addNode(newCity);
             }
         }
     }

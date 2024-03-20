@@ -26,3 +26,8 @@ void WaterSupply<T>::removePipe(Edge<T>& pipe)
 {
     removeEdge(pipe.getOrigin(), pipe.getDest());
 }
+
+template <class T>
+Vertex<T> WaterSupply<T>::findNode(const T &in) const{
+    return findVertex(in);
+}

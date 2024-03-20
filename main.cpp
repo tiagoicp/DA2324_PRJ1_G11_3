@@ -20,6 +20,7 @@ int main(int argc, char* argv[]) {
     }
     else {
         // terminal
+
         TerminalFlow::call();
     }
 

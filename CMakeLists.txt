@@ -19,6 +19,7 @@ add_executable(
         classes/PumpingStation.cpp
         classes/Pipe.cpp
         utils/FileReader.cpp
+        classes/City.cpp
 )
 
 # Doxygen Build

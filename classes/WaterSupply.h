@@ -24,6 +24,7 @@ public:
     void removeNode(const Vertex<T>& node);
     void addPipe(Edge<T>& pipe);
     void removePipe(Edge<T>& pipe);
+    Vertex<T> findNode(const T &in) const;
     // Getters
     const std::vector<Reservoir<T>>& getReservoirs() const { return reservoirs; }
     const std::vector<PumpingStation<T>>& getPumpingStations() const { return pumpingStations; }
