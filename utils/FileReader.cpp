@@ -1,8 +1,7 @@
 #include "FileReader.h"
 
 using namespace std;
-
-template<typename T>
+template <class T>
 void FileReader::addReservoirs(const string &filename, WaterSupply<T> &OurGraph)
 {
     ifstream inputFile(filename);
@@ -23,7 +22,7 @@ void FileReader::addReservoirs(const string &filename, WaterSupply<T> &OurGraph)
                 getline(iss, code,',') &&
                 getline(iss, maxDelivery,'\n'))
             {
-                Reservoir newReservoir = Reservoir(name,municipality,stoi(id),code,stoi(maxDelivery));
+                Reservoir<T> newReservoir = Reservoir<T>(name,municipality,stoi(id),code,stoi(maxDelivery));
                 OurGraph.addNode(newReservoir);
             }
         }
@@ -50,7 +49,7 @@ void FileReader::addStations(const string &filename, WaterSupply<T> &OurGraph)
             if( getline(iss, id,',') &&
                 getline(iss, code,'\n'))
             {
-                PumpingStation newStation = PumpingStation(stoi(id),code);
+                PumpingStation<T> newStation = PumpingStation<T>(stoi(id),code);
                 OurGraph.addNode(newStation);
             }
         }
@@ -59,7 +58,7 @@ void FileReader::addStations(const string &filename, WaterSupply<T> &OurGraph)
     inputFile.close();
 }
 
-template<typename T>
+template <class T>
 void FileReader::addCities(const string &filename, WaterSupply<T> &OurGraph)
 {
     ifstream inputFile(filename);
@@ -80,7 +79,7 @@ void FileReader::addCities(const string &filename, WaterSupply<T> &OurGraph)
                 getline(iss, demand,',') &&
                 getline(iss, population,'\n'))
             {
-                City newCity = City(city,stoi(id),code,stoi(demand),stoi(population));
+                City<T> newCity = City<T>(city,stoi(id),code,stoi(demand),stoi(population));
                 OurGraph.addNode(newCity);
             }
         }
@@ -112,10 +111,10 @@ void FileReader::addPipes(const string &filename, WaterSupply<T> &ourGraph)
                 Vertex<T> source = ourGraph.findNode(servicePointA);
                 Vertex<T> target = ourGraph.findNode(servicePointB);
                 if (direction == "0"){
-                    Pipe newPipe = Pipe(target,source,stoi(capacity),stoi(direction));
+                    Pipe<T> newPipe = Pipe<T>(target,source,stoi(capacity),stoi(direction));
                     ourGraph.addPipe(newPipe);
                 }
-                Pipe newPipe = Pipe(source,target,stoi(capacity),stoi(direction));
+                Pipe<T> newPipe = Pipe<T>(source,target,stoi(capacity),stoi(direction));
                 ourGraph.addPipe(newPipe);
             }
         }

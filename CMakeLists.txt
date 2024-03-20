@@ -14,6 +14,11 @@ add_executable(
         terminal/TerminalFlow.h
         utils/FileReader.h
         tests/utils/file_reader_test.cpp
+        classes/WaterSupply.cpp
+        classes/Reservoir.cpp
+        classes/PumpingStation.cpp
+        classes/Pipe.cpp
+        utils/FileReader.cpp
 )
 
 # Doxygen Build

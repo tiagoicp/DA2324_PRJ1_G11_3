@@ -7,10 +7,10 @@
 template <class T>
 class Pipe : public Edge<T> {
 private:
- /* Vertex<T>* servicePointA;
+    Vertex<T>* servicePointA;
     Vertex<T>* servicePointB;
     int capacity;
-    int direction;*/
+    int direction;
 
 public:
     // Constructor

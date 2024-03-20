@@ -13,10 +13,10 @@ template <class T>
 class WaterSupply : public Graph<T> {
 
 private:
-    std::vector<Reservoir> reservoirs;
-    std::vector<PumpingStation> pumpingStations;
-    std::vector<City> cities;
-    std::vector<Pipe> pipes;
+    std::vector<Reservoir<T>> reservoirs;
+    std::vector<PumpingStation<T>> pumpingStations;
+    std::vector<City<T>> cities;
+    std::vector<Pipe<T>> pipes;
     std::unordered_map<std::string, int> cityDemand;
 
 public:
@@ -25,10 +25,10 @@ public:
     void addPipe(Edge<T>& pipe);
     void removePipe(Edge<T>& pipe);
     // Getters
-    const std::vector<Reservoir>& getReservoirs() const { return reservoirs; }
-    const std::vector<PumpingStation>& getPumpingStations() const { return pumpingStations; }
-    const std::vector<City>& getCities() const { return cities; }
-    const std::vector<Pipe>& getPipes() const { return pipes; }
+    const std::vector<Reservoir<T>>& getReservoirs() const { return reservoirs; }
+    const std::vector<PumpingStation<T>>& getPumpingStations() const { return pumpingStations; }
+    const std::vector<City<T>>& getCities() const { return cities; }
+    const std::vector<Pipe<T>>& getPipes() const { return pipes; }
     const std::unordered_map<std::string, int>& getCityDemand() const { return cityDemand; }
 
     /*Airport findAirport(std::string code);
