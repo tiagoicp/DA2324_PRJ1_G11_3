@@ -28,10 +28,8 @@ public:
     // Getters
     const std::unordered_map<std::string,Reservoir>& getReservoirs() const { return reservoirs; }
     const std::unordered_map<std::string,PumpingStation>& getPumpingStations() const { return pumpingStations; }
-    /* const std::vector<City<std::string>>& getCities() const { return cities; }
-    const std::vector<Pipe<std::string>>& getPipes() const { return pipes; }
-    const std::unordered_map<std::string, int>& getCityDemand() const { return cityDemand; }*/
-
+    const std::unordered_map<std::string,City>& getCities() const { return cities; }
+    std::vector<Vertex<std::string> *> getNodes() const { return getVertexSet(); }
 };
 
 #endif // WATERSUPPLY_H
