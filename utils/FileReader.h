@@ -14,7 +14,7 @@
 class FileReader {
 public:
     static void addReservoirs(const std::string &filename, WaterSupply &network);
-    static void addStations(const std::string &filename, WaterSupply &network);
+    static void addPumpingStations(const std::string &filename, WaterSupply &network);
     static void addCities(const std::string &filename, WaterSupply &network);
     static void addPipes(const std::string &filename, WaterSupply &network);
 };

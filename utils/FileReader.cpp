@@ -19,7 +19,7 @@ void FileReader::addReservoirs(const string &filename, WaterSupply &network)
                 getline(iss, municipality,',') &&
                 getline(iss, id,',') &&
                 getline(iss, code,',') &&
-                getline(iss, maxDelivery,'\n'))
+                getline(iss, maxDelivery,'\r'))
             {
                 Reservoir newReservoir = Reservoir(name,municipality,stoi(id),code,stoi(maxDelivery));
                 network.addReservoir(code,newReservoir);
@@ -30,7 +30,7 @@ void FileReader::addReservoirs(const string &filename, WaterSupply &network)
     inputFile.close();
 }
 
-void FileReader::addStations(const string &filename, WaterSupply &network)
+void FileReader::addPumpingStations(const string &filename, WaterSupply &network)
 {
     ifstream inputFile(filename);
 
@@ -45,10 +45,10 @@ void FileReader::addStations(const string &filename, WaterSupply &network)
             string id, code;
 
             if( getline(iss, id,',') &&
-                getline(iss, code,'\n'))
+                getline(iss, code,'\r'))
             {
                 PumpingStation newStation = PumpingStation(stoi(id),code);
-                network.addPS(code,newStation);
+                network.addPumpingStation(code,newStation);
             }
         }
     }
@@ -74,7 +74,7 @@ void FileReader::addCities(const string &filename, WaterSupply &network)
                 getline(iss, id,',') &&
                 getline(iss, code,',') &&
                 getline(iss, demand,',') &&
-                getline(iss, population,'\n'))
+                getline(iss, population,'\r'))
             {
                 City newCity = City(city,stoi(id),code,stod(demand),stoi(population));
                 network.addCity(code,newCity);
@@ -102,7 +102,7 @@ void FileReader::addPipes(const string &filename, WaterSupply &network)
             if(getline(iss, servicePointA,',') &&
                getline(iss, servicePointB,',') &&
                getline(iss, capacity,',') &&
-               getline(iss, direction,'\n'))
+               getline(iss, direction,'\r'))
             {
                 network.addPipe(servicePointA,servicePointB, stoi(capacity), stoi(direction));
             }

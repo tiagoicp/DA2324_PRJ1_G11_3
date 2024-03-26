@@ -10,17 +10,14 @@ include_directories(lib/googletest-master/googlemock/include)
 
 add_executable(
         DA2324_PRJ1_G11_3 main.cpp
-        terminal/TerminalFlow.cpp
-        terminal/TerminalFlow.h
-        utils/FileReader.h
-        tests/utils/file_reader_test.cpp
-        classes/WaterSupply.cpp
-        classes/Reservoir.cpp
-        classes/PumpingStation.cpp
-        utils/FileReader.cpp
         classes/City.cpp
-        classes/Functionality.h
         classes/Functionality.cpp
+        classes/PumpingStation.cpp
+        classes/Reservoir.cpp
+        classes/WaterSupply.cpp
+        terminal/TerminalFlow.cpp
+        tests/utils/file_reader_test.cpp
+        utils/FileReader.cpp
 )
 
 # Doxygen Build

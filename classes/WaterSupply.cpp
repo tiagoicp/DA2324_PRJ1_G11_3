@@ -33,13 +33,14 @@ Vertex<std::string>* WaterSupply::findNode(const std::string &in) const{
     return findVertex(in);
 }
 
-void WaterSupply::addPS(const string &code, const PumpingStation &ps) {
+void WaterSupply::addPumpingStation(const std::string &code, const PumpingStation &ps) {
     pumpingStations[code] = ps;
     addVertex(code);
 }
 
-void WaterSupply::removePS(const string &code) {
+void WaterSupply::removePumpingStation(const std::string &code) {
     pumpingStations.erase(code);
+    removeVertex(code);
 }
 
 void WaterSupply::addCity(const string &code, const City &city) {
@@ -49,4 +50,5 @@ void WaterSupply::addCity(const string &code, const City &city) {
 
 void WaterSupply::removeCity(const string &code) {
     cities.erase(code);
+    removeVertex(code);
 }

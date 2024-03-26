@@ -20,7 +20,7 @@ void TerminalFlow::call() {
     std::string pipe_file_path = "../files/Project1DataSetSmall/Pipes_Madeira.csv";
 
     FileReader::addReservoirs(reservoir_file_path,ws);
-    FileReader::addStations(station_file_path,ws);
+    FileReader::addPumpingStations(station_file_path,ws);
     FileReader::addCities(city_file_path,ws);
     FileReader::addPipes(pipe_file_path,ws);
 
