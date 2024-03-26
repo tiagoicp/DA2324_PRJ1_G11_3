@@ -4,8 +4,7 @@
 #include <string>
 #include "Graph.h"
 
-template <class T>
-class Reservoir : public Vertex<T> {
+class Reservoir {
 private:
     std::string name;
     std::string municipality;
@@ -15,6 +14,7 @@ private:
 
 public:
     // Constructor
+    Reservoir();
     Reservoir(const std::string& _name, const std::string& _municipality, int _id,
               const std::string& _code, int _maxDelivery);
 

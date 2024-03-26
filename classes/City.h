@@ -4,24 +4,25 @@
 #include <string>
 #include "Graph.h"
 
-template <class T>
-class City : public Vertex<T> {
+
+class City {
 private:
     std::string city;
     int id;
     std::string code;
-    int demand;
+    double demand;
     int population;
 
 public:
     // Constructor
-    City(const std::string& _city, int _id, const std::string& _code, int _demand, int _population);
+    City();
+    City(const std::string& _city, int _id, const std::string& _code, double _demand, int _population);
 
     // Getters
     std::string getCity() const;
     int getId() const;
     std::string getCode() const; // Vertex getInfo()
-    int getDemand() const;
+    double getDemand() const;
     int getPopulation() const;
 };
 

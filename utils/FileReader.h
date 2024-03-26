@@ -5,7 +5,6 @@
 #include "../classes/PumpingStation.h"
 #include "../classes/City.h"
 #include "../classes/WaterSupply.h"
-#include "../classes/Pipe.h"
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -14,14 +13,10 @@
 
 class FileReader {
 public:
-    template <class T>
-    static void addReservoirs(const std::string &filename, WaterSupply<T> &OurGraph);
-    template <class T>
-    static void addStations(const std::string &filename, WaterSupply<T> &OurGraph);
-    template <class T>
-    static void addCities(const std::string &filename, WaterSupply<T> &OurGraph);
-    template <class T>
-    static void addPipes(const std::string &filename, WaterSupply<T> &OurGraph);
+    static void addReservoirs(const std::string &filename, WaterSupply &network);
+    static void addStations(const std::string &filename, WaterSupply &network);
+    static void addCities(const std::string &filename, WaterSupply &network);
+    static void addPipes(const std::string &filename, WaterSupply &network);
 };
 
 #endif //FILEREADER_H

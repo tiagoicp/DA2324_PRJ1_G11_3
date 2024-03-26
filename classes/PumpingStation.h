@@ -4,19 +4,19 @@
 #include <string>
 #include "Graph.h"
 
-template <class T>
-class PumpingStation : public Vertex<T> {
+class PumpingStation {
 private:
     int id;
     std::string code;
 
 public:
     // Constructor
+    PumpingStation();
     PumpingStation(int _id, const std::string& _code);
 
     // Getters
     int getId() const;
-    std::string getCode() const; // Vertex getInfo()
+    std::string getCode() const;
 };
 
 #endif // PUMPINGSTATION_H

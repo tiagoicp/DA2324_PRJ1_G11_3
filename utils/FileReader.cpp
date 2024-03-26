@@ -1,8 +1,7 @@
 #include "FileReader.h"
 
 using namespace std;
-template <class T>
-void FileReader::addReservoirs(const string &filename, WaterSupply<T> &ourGraph)
+void FileReader::addReservoirs(const string &filename, WaterSupply &network)
 {
     ifstream inputFile(filename);
 
@@ -22,8 +21,8 @@ void FileReader::addReservoirs(const string &filename, WaterSupply<T> &ourGraph)
                 getline(iss, code,',') &&
                 getline(iss, maxDelivery,'\n'))
             {
-                Reservoir<T> newReservoir = Reservoir<T>(name,municipality,stoi(id),code,stoi(maxDelivery));
-                ourGraph.addNode(newReservoir);
+                Reservoir newReservoir = Reservoir(name,municipality,stoi(id),code,stoi(maxDelivery));
+                network.addReservoir(code,newReservoir);
             }
         }
     }
@@ -31,8 +30,7 @@ void FileReader::addReservoirs(const string &filename, WaterSupply<T> &ourGraph)
     inputFile.close();
 }
 
-template<typename T>
-void FileReader::addStations(const string &filename, WaterSupply<T> &ourGraph)
+void FileReader::addStations(const string &filename, WaterSupply &network)
 {
     ifstream inputFile(filename);
 
@@ -49,8 +47,8 @@ void FileReader::addStations(const string &filename, WaterSupply<T> &ourGraph)
             if( getline(iss, id,',') &&
                 getline(iss, code,'\n'))
             {
-                PumpingStation<T> newStation = PumpingStation<T>(stoi(id),code);
-                ourGraph.addNode(newStation);
+                PumpingStation newStation = PumpingStation(stoi(id),code);
+                network.addPS(code,newStation);
             }
         }
     }
@@ -58,8 +56,7 @@ void FileReader::addStations(const string &filename, WaterSupply<T> &ourGraph)
     inputFile.close();
 }
 
-template <class T>
-void FileReader::addCities(const string &filename, WaterSupply<T> &ourGraph)
+void FileReader::addCities(const string &filename, WaterSupply &network)
 {
     ifstream inputFile(filename);
 
@@ -79,8 +76,8 @@ void FileReader::addCities(const string &filename, WaterSupply<T> &ourGraph)
                 getline(iss, demand,',') &&
                 getline(iss, population,'\n'))
             {
-                City<T> newCity = City<T>(city,stoi(id),code,stoi(demand),stoi(population));
-                ourGraph.addNode(newCity);
+                City newCity = City(city,stoi(id),code,stod(demand),stoi(population));
+                network.addCity(code,newCity);
             }
         }
     }
@@ -88,8 +85,7 @@ void FileReader::addCities(const string &filename, WaterSupply<T> &ourGraph)
     inputFile.close();
 }
 
-template<typename T>
-void FileReader::addPipes(const string &filename, WaterSupply<T> &ourGraph)
+void FileReader::addPipes(const string &filename, WaterSupply &network)
 {
     ifstream inputFile(filename);
 
@@ -108,15 +104,10 @@ void FileReader::addPipes(const string &filename, WaterSupply<T> &ourGraph)
                getline(iss, capacity,',') &&
                getline(iss, direction,'\n'))
             {
-                Vertex<T> source = ourGraph.findNode(servicePointA);
-                Vertex<T> target = ourGraph.findNode(servicePointB);
-                if (direction == "0"){
-                    Pipe<T> newPipe = Pipe<T>(target,source,stoi(capacity),stoi(direction));
-                    ourGraph.addPipe(newPipe);
-                }
-                Pipe<T> newPipe = Pipe<T>(source,target,stoi(capacity),stoi(direction));
-                ourGraph.addPipe(newPipe);
+                network.addPipe(servicePointA,servicePointB, stoi(capacity), stoi(direction));
             }
         }
     }
+
+    inputFile.close();
 }

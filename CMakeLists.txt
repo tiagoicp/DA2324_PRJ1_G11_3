@@ -17,9 +17,10 @@ add_executable(
         classes/WaterSupply.cpp
         classes/Reservoir.cpp
         classes/PumpingStation.cpp
-        classes/Pipe.cpp
         utils/FileReader.cpp
         classes/City.cpp
+        classes/Functionality.h
+        classes/Functionality.cpp
 )
 
 # Doxygen Build

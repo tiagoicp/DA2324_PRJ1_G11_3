@@ -3,31 +3,50 @@
 
 using namespace std;
 
-template <class T>
-void WaterSupply<T>::addNode(Vertex<T>& node)
+
+void WaterSupply::addReservoir(const std::string& code,const Reservoir& reservoir)
 {
-    addVertex(node);
+    reservoirs[code] = reservoir;       // add element to hash table
+    addVertex(code);                // add vertex to graph
 }
 
-template <class T>
-void WaterSupply<T>::removeNode(const Vertex<T>& node)
+void WaterSupply::removeReservoir(const std::string& code)
 {
-    removeVertex(node);
+    reservoirs.erase(code);
+    removeVertex(code);
 }
 
-template <class T>
-void WaterSupply<T>::addPipe(Edge<T>& pipe)
+void WaterSupply::addPipe(const std::string& servicePointA, const std::string& servicePointB, int capacity, int direction)
 {
-    addEdge(pipe.getOrigin(), pipe.getDest(), pipe);
+    addEdge(servicePointA, servicePointB, capacity);
+    if (direction == 0)
+        addEdge(servicePointB,servicePointA,capacity);
 }
 
-template <class T>
-void WaterSupply<T>::removePipe(Edge<T>& pipe)
+void WaterSupply::removePipe(const std::string& servicePointA, const std::string& servicePointB)
 {
-    removeEdge(pipe.getOrigin(), pipe.getDest());
+    removeEdge(servicePointA, servicePointB);
+    removeEdge(servicePointB, servicePointA);
 }
 
-template <class T>
-Vertex<T> WaterSupply<T>::findNode(const T &in) const{
+Vertex<std::string>* WaterSupply::findNode(const std::string &in) const{
     return findVertex(in);
+}
+
+void WaterSupply::addPS(const string &code, const PumpingStation &ps) {
+    pumpingStations[code] = ps;
+    addVertex(code);
+}
+
+void WaterSupply::removePS(const string &code) {
+    pumpingStations.erase(code);
+}
+
+void WaterSupply::addCity(const string &code, const City &city) {
+    cities[code] = city;
+    addVertex(code);
+}
+
+void WaterSupply::removeCity(const string &code) {
+    cities.erase(code);
 }

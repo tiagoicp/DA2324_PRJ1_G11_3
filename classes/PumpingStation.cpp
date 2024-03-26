@@ -2,15 +2,16 @@
 
 using namespace std;
 
-template<typename T>
-PumpingStation<T>::PumpingStation(int _id, const string& _code) : id(_id), code(_code) {}
+PumpingStation::PumpingStation() {
+    this->id = 0;
+    this->code = "";
+}
+PumpingStation::PumpingStation(int _id, const string& _code) : id(_id), code(_code) {}
 
-template<typename T>
-int PumpingStation<T>::getId() const {
+int PumpingStation::getId() const {
     return id;
 }
 
-template<typename T>
-string PumpingStation<T>::getCode() const {
+string PumpingStation::getCode() const {
     return code;
 }

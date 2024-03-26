@@ -2,32 +2,34 @@
 
 using namespace std;
 
-template<typename T>
-Reservoir<T>::Reservoir(const string& _name, const string& _municipality, int _id,
+Reservoir::Reservoir() {
+    this->name  = "";
+    this->municipality = "";
+    this->id = 0;
+    this->code = "";
+    this->maxDelivery = 0;
+}
+
+Reservoir::Reservoir(const string& _name, const string& _municipality, int _id,
                      const string& _code, int _maxDelivery)
     : name(_name), municipality(_municipality), id(_id), code(_code), maxDelivery(_maxDelivery) {}
 
-template<typename T>
-string Reservoir<T>::getName() const {
+string Reservoir::getName() const {
     return name;
 }
 
-template<typename T>
-string Reservoir<T>::getMunicipality() const {
+string Reservoir::getMunicipality() const {
     return municipality;
 }
 
-template<typename T>
-int Reservoir<T>::getId() const {
+int Reservoir::getId() const {
     return id;
 }
 
-template<typename T>
-string Reservoir<T>::getCode() const {
+string Reservoir::getCode() const {
     return code;
 }
 
-template<typename T>
-int Reservoir<T>::getMaxDelivery() const {
+int Reservoir::getMaxDelivery() const {
     return maxDelivery;
 }
