@@ -7,29 +7,41 @@
 #include "City.h"
 #include <unordered_map>
 
-class WaterSupply : Graph<std::string> {
+using namespace std;
+
+class WaterSupply : Graph<string> {
 
 private:
-    std::unordered_map<std::string,Reservoir> reservoirs;
-    std::unordered_map<std::string,PumpingStation> pumpingStations;
-    std::unordered_map<std::string,City> cities;
+    unordered_map<string,Reservoir> reservoirs;
+    unordered_map<string,PumpingStation> pumpingStations;
+    unordered_map<string,City> cities;
+    vector<Vertex<string>*> srcVertexSet;
+    vector<Vertex<string>*> dstVertexSet;
 
 public:
-    void addReservoir(const std::string &code,const Reservoir& reservoir);
-    void removeReservoir(const std::string& code);
-    void addPumpingStation(const std::string &code,const PumpingStation& ps);
-    void removePumpingStation(const std::string& code);
-    void addCity(const std::string &code,const City& city);
-    void removeCity(const std::string& code);
-    void addPipe(const std::string& servicePointA, const std::string& servicePointB, int capacity, int direction);
-    void removePipe(const std::string& servicePointA, const std::string& servicePointB);
-    Vertex<std::string>* findNode(const std::string &in) const;
+    void addNode(const string &code);
+    void removeNode(const string &code);
+    void addReservoir(const string &code,const Reservoir& reservoir);
+    void removeReservoir(const string& code);
+    void addPumpingStation(const string &code,const PumpingStation& ps);
+    void removePumpingStation(const string& code);
+    void addCity(const string &code,const City& city);
+    void removeCity(const string& code);
+    void addPipe(const string& servicePointA, const string& servicePointB, int capacity, int direction);
+    void removePipe(const string& servicePointA, const string& servicePointB, int direction);
+    Vertex<string>* findNode(const string &in) const;
+    void addSrc(Vertex<string>* src);
+    void addDst(Vertex<string>* dst);
 
     // Getters
-    const std::unordered_map<std::string,Reservoir>& getReservoirs() const { return reservoirs; }
-    const std::unordered_map<std::string,PumpingStation>& getPumpingStations() const { return pumpingStations; }
-    const std::unordered_map<std::string,City>& getCities() const { return cities; }
-    std::vector<Vertex<std::string> *> getNodes() const { return getVertexSet(); }
+    const unordered_map<string,Reservoir>& getReservoirs() const { return reservoirs; }
+    const unordered_map<string,PumpingStation>& getPumpingStations() const { return pumpingStations; }
+    const unordered_map<string,City>& getCities() const { return cities; }
+    vector<Vertex<string> *> getNodeSet() const { return getVertexSet(); }
+    vector<Vertex<string> *> getSrcSet() const { return srcVertexSet; }
+    vector<Vertex<string> *> getDstSet() const { return dstVertexSet; }
+    void connectedReservoirsDfsVisit(Vertex<string>* src, string& dest, bool& found);
+    void connectedReservoirsDfs(Vertex<string>* src, string& dest, vector<Vertex<string>*>& res);
 };
 
 #endif // WATERSUPPLY_H

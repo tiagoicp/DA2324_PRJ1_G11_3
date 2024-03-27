@@ -72,7 +72,7 @@ TEST(FileReader, addPipesLargeDataSet) {
     std::string pipe_file_path = "../files/Project1LargeDataSet/Pipes.csv";
     FileReader::addPipes(pipe_file_path,network);
 
-    EXPECT_EQ(network.getNodes().size(), 127);
+    EXPECT_EQ(network.getNodeSet().size(), 127);
 
     auto node_found = network.findNode("R_5");
     EXPECT_EQ(node_found->getAdj().size(), 2);

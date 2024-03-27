@@ -35,7 +35,7 @@ public:
 
     void setInfo(T info);
     void setVisited(bool visited);
-    void setProcesssing(bool processing);
+    void setProcessing(bool processing);
     void setIndegree(unsigned int indegree);
     void setDist(double dist);
     void setPath(Edge<T> *path);
@@ -255,7 +255,7 @@ void Vertex<T>::setVisited(bool visited) {
 }
 
 template <class T>
-void Vertex<T>::setProcesssing(bool processing) {
+void Vertex<T>::setProcessing(bool processing) {
     this->processing = processing;
 }
 

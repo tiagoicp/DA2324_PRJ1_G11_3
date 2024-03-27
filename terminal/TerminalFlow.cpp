@@ -6,33 +6,38 @@
 #include "TerminalFlow.h"
 #include "../classes/WaterSupply.h"
 #include "../utils/FileReader.h"
+#include "../classes/Functionality.h"
+
+using namespace std;
 
 void TerminalFlow::call() {
-    std::cout << std::endl;
-    std::cout << "=||= Welcome to your Water Pipeline Management System =||=" << std::endl;
-    std::cout << std::endl;
+    cout << endl;
+    cout << "=||= Welcome to your Water Pipeline Management System =||=" << endl;
+    cout << endl;
 
     WaterSupply ws;
 
-    std::string reservoir_file_path = "../files/Project1DataSetSmall/Reservoirs_Madeira.csv";
-    std::string station_file_path = "../files/Project1DataSetSmall/Stations_Madeira.csv";
-    std::string city_file_path = "../files/Project1DataSetSmall/Cities_Madeira.csv";
-    std::string pipe_file_path = "../files/Project1DataSetSmall/Pipes_Madeira.csv";
+    /*string reservoir_file_path = "../files/Project1DataSetSmall/Reservoirs_Madeira.csv";
+    string station_file_path = "../files/Project1DataSetSmall/Stations_Madeira.csv";
+    string city_file_path = "../files/Project1DataSetSmall/Cities_Madeira.csv";
+    string pipe_file_path = "../files/Project1DataSetSmall/Pipes_Madeira.csv";*/
+
+    string reservoir_file_path = "../files/Project1LargeDataSet/Reservoir.csv";
+    string station_file_path = "../files/Project1LargeDataSet/Stations.csv";
+    string city_file_path = "../files/Project1LargeDataSet/Cities.csv";
+    string pipe_file_path = "../files/Project1LargeDataSet/Pipes.csv";
 
     FileReader::addReservoirs(reservoir_file_path,ws);
     FileReader::addPumpingStations(station_file_path,ws);
     FileReader::addCities(city_file_path,ws);
     FileReader::addPipes(pipe_file_path,ws);
 
-    // Read and parse input data
-
-    // Determine maximum water flow
-    //ws.determineMaxWaterFlow();
-
-    // Check network configuration
-    //ws.checkNetworkConfiguration();
-
-    // Evaluate impact of failures
-    //ws.evaluateFailures();
+    // to select a single city just call the function once with the desired city code.
+    for (auto v : ws.getDstSet()){
+        string code = v->getInfo();
+        Functionality::maxFlowCity(&ws,code);
+    }
+    cout << endl;
+    Functionality::maxFlowGraph(&ws);
 
 }

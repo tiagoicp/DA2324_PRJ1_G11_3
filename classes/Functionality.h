@@ -7,13 +7,13 @@
 
 
 #include "City.h"
+#include "WaterSupply.h"
+#include <iostream>
 
 class Functionality {
-
-    void maxFlowCity(City& city){
-
-    }
-
+public:
+    static void maxFlowCity(WaterSupply* graph, string& cityCode);
+    static void maxFlowGraph(WaterSupply* graph);
 };
 
 
