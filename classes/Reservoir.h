@@ -1,5 +1,5 @@
-#ifndef RESERVOIR_H
-#define RESERVOIR_H
+#ifndef DA2324_PRJ1_G11_3_RESERVOIR_H
+#define DA2324_PRJ1_G11_3_RESERVOIR_H
 
 #include <string>
 #include "Graph.h"
@@ -26,4 +26,4 @@ public:
     int getMaxDelivery() const;
 };
 
-#endif // RESERVOIR_H
+#endif // DA2324_PRJ1_G11_3_RESERVOIR_H

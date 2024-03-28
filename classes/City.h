@@ -1,5 +1,5 @@
-#ifndef CITY_H
-#define CITY_H
+#ifndef DA2324_PRJ1_G11_3_CITY_H
+#define DA2324_PRJ1_G11_3_CITY_H
 
 #include <string>
 #include "Graph.h"
@@ -26,4 +26,4 @@ public:
     int getPopulation() const;
 };
 
-#endif // CITY_H
+#endif // DA2324_PRJ1_G11_3_CITY_H

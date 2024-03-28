@@ -2,6 +2,7 @@
 #include "gmock/gmock.h"
 #include "env.h"
 #include "terminal/TerminalFlow.h"
+#include "classes/WaterSupply.h"
 
 using namespace std;
 
@@ -20,8 +21,8 @@ int main(int argc, char* argv[]) {
     }
     else {
         // terminal
-
-        TerminalFlow::call();
+        WaterSupply ws;
+        TerminalFlow::call(ws);
     }
 
     return 0;

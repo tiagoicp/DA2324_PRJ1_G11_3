@@ -1,5 +1,5 @@
-#ifndef PUMPINGSTATION_H
-#define PUMPINGSTATION_H
+#ifndef DA2324_PRJ1_G11_3_PUMPINGSTATION_H
+#define DA2324_PRJ1_G11_3_PUMPINGSTATION_H
 
 #include <string>
 #include "Graph.h"
@@ -19,4 +19,4 @@ public:
     std::string getCode() const;
 };
 
-#endif // PUMPINGSTATION_H
+#endif // DA2324_PRJ1_G11_3_PUMPINGSTATION_H

@@ -1,5 +1,5 @@
-#ifndef WATERSUPPLY_H
-#define WATERSUPPLY_H
+#ifndef DA2324_PRJ1_G11_3_WATERSUPPLY_H
+#define DA2324_PRJ1_G11_3_WATERSUPPLY_H
 
 #include "Graph.h"
 #include "Reservoir.h"
@@ -44,4 +44,4 @@ public:
     void connectedReservoirsDfs(Vertex<string>* src, string& dest, vector<Vertex<string>*>& res);
 };
 
-#endif // WATERSUPPLY_H
+#endif // DA2324_PRJ1_G11_3_WATERSUPPLY_H
