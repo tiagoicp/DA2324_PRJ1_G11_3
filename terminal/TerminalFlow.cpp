@@ -31,7 +31,10 @@ void TerminalFlow::call(WaterSupply& ws) {
             call(ws);
             break;
         case 2 : 
-            Functionality::maxFlowGraph(&ws);
+            for (auto v : ws.getDstSet()){
+                string code = v->getInfo();
+                Functionality::maxFlowCity(&ws,code);
+            }
             call(ws);
             break;
         case 3 :
@@ -41,7 +44,7 @@ void TerminalFlow::call(WaterSupply& ws) {
             call(ws);
             break;
         case 4 :
-
+            Functionality::maxFlowGraph(&ws);
             call(ws);
             break;
         case 5 :
