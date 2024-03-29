@@ -1,7 +1,6 @@
 // Implement the functionalities here
 
 #include <sstream>
-#include <iomanip>
 #include "Functionality.h"
 #include "../classes/edmonds_karp.h"
 
@@ -33,7 +32,7 @@ string Functionality::maxFlowCity(WaterSupply *graph, string &cityCode) {
            " m^3/sec. City maximum capacity = " + to_string(int (capacity)) + ".";
 }
 
-void Functionality::maxFlowGraph(WaterSupply *graph) {
+vector<string> Functionality::maxFlowGraph(WaterSupply *graph) {
     unordered_map<string, Reservoir> reservoirs = graph->getReservoirs();
     unordered_map<string, City> cities = graph->getCities();
     vector<Vertex<string> *> dstVertexSet = graph->getDstSet();
@@ -59,16 +58,18 @@ void Functionality::maxFlowGraph(WaterSupply *graph) {
     }
 
     edmondsKarp(graph, source, dest);
-
+    vector<string> resultVector;
+    resultVector.push_back("With the existing network configuration:");
     for (Vertex<string> *dstVertex: dstVertexSet) {
         City dstCity = cities[dstVertex->getInfo()];
         totalFlow = 0;
         for (auto e: dstVertex->getIncoming()) {
             totalFlow += e->getFlow();
         }
-        cout << "With the existing network configuration, the maximum amount of water that can reach the city "
-             << dstVertex->getInfo() << " is " << totalFlow
-             << " m^3/sec.(water flow in deficit = " << dstCity.getDemand() - totalFlow << ") " << endl;
-
+        resultVector.push_back("The maximum amount of water that can reach the city "
+             + dstVertex->getInfo() + " is " + to_string(int(totalFlow))
+             + " m^3/sec. (water flow in deficit = " + to_string(int(dstCity.getDemand() - totalFlow)) + ")");
     }
+
+    return resultVector;
 }

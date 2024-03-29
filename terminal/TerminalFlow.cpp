@@ -48,7 +48,7 @@ void TerminalFlow::mainMenu(WaterSupply& ws){
             mainMenu(ws);
             break;
         case 3 :
-            Functionality::maxFlowGraph(&ws);
+            printVector(Functionality::maxFlowGraph(&ws));
             mainMenu(ws);
             break;
         case 4 :
@@ -68,6 +68,12 @@ void TerminalFlow::mainMenu(WaterSupply& ws){
         default:
             cout << "Invalid choice. Please try again." << endl;
             mainMenu(ws);
+    }
+}
+
+void TerminalFlow::printVector(const vector<string>& resultVector) {
+    for (const string& s : resultVector) {
+        cout << s << endl;
     }
 }
 

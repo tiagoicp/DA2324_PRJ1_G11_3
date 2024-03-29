@@ -13,7 +13,7 @@
 class Functionality {
 public:
     static string maxFlowCity(WaterSupply* graph, string& cityCode);
-    static void maxFlowGraph(WaterSupply* graph);
+    static vector<string> maxFlowGraph(WaterSupply* graph);
 };
 
 

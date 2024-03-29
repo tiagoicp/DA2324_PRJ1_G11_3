@@ -15,6 +15,8 @@ public:
     static void call(WaterSupply& ws);
     static void getReadDataMenu(WaterSupply& ws);
     static void mainMenu(WaterSupply& ws);
+private:
+    static void printVector(const vector<string>& resultVector);
 };
 
 

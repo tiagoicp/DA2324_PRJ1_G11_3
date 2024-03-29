@@ -31,3 +31,13 @@ TEST(Functionality, maxFlowCity) {
     result = Functionality::maxFlowCity(&network, city);
     EXPECT_EQ(result, "The maximum amount of water that can reach the city C_10 is 220 m^3/sec. City maximum capacity = 300.");
 }
+
+TEST(Functionality, maxFlowGraph) {
+    WaterSupply network;
+    setupGraph(network);
+
+    vector<string> result = Functionality::maxFlowGraph(&network);
+    EXPECT_EQ(result[3], "The maximum amount of water that can reach the city C_3 is 110 m^3/sec. (water flow in deficit = 50)");
+    EXPECT_EQ(result[4], "The maximum amount of water that can reach the city C_4 is 1208 m^3/sec. (water flow in deficit = 0)");
+    EXPECT_EQ(result[8], "The maximum amount of water that can reach the city C_8 is 100 m^3/sec. (water flow in deficit = 22)");
+}
