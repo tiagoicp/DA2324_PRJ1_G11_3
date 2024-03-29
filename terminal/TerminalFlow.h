@@ -8,12 +8,13 @@
 #include <iostream>
 #include "../classes/WaterSupply.h"
 #include "../utils/FileReader.h"
-#include "../classes/Functionality.h"
+#include "../functionalities/Functionality.h"
 
 class TerminalFlow {
 public:
     static void call(WaterSupply& ws);
     static void getReadDataMenu(WaterSupply& ws);
+    static void mainMenu(WaterSupply& ws);
 };
 
 

@@ -1,7 +1,7 @@
 // Implement the functionalities here
 
 #include "Functionality.h"
-#include "edmonds_karp.h"
+#include "../classes/edmonds_karp.h"
 
 void Functionality::maxFlowCity(WaterSupply* graph,string& cityCode) {
     vector<Vertex<string>*> reachableSources;

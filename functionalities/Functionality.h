@@ -6,8 +6,8 @@
 #define DA2324_PRJ1_G11_3_FUNCTIONALITY_H
 
 
-#include "City.h"
-#include "WaterSupply.h"
+#include "../classes/City.h"
+#include "../classes/WaterSupply.h"
 #include <iostream>
 
 class Functionality {

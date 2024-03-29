@@ -11,7 +11,7 @@ include_directories(lib/googletest-master/googlemock/include)
 add_executable(
         DA2324_PRJ1_G11_3 main.cpp
         classes/City.cpp
-        classes/Functionality.cpp
+        functionalities/Functionality.cpp
         classes/PumpingStation.cpp
         classes/Reservoir.cpp
         classes/WaterSupply.cpp
