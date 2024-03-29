@@ -37,14 +37,14 @@ void TerminalFlow::mainMenu(WaterSupply& ws){
         case 1 :
             for (auto v : ws.getDstSet()){
                 string code = v->getInfo();
-                Functionality::maxFlowCity(&ws,code);
+                cout << Functionality::maxFlowCity(&ws,code) << endl;
             }
             mainMenu(ws);
             break;
         case 2 :
             cout << "Insert the city code (C_i):"<< endl;
             cin >> city;
-            Functionality::maxFlowCity(&ws,city);
+            cout << Functionality::maxFlowCity(&ws,city) << endl;
             mainMenu(ws);
             break;
         case 3 :

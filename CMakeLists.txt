@@ -17,6 +17,7 @@ add_executable(
         classes/WaterSupply.cpp
         terminal/TerminalFlow.cpp
         tests/utils/file_reader_test.cpp
+        tests/functionalities/functionality_test.cpp
         utils/FileReader.cpp
 )
 

@@ -12,7 +12,7 @@
 
 class Functionality {
 public:
-    static void maxFlowCity(WaterSupply* graph, string& cityCode);
+    static string maxFlowCity(WaterSupply* graph, string& cityCode);
     static void maxFlowGraph(WaterSupply* graph);
 };
 

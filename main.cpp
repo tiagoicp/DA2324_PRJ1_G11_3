@@ -1,6 +1,5 @@
 #include "gtest/gtest.h"
 #include "gmock/gmock.h"
-#include "env.h"
 #include "terminal/TerminalFlow.h"
 #include "classes/WaterSupply.h"
 
@@ -14,7 +13,8 @@ using namespace std;
  * @return exit code
  */
 int main(int argc, char* argv[]) {
-    if(constants::IS_TESTING_ENV) {
+    bool isTesting = false;
+    if(isTesting) {
         // tests
         testing::InitGoogleTest(&argc, argv);
         return RUN_ALL_TESTS();
