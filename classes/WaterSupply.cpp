@@ -8,7 +8,7 @@ void WaterSupply::addNode(const string &code){
     addVertex(code);
 }
 void WaterSupply::removeNode(const string &code){
-    addVertex(code);
+    removeVertex(code);
 }
 
 void WaterSupply::addReservoir(const string& code,const Reservoir& reservoir)

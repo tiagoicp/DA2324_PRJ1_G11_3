@@ -13,7 +13,7 @@ using namespace std;
  * @return exit code
  */
 int main(int argc, char* argv[]) {
-    bool isTesting = false;
+    bool isTesting = true;
     if(isTesting) {
         // tests
         testing::InitGoogleTest(&argc, argv);

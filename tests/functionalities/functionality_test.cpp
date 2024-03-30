@@ -41,3 +41,14 @@ TEST(Functionality, maxFlowGraph) {
     EXPECT_EQ(result[4], "The maximum amount of water that can reach the city C_4 is 1208 m^3/sec. (water flow in deficit = 0)");
     EXPECT_EQ(result[8], "The maximum amount of water that can reach the city C_8 is 100 m^3/sec. (water flow in deficit = 22)");
 }
+
+TEST(Functionality, maxFlowGraphCleansFirst) {
+    WaterSupply network;
+    setupGraph(network);
+
+    Functionality::maxFlowGraph(&network);
+    vector<string> result = Functionality::maxFlowGraph(&network);
+    EXPECT_EQ(result[3], "The maximum amount of water that can reach the city C_3 is 110 m^3/sec. (water flow in deficit = 50)");
+    EXPECT_EQ(result[4], "The maximum amount of water that can reach the city C_4 is 1208 m^3/sec. (water flow in deficit = 0)");
+    EXPECT_EQ(result[8], "The maximum amount of water that can reach the city C_8 is 100 m^3/sec. (water flow in deficit = 22)");
+}

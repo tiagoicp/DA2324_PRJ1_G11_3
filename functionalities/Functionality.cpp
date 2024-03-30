@@ -37,6 +37,10 @@ vector<string> Functionality::maxFlowGraph(WaterSupply *graph) {
     unordered_map<string, City> cities = graph->getCities();
     vector<Vertex<string> *> dstVertexSet = graph->getDstSet();
     double totalFlow = 0;
+    if(graph->findNode("master_source")){
+        graph->removeNode("master_source");
+        graph->removeNode("master_sink");
+    }
     graph->addNode("master_source");
     graph->addNode("master_sink");
     Vertex<string> *source = graph->findNode("master_source");
