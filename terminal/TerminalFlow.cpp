@@ -7,7 +7,7 @@
 
 using namespace std;
 
-void TerminalFlow::call(WaterSupply& ws) {
+void TerminalFlow::call(WaterSupply &ws) {
     cout << endl;
     cout << "Welcome to our Water Supply Management System" << endl;
     cout << "---------------------------------------------" << endl;
@@ -15,36 +15,37 @@ void TerminalFlow::call(WaterSupply& ws) {
     mainMenu(ws);
 }
 
-void TerminalFlow::mainMenu(WaterSupply& ws){
+void TerminalFlow::mainMenu(WaterSupply &ws) {
     cout << endl;
     cout << "Please choose a functionality of the following:" << endl;
     cout << "---------------------------------------------" << endl;
     cout << "1. Determine maximum amount of water that can reach each city" << endl;
     cout << "2. Determine maximum amount of water that can reach a specific city" << endl;
     cout << "3. Check if the network configuration meets the water needs" << endl;
-    cout << "4. Balance the load across the network"<< endl;
+    cout << "4. Balance the load across the network" << endl;
     cout << "5. Determine which cities are affected by a reservoir failure" << endl;
-    cout << "6. Identify pumping stations that can be out of service without impacting overall city delivery capacity" << endl;
+    cout << "6. Identify pumping stations that can be out of service without impacting overall city delivery capacity"
+         << endl;
     cout << "7. Identify pipeline failures that would impede delivering required water to each city" << endl;
-    cout << "8. Exit"<< endl;
+    cout << "8. Exit" << endl;
 
     int selected;
     cin >> selected;
+    cin.ignore(9999999, '\n'); // always clean cin (to avoid issue with getline
     cout << endl;
 
-    string city;
-    switch (selected){
+    string cityCode;
+    switch (selected) {
         case 1 :
-            for (auto v : ws.getDstSet()){
+            for (auto v: ws.getDstSet()) {
                 string code = v->getInfo();
-                cout << Functionality::maxFlowCity(&ws,code) << endl;
+                cout << Functionality::maxFlowCity(&ws, code) << endl;
             }
             mainMenu(ws);
             break;
         case 2 :
-            cout << "Insert the city code (C_i):"<< endl;
-            cin >> city;
-            cout << Functionality::maxFlowCity(&ws,city) << endl;
+            cityCode = getValidCityCode(ws);
+            cout << Functionality::maxFlowCity(&ws, cityCode) << endl;
             mainMenu(ws);
             break;
         case 3 :
@@ -71,13 +72,29 @@ void TerminalFlow::mainMenu(WaterSupply& ws){
     }
 }
 
-void TerminalFlow::printVector(const vector<string>& resultVector) {
-    for (const string& s : resultVector) {
+string TerminalFlow::getValidCityCode(WaterSupply &ws) {
+    string cityCode;
+    while (true) {
+        cout << "Insert a city code: (eg: C_1)" << endl;
+        getline(cin, cityCode);
+        if (ws.findNode(cityCode) != nullptr)
+            break;
+
+        cout << "You wrote an invalid input or city not found." << endl;
+        cout << "Example of a valid input: C_2" << endl;
+        cout << endl;
+    }
+
+    return cityCode;
+}
+
+void TerminalFlow::printVector(const vector<string> &resultVector) {
+    for (const string &s: resultVector) {
         cout << s << endl;
     }
 }
 
-void TerminalFlow::getReadDataMenu(WaterSupply& ws){
+void TerminalFlow::getReadDataMenu(WaterSupply &ws) {
     cout << "Please choose a dataset of the following:" << endl;
     cout << "1. Madeira Dataset" << endl;
     cout << "2. Portugal Dataset" << endl;
@@ -87,14 +104,14 @@ void TerminalFlow::getReadDataMenu(WaterSupply& ws){
     string station_file_path = "";
     string city_file_path = "";
     string pipe_file_path = "";
-    switch (selected){
+    switch (selected) {
         case 1 :
             reservoir_file_path = "../files/Project1DataSetSmall/Reservoirs_Madeira.csv";
             station_file_path = "../files/Project1DataSetSmall/Stations_Madeira.csv";
             city_file_path = "../files/Project1DataSetSmall/Cities_Madeira.csv";
             pipe_file_path = "../files/Project1DataSetSmall/Pipes_Madeira.csv";
             break;
-        case 2 : 
+        case 2 :
             reservoir_file_path = "../files/Project1LargeDataSet/Reservoir.csv";
             station_file_path = "../files/Project1LargeDataSet/Stations.csv";
             city_file_path = "../files/Project1LargeDataSet/Cities.csv";
@@ -103,9 +120,9 @@ void TerminalFlow::getReadDataMenu(WaterSupply& ws){
         default:
             cout << "Invalid choice. Please try again." << endl;
     }
-    FileReader::addReservoirs(reservoir_file_path,ws);
-    FileReader::addPumpingStations(station_file_path,ws);
-    FileReader::addCities(city_file_path,ws);
-    FileReader::addPipes(pipe_file_path,ws);
+    FileReader::addReservoirs(reservoir_file_path, ws);
+    FileReader::addPumpingStations(station_file_path, ws);
+    FileReader::addCities(city_file_path, ws);
+    FileReader::addPipes(pipe_file_path, ws);
     cout << "Files have been read correctly" << endl;
 }

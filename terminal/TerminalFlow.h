@@ -17,6 +17,7 @@ public:
     static void mainMenu(WaterSupply& ws);
 private:
     static void printVector(const vector<string>& resultVector);
+    static string getValidCityCode(WaterSupply& ws);
 };
 
 
