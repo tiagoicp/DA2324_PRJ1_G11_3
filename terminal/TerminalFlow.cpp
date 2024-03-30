@@ -53,14 +53,14 @@ void TerminalFlow::mainMenu(WaterSupply &ws) {
             mainMenu(ws);
             break;
         case 4 :
+            Functionality::maxFlowGraph(&ws);
+            printPipeLoad(ws); // print current load of edges/pipes
+            // run pipe balancer algorithm
+            // print final load of edges/pipes
             mainMenu(ws);
             break;
         case 5 :
-            mainMenu(ws);
-            break;
         case 6 :
-            mainMenu(ws);
-            break;
         case 7 :
             mainMenu(ws);
             break;
@@ -70,6 +70,31 @@ void TerminalFlow::mainMenu(WaterSupply &ws) {
             cout << "Invalid choice. Please try again." << endl;
             mainMenu(ws);
     }
+}
+
+void TerminalFlow::printPipeLoad(WaterSupply& ws) {
+    cout << "Current Network / Pipe Load:" << endl;
+    for(auto node : ws.getNodeSet()){
+        if(node->getInfo() == "master_source" || node->getInfo() == "master_sink")
+            continue;
+
+        if(node->getAdj().empty())
+            continue;
+
+        if(node->getAdj().size() == 1 && node->getAdj()[0]->getDest()->getInfo() == "master_sink")
+            continue;
+
+        cout << "From node " << node->getInfo() << ":" << endl;
+        for(auto pipe : node->getAdj()){
+            if(pipe->getDest()->getInfo() == "master_sink")
+                continue;
+
+            cout << "- to " << pipe->getDest()->getInfo() << " (" << to_string(int(pipe->getFlow())) << "/" << to_string(int(pipe->getWeight())) <<")" << endl;
+        }
+    }
+    cout << endl;
+    // average diff
+    // variance of flow
 }
 
 string TerminalFlow::getValidCityCode(WaterSupply &ws) {

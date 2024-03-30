@@ -18,6 +18,7 @@ public:
 private:
     static void printVector(const vector<string>& resultVector);
     static string getValidCityCode(WaterSupply& ws);
+    static void printPipeLoad(WaterSupply& ws);
 };
 
 

@@ -36,7 +36,7 @@ vector<string> Functionality::maxFlowGraph(WaterSupply *graph) {
     unordered_map<string, Reservoir> reservoirs = graph->getReservoirs();
     unordered_map<string, City> cities = graph->getCities();
     vector<Vertex<string> *> dstVertexSet = graph->getDstSet();
-    double totalFlow = 0;
+
     if(graph->findNode("master_source")){
         graph->removeNode("master_source");
         graph->removeNode("master_sink");
@@ -64,6 +64,7 @@ vector<string> Functionality::maxFlowGraph(WaterSupply *graph) {
     edmondsKarp(graph, source, dest);
     vector<string> resultVector;
     resultVector.push_back("With the existing network configuration:");
+    double totalFlow;
     for (Vertex<string> *dstVertex: dstVertexSet) {
         City dstCity = cities[dstVertex->getInfo()];
         totalFlow = 0;
