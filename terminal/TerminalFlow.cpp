@@ -3,6 +3,7 @@
 //
 
 #include <iostream>
+#include <numeric>
 #include "TerminalFlow.h"
 
 using namespace std;
@@ -73,6 +74,7 @@ void TerminalFlow::mainMenu(WaterSupply &ws) {
 }
 
 void TerminalFlow::printPipeLoad(WaterSupply& ws) {
+    vector<double> diffVector;
     cout << "Current Network / Pipe Load:" << endl;
     for(auto node : ws.getNodeSet()){
         if(node->getInfo() == "master_source" || node->getInfo() == "master_sink")
@@ -89,12 +91,29 @@ void TerminalFlow::printPipeLoad(WaterSupply& ws) {
             if(pipe->getDest()->getInfo() == "master_sink")
                 continue;
 
+            diffVector.push_back(pipe->getWeight()-pipe->getFlow());
             cout << "- to " << pipe->getDest()->getInfo() << " (" << to_string(int(pipe->getFlow())) << "/" << to_string(int(pipe->getWeight())) <<")" << endl;
         }
     }
     cout << endl;
-    // average diff
-    // variance of flow
+    cout << "Average diff: " << getAverage(diffVector) << endl;
+    cout << "Std Dev of diff: " << getStdDev(diffVector) << endl;
+    cout << endl;
+}
+
+double TerminalFlow::getAverage(const vector<double>& v){
+    double sum = std::accumulate(v.begin(), v.end(), 0.0);
+    return sum / v.size();
+}
+
+double TerminalFlow::getStdDev(const vector<double>& v){
+    double sum = std::accumulate(v.begin(), v.end(), 0.0);
+    double mean = sum / v.size();
+
+    std::vector<double> diff(v.size());
+    std::transform(v.begin(), v.end(), diff.begin(), [mean](double x) { return x - mean; });
+    double sq_sum = std::inner_product(diff.begin(), diff.end(), diff.begin(), 0.0);
+    return std::sqrt(sq_sum / v.size());
 }
 
 string TerminalFlow::getValidCityCode(WaterSupply &ws) {
