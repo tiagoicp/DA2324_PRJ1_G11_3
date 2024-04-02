@@ -3,6 +3,7 @@
 //
 
 #include <iostream>
+#include <cmath>
 #include <numeric>
 #include "TerminalFlow.h"
 
@@ -61,6 +62,8 @@ void TerminalFlow::mainMenu(WaterSupply &ws) {
             mainMenu(ws);
             break;
         case 5 :
+            Functionality::maxFlowGraphBalanced(&ws);
+            printPipeLoad(ws);
         case 6 :
         case 7 :
             mainMenu(ws);
@@ -75,6 +78,7 @@ void TerminalFlow::mainMenu(WaterSupply &ws) {
 
 void TerminalFlow::printPipeLoad(WaterSupply& ws) {
     vector<double> diffVector;
+    double totalFlow = ws.getSinkFlow();
     cout << "Current Network / Pipe Load:" << endl;
     for(auto node : ws.getNodeSet()){
         if(node->getInfo() == "master_source" || node->getInfo() == "master_sink")
@@ -98,6 +102,7 @@ void TerminalFlow::printPipeLoad(WaterSupply& ws) {
     cout << endl;
     cout << "Average diff: " << getAverage(diffVector) << endl;
     cout << "Std Dev of diff: " << getStdDev(diffVector) << endl;
+    cout << "Sink flow: " << totalFlow << endl;
     cout << endl;
 }
 

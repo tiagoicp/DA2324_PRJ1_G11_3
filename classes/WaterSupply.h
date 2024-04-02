@@ -42,6 +42,7 @@ public:
     vector<Vertex<string> *> getDstSet() const { return dstVertexSet; }
     void connectedReservoirsDfsVisit(Vertex<string>* src, string& dest, bool& found);
     void connectedReservoirsDfs(Vertex<string>* src, string& dest, vector<Vertex<string>*>& res);
+    double getSinkFlow();
 };
 
 #endif // DA2324_PRJ1_G11_3_WATERSUPPLY_H

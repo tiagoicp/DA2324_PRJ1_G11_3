@@ -78,3 +78,29 @@ vector<string> Functionality::maxFlowGraph(WaterSupply *graph) {
 
     return resultVector;
 }
+
+void Functionality::maxFlowGraphBalanced(WaterSupply *graph) {
+    maxFlowGraph(graph);
+    double avg;
+    vector<double> ratios;
+    double sum = 0;
+    for (Vertex<string>* v : graph->getNodeSet()){
+        for (Edge<string>* e : v->getAdj()){
+            ratios.push_back(e->getFlow()/e->getWeight());
+        }
+    }
+    for(double d : ratios){
+        sum+= d;
+    }
+    avg = sum/ratios.size();
+    for (Vertex<string>* v : graph->getSrcSet()){
+        for(Edge<string>* e : v->getAdj()){
+            if ((e->getFlow()/ e->getWeight()) > avg) {
+                e->setFlow(e->getWeight()*avg);
+                e->setWeight(e->getWeight() * avg);
+            }
+        }
+    }
+    maxFlowGraph(graph);
+
+}

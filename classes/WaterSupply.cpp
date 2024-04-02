@@ -88,5 +88,16 @@ void WaterSupply::connectedReservoirsDfs(Vertex<string>* src, string& dest,vecto
         res.push_back(src);
 }
 
+double WaterSupply::getSinkFlow() {
+    double totalFlow = 0;
+    for (Vertex<string>* v : dstVertexSet){
+        for (Edge<string>* e : v->getIncoming()){
+            totalFlow+=e->getFlow();
+        }
+    }
+    return totalFlow;
+}
+
+
 
 
