@@ -18,6 +18,7 @@ public:
 private:
     static void printVector(const vector<string>& resultVector);
     static string getValidCityCode(WaterSupply& ws);
+    static string getValidReservoirCode(WaterSupply& ws);
     static void printPipeLoad(WaterSupply& ws);
     static double getAverage(const vector<double>& v);
     static double getStdDev(const vector<double>& v);

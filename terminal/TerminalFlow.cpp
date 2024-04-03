@@ -37,35 +37,43 @@ void TerminalFlow::mainMenu(WaterSupply &ws) {
     cout << endl;
 
     string cityCode;
+    string reservoirCode;
     switch (selected) {
         case 1 :
             for (auto v: ws.getDstSet()) {
                 string code = v->getInfo();
-                cout << Functionality::maxFlowCity(&ws, code) << endl;
+                cout << Functionality::maxFlowCity(ws, code) << endl;
+                cout << endl;
             }
             mainMenu(ws);
             break;
         case 2 :
             cityCode = getValidCityCode(ws);
-            cout << Functionality::maxFlowCity(&ws, cityCode) << endl;
+            cout << Functionality::maxFlowCity(ws, cityCode) << endl;
             mainMenu(ws);
             break;
         case 3 :
-            printVector(Functionality::maxFlowGraph(&ws));
+            printVector(Functionality::maxFlowGraph(ws));
             mainMenu(ws);
             break;
         case 4 :
-            Functionality::maxFlowGraph(&ws);
+            Functionality::maxFlowGraph(ws);
             printPipeLoad(ws); // print current load of edges/pipes
-            // run pipe balancer algorithm
-            // print final load of edges/pipes
+            // run pipe balancer algorithm  Functionality::maxFlowGraphBalanced(&ws);
+            // print final load of edges/pipes  printPipeLoad(ws);
             mainMenu(ws);
             break;
         case 5 :
-            Functionality::maxFlowGraphBalanced(&ws);
-            printPipeLoad(ws);
+            reservoirCode = getValidReservoirCode(ws);
+            Functionality::removeReservoirAndListAffectedCities(ws,reservoirCode);
+            mainMenu(ws);
+            break;
         case 6 :
+            Functionality::checkUselessPumpingStations(ws);
+            mainMenu(ws);
+            break;
         case 7 :
+            Functionality::checkCriticalPipes(ws);
             mainMenu(ws);
             break;
         case 8 :
@@ -78,7 +86,7 @@ void TerminalFlow::mainMenu(WaterSupply &ws) {
 
 void TerminalFlow::printPipeLoad(WaterSupply& ws) {
     vector<double> diffVector;
-    double totalFlow = ws.getSinkFlow();
+    double totalFlow = ws.getTotalSinkFlow();
     cout << "Current Network / Pipe Load:" << endl;
     for(auto node : ws.getNodeSet()){
         if(node->getInfo() == "master_source" || node->getInfo() == "master_sink")
@@ -114,7 +122,6 @@ double TerminalFlow::getAverage(const vector<double>& v){
 double TerminalFlow::getStdDev(const vector<double>& v){
     double sum = std::accumulate(v.begin(), v.end(), 0.0);
     double mean = sum / v.size();
-
     std::vector<double> diff(v.size());
     std::transform(v.begin(), v.end(), diff.begin(), [mean](double x) { return x - mean; });
     double sq_sum = std::inner_product(diff.begin(), diff.end(), diff.begin(), 0.0);
@@ -135,6 +142,22 @@ string TerminalFlow::getValidCityCode(WaterSupply &ws) {
     }
 
     return cityCode;
+}
+
+string TerminalFlow::getValidReservoirCode(WaterSupply &ws) {
+    string reservoirCode;
+    while (true) {
+        cout << "Insert a reservoir code: (eg: R_1)" << endl;
+        getline(cin, reservoirCode);
+        if (ws.findNode(reservoirCode) != nullptr)
+            break;
+
+        cout << "You wrote an invalid input or reservoir not found." << endl;
+        cout << "Example of a valid input: R_2" << endl;
+        cout << endl;
+    }
+
+    return reservoirCode;
 }
 
 void TerminalFlow::printVector(const vector<string> &resultVector) {
@@ -175,3 +198,6 @@ void TerminalFlow::getReadDataMenu(WaterSupply &ws) {
     FileReader::addPipes(pipe_file_path, ws);
     cout << "Files have been read correctly" << endl;
 }
+
+
+

@@ -6,19 +6,25 @@
 #include "PumpingStation.h"
 #include "City.h"
 #include <unordered_map>
+#include <utility>
 
 using namespace std;
 
 class WaterSupply : Graph<string> {
 
 private:
+
     unordered_map<string,Reservoir> reservoirs;
     unordered_map<string,PumpingStation> pumpingStations;
     unordered_map<string,City> cities;
     vector<Vertex<string>*> srcVertexSet;
     vector<Vertex<string>*> dstVertexSet;
+    vector<Vertex<string>*> psVertexSet;
 
 public:
+    WaterSupply() = default;
+    WaterSupply(const WaterSupply& other);
+
     void addNode(const string &code);
     void removeNode(const string &code);
     void addReservoir(const string &code,const Reservoir& reservoir);
@@ -32,6 +38,8 @@ public:
     Vertex<string>* findNode(const string &in) const;
     void addSrc(Vertex<string>* src);
     void addDst(Vertex<string>* dst);
+    void addPS(Vertex<string>* ps);
+    void resetGraphFlow();
 
     // Getters
     const unordered_map<string,Reservoir>& getReservoirs() const { return reservoirs; }
@@ -40,9 +48,11 @@ public:
     vector<Vertex<string> *> getNodeSet() const { return getVertexSet(); }
     vector<Vertex<string> *> getSrcSet() const { return srcVertexSet; }
     vector<Vertex<string> *> getDstSet() const { return dstVertexSet; }
+    vector<Vertex<string> *> getPSSet() const { return psVertexSet; }
     void connectedReservoirsDfsVisit(Vertex<string>* src, string& dest, bool& found);
     void connectedReservoirsDfs(Vertex<string>* src, string& dest, vector<Vertex<string>*>& res);
-    double getSinkFlow();
+    double getTotalSinkFlow();
+    double getCityFlow(Vertex<string>* cityVertex);
 };
 
 #endif // DA2324_PRJ1_G11_3_WATERSUPPLY_H

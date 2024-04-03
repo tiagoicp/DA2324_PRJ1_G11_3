@@ -23,7 +23,6 @@ void FileReader::addReservoirs(const string &filename, WaterSupply &network)
             {
                 Reservoir newReservoir = Reservoir(name,municipality,stoi(id),code,stoi(maxDelivery));
                 network.addReservoir(code,newReservoir);
-                network.addSrc(network.findNode(code));
             }
         }
     }
@@ -79,7 +78,6 @@ void FileReader::addCities(const string &filename, WaterSupply &network)
             {
                 City newCity = City(city,stoi(id),code,stod(demand),stoi(population));
                 network.addCity(code,newCity);
-                network.addDst(network.findNode(code));
             }
         }
     }

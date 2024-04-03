@@ -10,8 +10,8 @@ using namespace std;
 
 // This file contains an adapted Edmonds Karp algorithm for our graph.
 
-bool findAugmentingPath(WaterSupply *g, Vertex<string>* source, Vertex<string>* target){
-    for (Vertex<string>* v : g->getNodeSet()) {
+bool findAugmentingPath(WaterSupply& g, Vertex<string>* source, Vertex<string>* target){
+    for (Vertex<string>* v : g.getNodeSet()) {
         v->setVisited(false);
     }
     source->setVisited(true);
@@ -40,7 +40,7 @@ bool findAugmentingPath(WaterSupply *g, Vertex<string>* source, Vertex<string>* 
     return (target->isVisited());
 }
 
-void edmondsKarp(WaterSupply *g, Vertex<string>* s, Vertex<string>* t) {
+void edmondsKarp(WaterSupply& g, Vertex<string>* s, Vertex<string>* t) {
     while(findAugmentingPath(g,s,t)){
         double minFlow = INF;
         for (Vertex<string>* v = t; v!=s;){

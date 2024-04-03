@@ -32,6 +32,7 @@ public:
     double getDist() const;
     Edge<T> *getPath() const;
     std::vector<Edge<T> *> getIncoming() const;
+    double getIncFlow() const;
 
     void setInfo(T info);
     void setVisited(bool visited);
@@ -39,6 +40,8 @@ public:
     void setIndegree(unsigned int indegree);
     void setDist(double dist);
     void setPath(Edge<T> *path);
+    void setIncFlow(double incFlow);
+
     Edge<T> * addEdge(Vertex<T> *dest, double w);
     bool removeEdge(T in);
     void removeOutgoingEdges();
@@ -58,9 +61,12 @@ protected:
     std::vector<Edge<T> *> incoming; // incoming edges
 
     int queueIndex = 0; 		// required by MutablePriorityQueue and UFDS
+    double incFlow = 0;
 
     void deleteEdge(Edge<T> *edge);
 };
+
+
 
 /********************** Edge  ****************************/
 
@@ -75,11 +81,13 @@ public:
     Vertex<T> * getOrig() const;
     Edge<T> *getReverse() const;
     double getFlow() const;
+    double getTempWeight() const;
 
     void setSelected(bool selected);
     void setReverse(Edge<T> *reverse);
     void setFlow(double flow);
     void setWeight(double weight);
+    void setTempWeight(double tempWeight);
 protected:
     Vertex<T> * dest; // destination vertex
     double weight; // edge weight, can also be used for capacity
@@ -92,7 +100,10 @@ protected:
     Edge<T> *reverse = nullptr;
 
     double flow; // for flow-related problems
+    double tempWeight = 0;
 };
+
+
 
 /********************** Graph  ****************************/
 
@@ -245,6 +256,11 @@ std::vector<Edge<T> *> Vertex<T>::getIncoming() const {
     return this->incoming;
 }
 
+template<class T>
+double Vertex<T>::getIncFlow() const {
+    return this->incFlow;
+}
+
 template <class T>
 void Vertex<T>::setInfo(T in) {
     this->info = in;
@@ -325,6 +341,10 @@ template <class T>
 double Edge<T>::getFlow() const {
     return flow;
 }
+template<class T>
+double Edge<T>::getTempWeight() const {
+    return this->tempWeight;
+}
 
 template <class T>
 void Edge<T>::setSelected(bool selected) {
@@ -344,6 +364,16 @@ void Edge<T>::setFlow(double flow) {
 template <class T>
 void Edge<T>::setWeight(double weight) {
     this->weight = weight;
+}
+
+template<class T>
+void Edge<T>::setTempWeight(double tempWeight) {
+    this->tempWeight = tempWeight;
+}
+
+template<class T>
+void Vertex<T>::setIncFlow(double incFlow) {
+    this->incFlow = incFlow;
 }
 
 /********************** Graph  ****************************/
