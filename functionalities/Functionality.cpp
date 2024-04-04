@@ -92,16 +92,16 @@ vector<string> Functionality::maxFlowGraph(WaterSupply& graph) {
     return resultVector;
 }
 
-void Functionality::maxFlowGraphBalanced(WaterSupply& graph) {  // UNFINISHED
+void Functionality::maxFlowGraphBalanced(WaterSupply& graph) {
     maxFlowGraph(graph);
     double avg;
     vector<double> ratios;
-    double sum = 0;
     for (Vertex<string>* v : graph.getNodeSet()){
         for (Edge<string>* e : v->getAdj()){
             ratios.push_back(e->getFlow()/e->getWeight());
         }
     }
+    double sum = 0;
     for(double d : ratios){
         sum+= d;
     }
@@ -109,13 +109,12 @@ void Functionality::maxFlowGraphBalanced(WaterSupply& graph) {  // UNFINISHED
     for (Vertex<string>* v : graph.getSrcSet()){
         for(Edge<string>* e : v->getAdj()){
             if ((e->getFlow()/ e->getWeight()) > avg) {
-                e->setFlow(e->getWeight()*avg);
-                e->setWeight(e->getWeight() * avg);
+                e->setWeight(e->getWeight() * 0.9); // decrease to 90%
             }
         }
     }
-    maxFlowGraph(graph);
 
+    maxFlowGraph(graph);
 }
 
 /* This function uses the previous maxFlowGraph to calculate and memorize each city's incoming flow,
@@ -255,7 +254,6 @@ void Functionality::checkCriticalPipes(WaterSupply &graph) {
             e->setTempWeight(0);
         }
     }
-
 }
 
 
