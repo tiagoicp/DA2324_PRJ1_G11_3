@@ -3,6 +3,9 @@
 
 using namespace std;
 
+/* This copy constructor is necessary and used when creating a new temporary graph, so we can remove
+ * edges/change edge weights/remove vertex safely without having to re-load the entire data into the
+ * original graph everytime.*/
 WaterSupply::WaterSupply(const WaterSupply& other)  : Graph(other) {
 
     cities = other.cities;
@@ -108,6 +111,8 @@ void WaterSupply::connectedReservoirsDfsVisit(Vertex<string>* src, string& dest,
     }
 }
 
+/* Simple DFS algorithm that stores a reservoir into a vector if it can send water to the selected city (dest)
+ * Time Complexity = O(V+E). */
 void WaterSupply::connectedReservoirsDfs(Vertex<string>* src, string& dest,vector<Vertex<string>*>& res ) {
     bool found = false;
     for (Vertex<string>* v : vertexSet){

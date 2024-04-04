@@ -8,7 +8,8 @@
 #include "WaterSupply.h"
 using namespace std;
 
-// This file contains an adapted Edmonds Karp algorithm for our graph.
+/* This file contains an adapted Edmonds Karp algorithm for our graph.
+ * Time Complexity = O(V*E^2) */
 
 bool findAugmentingPath(WaterSupply& g, Vertex<string>* source, Vertex<string>* target){
     for (Vertex<string>* v : g.getNodeSet()) {
