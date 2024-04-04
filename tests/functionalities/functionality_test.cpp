@@ -25,11 +25,11 @@ TEST(Functionality, maxFlowCity) {
 
     string city = "C_2";
     string result = Functionality::maxFlowCity(network, city);
-    EXPECT_EQ(result, "The maximum amount of water that can reach the city C_2 is 560 m^3/sec. City maximum capacity = 560.");
+    EXPECT_EQ(result, "The maximum amount of water that can reach the city C_2 is 560 m^3/sec. Maximum incoming capacity = 560.\nDemand = 515.");
 
     city = "C_10";
     result = Functionality::maxFlowCity(network, city);
-    EXPECT_EQ(result, "The maximum amount of water that can reach the city C_10 is 220 m^3/sec. City maximum capacity = 300.");
+    EXPECT_EQ(result, "The maximum amount of water that can reach the city C_10 is 220 m^3/sec. Maximum incoming capacity = 300.\nDemand = 313. There is no possible configuration that can meet this city's needs.");
 }
 
 TEST(Functionality, maxFlowGraph) {
@@ -37,9 +37,9 @@ TEST(Functionality, maxFlowGraph) {
     setupGraph(network);
 
     vector<string> result = Functionality::maxFlowGraph(network);
-    EXPECT_EQ(result[3], "The maximum amount of water that can reach the city C_3 is 110 m^3/sec. (water flow in deficit = 50)");
-    EXPECT_EQ(result[4], "The maximum amount of water that can reach the city C_4 is 1208 m^3/sec. (water flow in deficit = 0)");
-    EXPECT_EQ(result[8], "The maximum amount of water that can reach the city C_8 is 100 m^3/sec. (water flow in deficit = 22)");
+    EXPECT_EQ(result[3], "The city C_3 is supplied with only 110 m^3/sec, resulting in a water flow deficit of 50 m^3/sec.");
+    EXPECT_EQ(result[4], "The city C_4 is supplied with the desired water rate level of 1208 m^3/sec.");
+    EXPECT_EQ(result[8], "The city C_8 is supplied with only 100 m^3/sec, resulting in a water flow deficit of 22 m^3/sec.");
 }
 
 TEST(Functionality, maxFlowGraphCleansFirst) {
@@ -48,7 +48,7 @@ TEST(Functionality, maxFlowGraphCleansFirst) {
 
     Functionality::maxFlowGraph(network);
     vector<string> result = Functionality::maxFlowGraph(network);
-    EXPECT_EQ(result[3], "The maximum amount of water that can reach the city C_3 is 110 m^3/sec. (water flow in deficit = 50)");
-    EXPECT_EQ(result[4], "The maximum amount of water that can reach the city C_4 is 1208 m^3/sec. (water flow in deficit = 0)");
-    EXPECT_EQ(result[8], "The maximum amount of water that can reach the city C_8 is 100 m^3/sec. (water flow in deficit = 22)");
+    EXPECT_EQ(result[3], "The city C_3 is supplied with only 110 m^3/sec, resulting in a water flow deficit of 50 m^3/sec.");
+    EXPECT_EQ(result[4], "The city C_4 is supplied with the desired water rate level of 1208 m^3/sec.");
+    EXPECT_EQ(result[8], "The city C_8 is supplied with only 100 m^3/sec, resulting in a water flow deficit of 22 m^3/sec.");
 }
