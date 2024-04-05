@@ -52,3 +52,20 @@ TEST(Functionality, maxFlowGraphCleansFirst) {
     EXPECT_EQ(result[4], "The city C_4 is supplied with the desired water rate level of 1208 m^3/sec.");
     EXPECT_EQ(result[8], "The city C_8 is supplied with only 100 m^3/sec, resulting in a water flow deficit of 22 m^3/sec.");
 }
+
+TEST(Functionality, balanceMaxFlowGraph) {
+    WaterSupply network;
+    setupGraph(network);
+
+    Functionality::maxFlowGraph(network);
+    vector<double> initStats = network.getNetworkBalanceStats();
+    double initFlow = network.getTotalSinkFlow();
+
+    Functionality::balanceMaxFlowGraph(network);
+    vector<double> stats = network.getNetworkBalanceStats();
+    double flow = network.getTotalSinkFlow();
+
+    EXPECT_LT(stats[0], initStats[0]);
+    EXPECT_LT(stats[1], initStats[1]);
+    EXPECT_LT(flow, initFlow);
+}

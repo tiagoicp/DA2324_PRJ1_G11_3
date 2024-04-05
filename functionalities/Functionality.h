@@ -14,7 +14,8 @@ class Functionality {
 public:
     static string maxFlowCity(WaterSupply& graph, string& cityCode);
     static vector<string> maxFlowGraph(WaterSupply& graph);
-    static void maxFlowGraphBalanced(WaterSupply& graph);
+    static void maxFlowGraphBalanced(WaterSupply& graph); // v1
+    static void balanceMaxFlowGraph(WaterSupply& graph); // v2
     static void removeReservoirAndListAffectedCities(WaterSupply& graph, const string& reservoirCode);
     static void checkUselessPumpingStations(WaterSupply& graph);
     static void checkCriticalPipes(WaterSupply& graph);

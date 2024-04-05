@@ -120,6 +120,16 @@ void Functionality::maxFlowGraphBalanced(WaterSupply& graph) {
     maxFlowGraph(graph);
 }
 
+void Functionality::balanceMaxFlowGraph(WaterSupply& graph) {
+
+    // for one city,
+    // find all alternate routes (from city to "main path" node)
+
+    // run "balance" across all vectors
+    // if there are alternate paths "distribute flow as much equal as they can take"
+
+}
+
 /* This function uses the previous maxFlowGraph to calculate and memorize each city's incoming flow,
  * removes the selected reservoir from the graph(actually sets the capacity of the reservoir's outgoing
  * edges to 0), recalculates the maximum flow of the new graph and then compares each city's new
