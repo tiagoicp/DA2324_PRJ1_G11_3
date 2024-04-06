@@ -13,7 +13,6 @@ using namespace std;
 class WaterSupply : Graph<string> {
 
 private:
-
     unordered_map<string,Reservoir> reservoirs;
     unordered_map<string,PumpingStation> pumpingStations;
     unordered_map<string,City> cities;
@@ -53,6 +52,7 @@ public:
     void connectedReservoirsDfs(Vertex<string>* src, string& dest, vector<Vertex<string>*>& res);
     double getTotalSinkFlow();
     double getCityFlow(Vertex<string>* cityVertex);
+    vector<double> getNetworkBalanceStats() const;
 };
 
 #endif // DA2324_PRJ1_G11_3_WATERSUPPLY_H

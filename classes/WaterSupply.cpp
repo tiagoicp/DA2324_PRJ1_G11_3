@@ -1,4 +1,6 @@
 #include <iostream>
+#include <cmath>
+#include <numeric>
 #include "WaterSupply.h"
 
 using namespace std;
@@ -148,6 +150,39 @@ double WaterSupply::getCityFlow(Vertex<string> *cityVertex) {
     }
     cityVertex->setIncFlow(totalFlow);
     return totalFlow;
+}
+
+double getAverage(const vector<double>& v){
+    double sum = std::accumulate(v.begin(), v.end(), 0.0);
+    return sum / v.size();
+}
+
+double getStdDev(const vector<double>& v){
+    double sum = std::accumulate(v.begin(), v.end(), 0.0);
+    double mean = sum / v.size();
+    std::vector<double> diff(v.size());
+    std::transform(v.begin(), v.end(), diff.begin(), [mean](double x) { return x - mean; });
+    double sq_sum = std::inner_product(diff.begin(), diff.end(), diff.begin(), 0.0);
+    return std::sqrt(sq_sum / v.size());
+}
+
+vector<double> WaterSupply::getNetworkBalanceStats() const {
+    vector<double> diffVector;
+    for(auto node : getNodeSet()){
+        if(node->getInfo() == "master_source" || node->getInfo() == "master_sink") continue;
+        if(node->getAdj().empty()) continue;
+        if(node->getAdj().size() == 1 && node->getAdj()[0]->getDest()->getInfo() == "master_sink") continue;
+
+        for(auto pipe : node->getAdj()){
+            if(pipe->getDest()->getInfo() == "master_sink") continue;
+
+            diffVector.push_back(pipe->getWeight()-pipe->getFlow());
+        }
+    }
+    vector<double> stats;
+    stats.push_back(getAverage(diffVector));
+    stats.push_back(getStdDev(diffVector));
+    return stats;
 }
 
 

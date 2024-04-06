@@ -34,6 +34,8 @@ public:
     std::vector<Edge<T> *> getIncoming() const;
     double getIncFlow() const;
 
+    void reverseAdj();
+    void reverseIncoming();
     void setInfo(T info);
     void setVisited(bool visited);
     void setProcessing(bool processing);
@@ -81,11 +83,13 @@ public:
     Vertex<T> * getOrig() const;
     Edge<T> *getReverse() const;
     double getFlow() const;
+    double getPreviousFlow() const;
     double getTempWeight() const;
 
     void setSelected(bool selected);
     void setReverse(Edge<T> *reverse);
     void setFlow(double flow);
+    void setPreviousFlow(double previousFlow);
     void setWeight(double weight);
     void setTempWeight(double tempWeight);
 protected:
@@ -100,6 +104,7 @@ protected:
     Edge<T> *reverse = nullptr;
 
     double flow; // for flow-related problems
+    double previousFlow;
     double tempWeight = 0;
 };
 
@@ -261,6 +266,16 @@ double Vertex<T>::getIncFlow() const {
     return this->incFlow;
 }
 
+template<class T>
+void Vertex<T>::reverseAdj() {
+    std::reverse(this->adj.begin(), this->adj.end());
+}
+
+template<class T>
+void Vertex<T>::reverseIncoming() {
+    std::reverse(this->incoming.begin(), this->incoming.end());
+}
+
 template <class T>
 void Vertex<T>::setInfo(T in) {
     this->info = in;
@@ -341,6 +356,10 @@ template <class T>
 double Edge<T>::getFlow() const {
     return flow;
 }
+template <class T>
+double Edge<T>::getPreviousFlow() const {
+    return previousFlow;
+}
 template<class T>
 double Edge<T>::getTempWeight() const {
     return this->tempWeight;
@@ -359,6 +378,11 @@ void Edge<T>::setReverse(Edge<T> *reverse) {
 template <class T>
 void Edge<T>::setFlow(double flow) {
     this->flow = flow;
+}
+
+template <class T>
+void Edge<T>::setPreviousFlow(double previousFlow) {
+    this->previousFlow = previousFlow;
 }
 
 template <class T>
