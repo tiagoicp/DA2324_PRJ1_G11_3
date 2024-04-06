@@ -48,15 +48,15 @@ string Functionality::maxFlowCity(WaterSupply& graph, string &cityCode) {
 /* This function uses a "Master Source" node connected to all Reservoirs and a "Master Sink" that all Cities are connected to,
  * to calculate the maximum flow for the entire graph.
  * Time Complexity = O(V*E^2) (We run EdmondsKarp only once) */
-vector<string> Functionality::maxFlowGraph(WaterSupply& graph) {
+vector<string> Functionality::maxFlowGraph(WaterSupply& graph, bool inverseOrder) {
     unordered_map<string, Reservoir> reservoirs = graph.getReservoirs();
     unordered_map<string, City> cities = graph.getCities();
     vector<Vertex<string> *> dstVertexSet = graph.getDstSet();
 
     graph.addNode("master_source");
     graph.addNode("master_sink");
-    Vertex<string> *source = graph.findNode("master_source");
-    Vertex<string> *dest = graph.findNode("master_sink");
+    Vertex<string>* source = graph.findNode("master_source");
+    Vertex<string>* dest = graph.findNode("master_sink");
 
     for (Vertex<string> *src: graph.getSrcSet()) {
         Reservoir reservoir = reservoirs[src->getInfo()];
@@ -69,7 +69,7 @@ vector<string> Functionality::maxFlowGraph(WaterSupply& graph) {
 
     graph.resetGraphFlow();
 
-    edmondsKarp(graph, source, dest);
+    edmondsKarp(graph, source, dest, inverseOrder);
     vector<string> resultVector;
     resultVector.push_back("With the network configured to output the maximum flow:");
 
@@ -87,47 +87,52 @@ vector<string> Functionality::maxFlowGraph(WaterSupply& graph) {
              + " m^3/sec, resulting in a water flow deficit of " + to_string(int(dstCity.getDemand() - totalFlow)) + " m^3/sec.");
     }
 
-
     graph.removeNode("master_source");
     graph.removeNode("master_sink");
-
 
     return resultVector;
 }
 
-void Functionality::maxFlowGraphBalanced(WaterSupply& graph) {
-    maxFlowGraph(graph);
-    double avg;
-    vector<double> ratios;
-    for (Vertex<string>* v : graph.getNodeSet()){
-        for (Edge<string>* e : v->getAdj()){
-            ratios.push_back(e->getFlow()/e->getWeight());
-        }
-    }
-    double sum = 0;
-    for(double d : ratios){
-        sum+= d;
-    }
-    avg = sum/ratios.size();
-    for (Vertex<string>* v : graph.getSrcSet()){
-        for(Edge<string>* e : v->getAdj()){
-            if ((e->getFlow()/ e->getWeight()) > avg) {
-                e->setWeight(e->getWeight() * 0.9); // decrease to 90%
-            }
-        }
-    }
-
-    maxFlowGraph(graph);
+vector<string> Functionality::maxFlowGraph(WaterSupply& graph) {
+    return maxFlowGraph(graph, false);
 }
 
 void Functionality::balanceMaxFlowGraph(WaterSupply& graph) {
+    // run normal order / strategy
+    maxFlowGraph(graph, false);
 
-    // for one city,
-    // find all alternate routes (from city to "main path" node)
+    // write previousFlow
+    vector<Vertex<string>*> nodes = graph.getNodeSet();
+    for(Vertex<string>* node : nodes){
+        vector<Edge<string>*> pipes = node->getAdj();
+        for(auto pipe : pipes){
+            pipe->setPreviousFlow(pipe->getFlow());
+        }
+    }
 
-    // run "balance" across all vectors
-    // if there are alternate paths "distribute flow as much equal as they can take"
+    // run inverse order / strategy
+    maxFlowGraph(graph, true);
 
+    // balance flows between two strategies
+    nodes = graph.getNodeSet();
+    for(Vertex<string>* node : nodes){
+        vector<Edge<string>*> pipes = node->getAdj();
+        for(auto pipe : pipes){
+            if(pipe->getFlow() == pipe->getPreviousFlow()) continue;
+
+            // find diff and round it
+            double diff = (pipe->getPreviousFlow() - pipe->getFlow()) / 2;
+            if(diff - floor(diff) != 0) {
+                diff = (diff > 0) ? floor(diff) : ceil(diff);
+            }
+
+            // add positive on one side and
+            // add negative on the other side
+            pipe->setFlow(pipe->getFlow() + diff);
+            cout << "Balanced pipe from " << pipe->getOrig()->getInfo() << " to " << pipe->getDest()->getInfo() << " by " << diff << endl;
+        }
+    }
+    cout << endl;
 }
 
 /* This function uses the previous maxFlowGraph to calculate and memorize each city's incoming flow,

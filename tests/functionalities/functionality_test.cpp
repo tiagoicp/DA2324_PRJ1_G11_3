@@ -67,5 +67,5 @@ TEST(Functionality, balanceMaxFlowGraph) {
 
     EXPECT_LT(stats[0], initStats[0]);
     EXPECT_LT(stats[1], initStats[1]);
-    EXPECT_LT(flow, initFlow);
+    EXPECT_EQ(flow, initFlow);
 }

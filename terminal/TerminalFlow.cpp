@@ -63,7 +63,7 @@ void TerminalFlow::mainMenu(WaterSupply &ws) {
             cout << "Balancing..." << endl;
             cout << endl;
             // run pipe balancer algorithm
-            Functionality::maxFlowGraphBalanced(ws);
+            Functionality::balanceMaxFlowGraph(ws);
             cout << "====== Balanced Network Load ======" << endl;
             // print final load of edges/pipes
             printPipeLoad(ws);
