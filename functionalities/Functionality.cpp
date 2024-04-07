@@ -4,9 +4,12 @@
 #include "Functionality.h"
 #include "../classes/edmonds_karp.h"
 
-/* This function checks what could be the maximum flow for the selected city, if each reservoir
+/**
+ * This function checks what could be the maximum flow for the selected city, if each reservoir
  * that can reach it would only try to send water to that city (imagine only the selected city exists, no other).
- * Time Complexity = O(S*(V*E^2)) S= Number of Sources(Reservoirs). */
+ *
+ * Time Complexity = O(S*(V*E^2)) S= Number of Sources(Reservoirs).
+ */
 string Functionality::maxFlowCity(WaterSupply &graph, string &cityCode) {
     vector<Vertex<string> *> reachableSources;
     Vertex<string> *dstVertex = graph.findNode(cityCode);
@@ -47,8 +50,10 @@ string Functionality::maxFlowCity(WaterSupply &graph, string &cityCode) {
            + ".";
 }
 
-/* This function uses a "Master Source" node connected to all Reservoirs and a "Master Sink" that all Cities are connected to,
+/**
+ * This function uses a "Master Source" node connected to all Reservoirs and a "Master Sink" that all Cities are connected to,
  * to calculate the maximum flow for the entire graph.
+ *
  * Time Complexity = O(V*E^2) (We run EdmondsKarp only once) */
 vector<string> Functionality::maxFlowGraph(WaterSupply &graph, bool inverseOrder) {
     unordered_map<string, Reservoir> reservoirs = graph.getReservoirs();
@@ -131,8 +136,10 @@ void rejectChildFlowChanges(Vertex<string> *node, double maxAmount) {
     rejectChildFlowChanges(pipe->getDest(), maxAmount);
 }
 
-/* This function generates two alternatives and then attempts to reconcile their differences,
+/**
+ * This function generates two alternatives and then attempts to reconcile their differences,
  * trying to pick the best alternative from each "splitting node" and rejecting the worst
+ *
  * Time Complexity = O(V*E^2)
  * We need to run EdmondsKarp twice, then do several linear operations */
 void Functionality::balanceMaxFlowGraph(WaterSupply &graph) {
@@ -294,10 +301,12 @@ void Functionality::balanceMaxFlowGraph(WaterSupply &graph) {
     cout << endl;
 }
 
-/* This function uses the previous maxFlowGraph to calculate and memorize each city's incoming flow,
+/**
+ * This function uses the previous maxFlowGraph to calculate and memorize each city's incoming flow,
  * removes the selected reservoir from the graph(actually sets the capacity of the reservoir's outgoing
  * edges to 0), recalculates the maximum flow of the new graph and then compares each city's new
  * incoming flow value to the old one.
+ *
  * Time Complexity = O(V*E^2) (We run EdmondsKarp twice) */
 void Functionality::removeReservoirAndListAffectedCities(WaterSupply &graph, const string &reservoirCode) {
     WaterSupply newGraph = graph;
@@ -335,10 +344,12 @@ void Functionality::removeReservoirAndListAffectedCities(WaterSupply &graph, con
 
 }
 
-/* This function uses the previous maxFlowGraph to calculate and memorize the total sink flow as well as
+/**
+ * This function uses the previous maxFlowGraph to calculate and memorize the total sink flow as well as
  * each city's incoming flow, then for each Pumping Station sets its outgoing edges to 0 capacity, recalculates
  * maximum flow and, if the total sink flow is different, checks which cities got affected. Note that, while the
  * overall flow is smaller, some cities get increased flow because of the rearrangement of the graph.
+ *
  * Time Complexity = O(P*(V*E^2)) P = Number of Pumping Stations (We run EdmondsKarp for each PS). */
 void Functionality::checkUselessPumpingStations(WaterSupply &graph) {
     WaterSupply newGraph = graph;
@@ -390,8 +401,10 @@ void Functionality::checkUselessPumpingStations(WaterSupply &graph) {
     }
 }
 
-/* similarly to the previous two functions, this one calculates maxFlowGraph, then, for each edge of the graph,
+/**
+ * Similarly to the previous two functions, this one calculates maxFlowGraph, then, for each edge of the graph,
  * sets its capacity to 0, recalculates max flow and checks which cities got affected.
+ *
  * Time Complexity = O(V*E^3) (We run EdmondsKarp for each edge of the graph) */
 void Functionality::checkCriticalPipes(WaterSupply &graph) {
     WaterSupply newGraph = graph;

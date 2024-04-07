@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['dfsisdag_0',['dfsIsDAG',['../class_graph.html#a06743c0b3e219cfeefa5aade38556cb7',1,'Graph']]]
+  ['balancemaxflowgraph_0',['balanceMaxFlowGraph',['../class_functionality.html#a8861df8102375ae34e4848b2328ac1e2',1,'Functionality']]]
 ];

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['vertex_0',['Vertex',['../class_vertex.html',1,'']]]
+  ['terminalflow_0',['TerminalFlow',['../class_terminal_flow.html',1,'']]]
 ];

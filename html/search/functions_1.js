@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['main_0',['main',['../main_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97',1,'main.cpp']]]
+  ['checkcriticalpipes_0',['checkCriticalPipes',['../class_functionality.html#a6b7bb383d1ed6ce93e37c7301db2f4a7',1,'Functionality']]],
+  ['checkuselesspumpingstations_1',['checkUselessPumpingStations',['../class_functionality.html#a93e7a0d2599fa721fa346c703eb2c4a5',1,'Functionality']]]
 ];

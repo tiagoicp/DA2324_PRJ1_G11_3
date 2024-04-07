@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['city_0',['City',['../class_city.html',1,'']]],
-  ['classes_1',['Classes',['../md__r_e_a_d_m_e.html#autotoc_md2',1,'']]]
+  ['balancemaxflowgraph_0',['balanceMaxFlowGraph',['../class_functionality.html#a8861df8102375ae34e4848b2328ac1e2',1,'Functionality']]]
 ];
