@@ -167,7 +167,8 @@ double getStdDev(const vector<double>& v){
 }
 
 vector<double> WaterSupply::getNetworkBalanceStats() const {
-    vector<double> diffVector;
+    vector<double> flowVector;
+    double totalFlow = 0;
     for(auto node : getNodeSet()){
         if(node->getInfo() == "master_source" || node->getInfo() == "master_sink") continue;
         if(node->getAdj().empty()) continue;
@@ -176,12 +177,14 @@ vector<double> WaterSupply::getNetworkBalanceStats() const {
         for(auto pipe : node->getAdj()){
             if(pipe->getDest()->getInfo() == "master_sink") continue;
 
-            diffVector.push_back(pipe->getWeight()-pipe->getFlow());
+            flowVector.push_back(pipe->getFlow());
+            totalFlow += pipe->getFlow();
         }
     }
     vector<double> stats;
-    stats.push_back(getAverage(diffVector));
-    stats.push_back(getStdDev(diffVector));
+    stats.push_back(getAverage(flowVector));
+    stats.push_back(getStdDev(flowVector));
+    stats.push_back(totalFlow);
     return stats;
 }
 

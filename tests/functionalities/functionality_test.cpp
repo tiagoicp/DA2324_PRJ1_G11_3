@@ -19,6 +19,20 @@ void setupGraph(WaterSupply& network) {
     FileReader::addPipes(pipe_file_path,network);
 }
 
+void setupMadeiraGraph(WaterSupply& network) {
+    // setup all vertexes before adding edges
+    std::string reservoir_file_path = "../files/Project1DataSetSmall/Reservoirs_Madeira.csv";
+    std::string station_file_path = "../files/Project1DataSetSmall/Stations_Madeira.csv";
+    std::string city_file_path = "../files/Project1DataSetSmall/Cities_Madeira.csv";
+    FileReader::addReservoirs(reservoir_file_path,network);
+    FileReader::addPumpingStations(station_file_path,network);
+    FileReader::addCities(city_file_path,network);
+
+    // add edges / pipes
+    std::string pipe_file_path = "../files/Project1DataSetSmall/Pipes_Madeira.csv";
+    FileReader::addPipes(pipe_file_path,network);
+}
+
 TEST(Functionality, maxFlowCity) {
     WaterSupply network;
     setupGraph(network);
@@ -59,13 +73,26 @@ TEST(Functionality, balanceMaxFlowGraph) {
 
     Functionality::maxFlowGraph(network);
     vector<double> initStats = network.getNetworkBalanceStats();
-    double initFlow = network.getTotalSinkFlow();
 
     Functionality::balanceMaxFlowGraph(network);
     vector<double> stats = network.getNetworkBalanceStats();
-    double flow = network.getTotalSinkFlow();
 
-    EXPECT_LT(stats[0], initStats[0]);
+    EXPECT_EQ(stats[0], initStats[0]);
     EXPECT_LT(stats[1], initStats[1]);
-    EXPECT_EQ(flow, initFlow);
+    EXPECT_EQ(stats[2], initStats[2]);
+}
+
+TEST(Functionality, balanceMaxFlowGraphWithMadeiraSample) {
+    WaterSupply network;
+    setupMadeiraGraph(network);
+
+    Functionality::maxFlowGraph(network);
+    vector<double> initStats = network.getNetworkBalanceStats();
+
+    Functionality::balanceMaxFlowGraph(network);
+    vector<double> stats = network.getNetworkBalanceStats();
+
+    EXPECT_EQ(stats[0], initStats[0]);
+    EXPECT_LT(stats[1], initStats[1]);
+    EXPECT_EQ(stats[2], initStats[2]);
 }

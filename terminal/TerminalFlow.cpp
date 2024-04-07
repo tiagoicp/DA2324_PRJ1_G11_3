@@ -114,9 +114,9 @@ void TerminalFlow::printPipeLoad(WaterSupply& ws) {
     }
     cout << endl;
     vector<double> balanceStats = ws.getNetworkBalanceStats();
-    cout << "Average diff: " << balanceStats[0] << endl;
-    cout << "Std Dev of diff: " << balanceStats[1] << endl;
-    cout << "Sink flow: " << ws.getTotalSinkFlow() << endl;
+    cout << "Average flow: " << balanceStats[0] << endl;
+    cout << "Std Dev of flow: " << balanceStats[1] << endl;
+    cout << "Total flow: " << balanceStats[2] << endl;
     cout << endl;
 }
 
