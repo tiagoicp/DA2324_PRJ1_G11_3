@@ -181,6 +181,27 @@ vector<double> WaterSupply::getNetworkBalanceStats() const {
             totalFlow += pipe->getFlow();
         }
     }
+
+    // check consistency
+    // guarantee incoming flow is always higher or equal than adj
+    for(auto node : getNodeSet()){
+        if(node->getIncoming().empty()) continue;
+
+        double incomingFlow = 0;
+        for(auto pipe : node->getIncoming()){
+            incomingFlow += pipe->getFlow();
+        }
+
+        double adjFlow = 0;
+        for(auto pipe : node->getAdj()){
+            adjFlow += pipe->getFlow();
+        }
+
+        if(adjFlow > incomingFlow) {
+            throw std::invalid_argument("Network became inconsistent!");
+        }
+    }
+
     vector<double> stats;
     stats.push_back(getAverage(flowVector));
     stats.push_back(getStdDev(flowVector));

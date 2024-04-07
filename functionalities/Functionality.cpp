@@ -212,7 +212,12 @@ void Functionality::balanceMaxFlowGraph(WaterSupply &graph) {
     }
 
     // accept or reject alternative paths
-    for (const auto &diff_pair: diff_paths) {
+    for (Vertex<string> *node: nodes) {
+        // on original order
+        auto search = diff_paths.find(node->getInfo());
+        if(search == diff_paths.end()) continue;
+
+        auto diff_pair = *search;
         if (diff_pair.second.size() < 2) continue;
         if (diff_pair.second.size() > 2) throw std::invalid_argument("Unexpected case of more than 2 alternate paths");
 
@@ -240,6 +245,34 @@ void Functionality::balanceMaxFlowGraph(WaterSupply &graph) {
                  << " by " << pipe1->getFlow() - pipe1->getPreviousFlow() << endl;
             cout << "Balanced pipe from " << pipe2->getOrig()->getInfo() << " to " << pipe2->getDest()->getInfo()
                  << " by " << pipe2->getFlow() - pipe2->getPreviousFlow() << endl;
+        }
+    }
+
+    // compensate any missing rejections
+    for(auto node : graph.getNodeSet()){
+        if(node->getIncoming().empty()) continue;
+
+        double incomingFlow = 0;
+        for(auto pipe : node->getIncoming()){
+            incomingFlow += pipe->getFlow();
+        }
+
+        double adjFlow = 0;
+        for(auto pipe : node->getAdj()){
+            adjFlow += pipe->getFlow();
+        }
+
+        if(adjFlow > incomingFlow) {
+            for(auto pipe : node->getIncoming()){
+                if(pipe->getFlow() == pipe->getPreviousFlow()) continue;
+
+                // reject change
+                double diff =  pipe->getFlow() - pipe->getPreviousFlow();
+                cout << "REJECTED change (compensated) from " << pipe->getOrig()->getInfo() << " to " << pipe->getDest()->getInfo()
+                     << " by " << diff << endl;
+                pipe->setFlow(pipe->getPreviousFlow());
+                rejectChildFlowChanges(pipe->getOrig(), diff);
+            }
         }
     }
 
