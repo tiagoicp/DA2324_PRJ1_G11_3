@@ -1,0 +1,364 @@
+\doxysection{gtest\+\_\+pred\+\_\+impl.\+h}
+\hypertarget{gtest__pred__impl_8h_source}{}\label{gtest__pred__impl_8h_source}\index{lib/googletest-\/master/googletest/include/gtest/gtest\_pred\_impl.h@{lib/googletest-\/master/googletest/include/gtest/gtest\_pred\_impl.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//\ Copyright\ 2006,\ Google\ Inc.}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//\ All\ rights\ reserved.}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//}}
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ Redistribution\ and\ use\ in\ source\ and\ binary\ forms,\ with\ or\ without}}
+\DoxyCodeLine{00005\ \textcolor{comment}{//\ modification,\ are\ permitted\ provided\ that\ the\ following\ conditions\ are}}
+\DoxyCodeLine{00006\ \textcolor{comment}{//\ met:}}
+\DoxyCodeLine{00007\ \textcolor{comment}{//}}
+\DoxyCodeLine{00008\ \textcolor{comment}{//\ \ \ \ \ *\ Redistributions\ of\ source\ code\ must\ retain\ the\ above\ copyright}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//\ notice,\ this\ list\ of\ conditions\ and\ the\ following\ disclaimer.}}
+\DoxyCodeLine{00010\ \textcolor{comment}{//\ \ \ \ \ *\ Redistributions\ in\ binary\ form\ must\ reproduce\ the\ above}}
+\DoxyCodeLine{00011\ \textcolor{comment}{//\ copyright\ notice,\ this\ list\ of\ conditions\ and\ the\ following\ disclaimer}}
+\DoxyCodeLine{00012\ \textcolor{comment}{//\ in\ the\ documentation\ and/or\ other\ materials\ provided\ with\ the}}
+\DoxyCodeLine{00013\ \textcolor{comment}{//\ distribution.}}
+\DoxyCodeLine{00014\ \textcolor{comment}{//\ \ \ \ \ *\ Neither\ the\ name\ of\ Google\ Inc.\ nor\ the\ names\ of\ its}}
+\DoxyCodeLine{00015\ \textcolor{comment}{//\ contributors\ may\ be\ used\ to\ endorse\ or\ promote\ products\ derived\ from}}
+\DoxyCodeLine{00016\ \textcolor{comment}{//\ this\ software\ without\ specific\ prior\ written\ permission.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{//}}
+\DoxyCodeLine{00018\ \textcolor{comment}{//\ THIS\ SOFTWARE\ IS\ PROVIDED\ BY\ THE\ COPYRIGHT\ HOLDERS\ AND\ CONTRIBUTORS}}
+\DoxyCodeLine{00019\ \textcolor{comment}{//\ "{}AS\ IS"{}\ AND\ ANY\ EXPRESS\ OR\ IMPLIED\ WARRANTIES,\ INCLUDING,\ BUT\ NOT}}
+\DoxyCodeLine{00020\ \textcolor{comment}{//\ LIMITED\ TO,\ THE\ IMPLIED\ WARRANTIES\ OF\ MERCHANTABILITY\ AND\ FITNESS\ FOR}}
+\DoxyCodeLine{00021\ \textcolor{comment}{//\ A\ PARTICULAR\ PURPOSE\ ARE\ DISCLAIMED.\ IN\ NO\ EVENT\ SHALL\ THE\ COPYRIGHT}}
+\DoxyCodeLine{00022\ \textcolor{comment}{//\ OWNER\ OR\ CONTRIBUTORS\ BE\ LIABLE\ FOR\ ANY\ DIRECT,\ INDIRECT,\ INCIDENTAL,}}
+\DoxyCodeLine{00023\ \textcolor{comment}{//\ SPECIAL,\ EXEMPLARY,\ OR\ CONSEQUENTIAL\ DAMAGES\ (INCLUDING,\ BUT\ NOT}}
+\DoxyCodeLine{00024\ \textcolor{comment}{//\ LIMITED\ TO,\ PROCUREMENT\ OF\ SUBSTITUTE\ GOODS\ OR\ SERVICES;\ LOSS\ OF\ USE,}}
+\DoxyCodeLine{00025\ \textcolor{comment}{//\ DATA,\ OR\ PROFITS;\ OR\ BUSINESS\ INTERRUPTION)\ HOWEVER\ CAUSED\ AND\ ON\ ANY}}
+\DoxyCodeLine{00026\ \textcolor{comment}{//\ THEORY\ OF\ LIABILITY,\ WHETHER\ IN\ CONTRACT,\ STRICT\ LIABILITY,\ OR\ TORT}}
+\DoxyCodeLine{00027\ \textcolor{comment}{//\ (INCLUDING\ NEGLIGENCE\ OR\ OTHERWISE)\ ARISING\ IN\ ANY\ WAY\ OUT\ OF\ THE\ USE}}
+\DoxyCodeLine{00028\ \textcolor{comment}{//\ OF\ THIS\ SOFTWARE,\ EVEN\ IF\ ADVISED\ OF\ THE\ POSSIBILITY\ OF\ SUCH\ DAMAGE.}}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \textcolor{comment}{//\ This\ file\ is\ AUTOMATICALLY\ GENERATED\ on\ 07/21/2021\ by\ command}}
+\DoxyCodeLine{00031\ \textcolor{comment}{//\ 'gen\_gtest\_pred\_impl.py\ 5'.\ \ DO\ NOT\ EDIT\ BY\ HAND!}}
+\DoxyCodeLine{00032\ \textcolor{comment}{//}}
+\DoxyCodeLine{00033\ \textcolor{comment}{//\ Implements\ a\ family\ of\ generic\ predicate\ assertion\ macros.}}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#ifndef\ GOOGLETEST\_INCLUDE\_GTEST\_GTEST\_PRED\_IMPL\_H\_}}
+\DoxyCodeLine{00036\ \textcolor{preprocessor}{\#define\ GOOGLETEST\_INCLUDE\_GTEST\_GTEST\_PRED\_IMPL\_H\_}}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#include\ "{}gtest/gtest.h"{}}}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \textcolor{keyword}{namespace\ }testing\ \{}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \textcolor{comment}{//\ This\ header\ implements\ a\ family\ of\ generic\ predicate\ assertion}}
+\DoxyCodeLine{00043\ \textcolor{comment}{//\ macros:}}
+\DoxyCodeLine{00044\ \textcolor{comment}{//}}
+\DoxyCodeLine{00045\ \textcolor{comment}{//\ \ \ ASSERT\_PRED\_FORMAT1(pred\_format,\ v1)}}
+\DoxyCodeLine{00046\ \textcolor{comment}{//\ \ \ ASSERT\_PRED\_FORMAT2(pred\_format,\ v1,\ v2)}}
+\DoxyCodeLine{00047\ \textcolor{comment}{//\ \ \ ...}}
+\DoxyCodeLine{00048\ \textcolor{comment}{//}}
+\DoxyCodeLine{00049\ \textcolor{comment}{//\ where\ pred\_format\ is\ a\ function\ or\ functor\ that\ takes\ n\ (in\ the}}
+\DoxyCodeLine{00050\ \textcolor{comment}{//\ case\ of\ ASSERT\_PRED\_FORMATn)\ values\ and\ their\ source\ expression}}
+\DoxyCodeLine{00051\ \textcolor{comment}{//\ text,\ and\ returns\ a\ testing::AssertionResult.\ \ See\ the\ definition}}
+\DoxyCodeLine{00052\ \textcolor{comment}{//\ of\ ASSERT\_EQ\ in\ gtest.h\ for\ an\ example.}}
+\DoxyCodeLine{00053\ \textcolor{comment}{//}}
+\DoxyCodeLine{00054\ \textcolor{comment}{//\ If\ you\ don't\ care\ about\ formatting,\ you\ can\ use\ the\ more}}
+\DoxyCodeLine{00055\ \textcolor{comment}{//\ restrictive\ version:}}
+\DoxyCodeLine{00056\ \textcolor{comment}{//}}
+\DoxyCodeLine{00057\ \textcolor{comment}{//\ \ \ ASSERT\_PRED1(pred,\ v1)}}
+\DoxyCodeLine{00058\ \textcolor{comment}{//\ \ \ ASSERT\_PRED2(pred,\ v1,\ v2)}}
+\DoxyCodeLine{00059\ \textcolor{comment}{//\ \ \ ...}}
+\DoxyCodeLine{00060\ \textcolor{comment}{//}}
+\DoxyCodeLine{00061\ \textcolor{comment}{//\ where\ pred\ is\ an\ n-\/ary\ function\ or\ functor\ that\ returns\ bool,}}
+\DoxyCodeLine{00062\ \textcolor{comment}{//\ and\ the\ values\ v1,\ v2,\ ...,\ must\ support\ the\ <<\ operator\ for}}
+\DoxyCodeLine{00063\ \textcolor{comment}{//\ streaming\ to\ std::ostream.}}
+\DoxyCodeLine{00064\ \textcolor{comment}{//}}
+\DoxyCodeLine{00065\ \textcolor{comment}{//\ We\ also\ define\ the\ EXPECT\_*\ variations.}}
+\DoxyCodeLine{00066\ \textcolor{comment}{//}}
+\DoxyCodeLine{00067\ \textcolor{comment}{//\ For\ now\ we\ only\ support\ predicates\ whose\ arity\ is\ at\ most\ 5.}}
+\DoxyCodeLine{00068\ \textcolor{comment}{//\ Please\ email\ googletestframework@googlegroups.com\ if\ you\ need}}
+\DoxyCodeLine{00069\ \textcolor{comment}{//\ support\ for\ higher\ arities.}}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00071\ \textcolor{comment}{//\ GTEST\_ASSERT\_\ is\ the\ basic\ statement\ to\ which\ all\ of\ the\ assertions}}
+\DoxyCodeLine{00072\ \textcolor{comment}{//\ in\ this\ file\ reduce.\ \ Don't\ use\ this\ in\ your\ code.}}
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00074\ \textcolor{preprocessor}{\#define\ GTEST\_ASSERT\_(expression,\ on\_failure)\ \(\backslash\)}}
+\DoxyCodeLine{00075\ \textcolor{preprocessor}{\ \ GTEST\_AMBIGUOUS\_ELSE\_BLOCKER\_\ \(\backslash\)}}
+\DoxyCodeLine{00076\ \textcolor{preprocessor}{\ \ if\ (const\ ::testing::AssertionResult\ gtest\_ar\ =\ (expression))\ \(\backslash\)}}
+\DoxyCodeLine{00077\ \textcolor{preprocessor}{\ \ \ \ ;\ \(\backslash\)}}
+\DoxyCodeLine{00078\ \textcolor{preprocessor}{\ \ else\ \(\backslash\)}}
+\DoxyCodeLine{00079\ \textcolor{preprocessor}{\ \ \ \ on\_failure(gtest\_ar.failure\_message())}}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00081\ }
+\DoxyCodeLine{00082\ \textcolor{comment}{//\ Helper\ function\ for\ implementing\ \{EXPECT|ASSERT\}\_PRED1.\ \ Don't\ use}}
+\DoxyCodeLine{00083\ \textcolor{comment}{//\ this\ in\ your\ code.}}
+\DoxyCodeLine{00084\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Pred,}
+\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{typename}\ T1>}
+\DoxyCodeLine{00086\ AssertionResult\ AssertPred1Helper(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ pred\_text,}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ e1,}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Pred\ pred,}
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ T1\&\ v1)\ \{}
+\DoxyCodeLine{00090\ \ \ \textcolor{keywordflow}{if}\ (pred(v1))\ \textcolor{keywordflow}{return}\ AssertionSuccess();}
+\DoxyCodeLine{00091\ }
+\DoxyCodeLine{00092\ \ \ \textcolor{keywordflow}{return}\ AssertionFailure()}
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ \ <<\ pred\_text\ <<\ \textcolor{stringliteral}{"{}("{}}\ <<\ e1\ <<\ \textcolor{stringliteral}{"{})\ evaluates\ to\ false,\ where"{}}}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ \ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}}}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ \ <<\ e1\ <<\ \textcolor{stringliteral}{"{}\ evaluates\ to\ "{}}\ <<\ ::testing::PrintToString(v1);}
+\DoxyCodeLine{00096\ \}}
+\DoxyCodeLine{00097\ }
+\DoxyCodeLine{00098\ \textcolor{comment}{//\ Internal\ macro\ for\ implementing\ \{EXPECT|ASSERT\}\_PRED\_FORMAT1.}}
+\DoxyCodeLine{00099\ \textcolor{comment}{//\ Don't\ use\ this\ in\ your\ code.}}
+\DoxyCodeLine{00100\ \textcolor{preprocessor}{\#define\ GTEST\_PRED\_FORMAT1\_(pred\_format,\ v1,\ on\_failure)\(\backslash\)}}
+\DoxyCodeLine{00101\ \textcolor{preprocessor}{\ \ GTEST\_ASSERT\_(pred\_format(\#v1,\ v1),\ \(\backslash\)}}
+\DoxyCodeLine{00102\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ on\_failure)}}
+\DoxyCodeLine{00103\ }
+\DoxyCodeLine{00104\ \textcolor{comment}{//\ Internal\ macro\ for\ implementing\ \{EXPECT|ASSERT\}\_PRED1.\ \ Don't\ use}}
+\DoxyCodeLine{00105\ \textcolor{comment}{//\ this\ in\ your\ code.}}
+\DoxyCodeLine{00106\ \textcolor{preprocessor}{\#define\ GTEST\_PRED1\_(pred,\ v1,\ on\_failure)\(\backslash\)}}
+\DoxyCodeLine{00107\ \textcolor{preprocessor}{\ \ GTEST\_ASSERT\_(::testing::AssertPred1Helper(\#pred,\ \(\backslash\)}}
+\DoxyCodeLine{00108\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \#v1,\ \(\backslash\)}}
+\DoxyCodeLine{00109\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pred,\ \(\backslash\)}}
+\DoxyCodeLine{00110\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ v1),\ on\_failure)}}
+\DoxyCodeLine{00111\ }
+\DoxyCodeLine{00112\ \textcolor{comment}{//\ Unary\ predicate\ assertion\ macros.}}
+\DoxyCodeLine{00113\ \textcolor{preprocessor}{\#define\ EXPECT\_PRED\_FORMAT1(pred\_format,\ v1)\ \(\backslash\)}}
+\DoxyCodeLine{00114\ \textcolor{preprocessor}{\ \ GTEST\_PRED\_FORMAT1\_(pred\_format,\ v1,\ GTEST\_NONFATAL\_FAILURE\_)}}
+\DoxyCodeLine{00115\ \textcolor{preprocessor}{\#define\ EXPECT\_PRED1(pred,\ v1)\ \(\backslash\)}}
+\DoxyCodeLine{00116\ \textcolor{preprocessor}{\ \ GTEST\_PRED1\_(pred,\ v1,\ GTEST\_NONFATAL\_FAILURE\_)}}
+\DoxyCodeLine{00117\ \textcolor{preprocessor}{\#define\ ASSERT\_PRED\_FORMAT1(pred\_format,\ v1)\ \(\backslash\)}}
+\DoxyCodeLine{00118\ \textcolor{preprocessor}{\ \ GTEST\_PRED\_FORMAT1\_(pred\_format,\ v1,\ GTEST\_FATAL\_FAILURE\_)}}
+\DoxyCodeLine{00119\ \textcolor{preprocessor}{\#define\ ASSERT\_PRED1(pred,\ v1)\ \(\backslash\)}}
+\DoxyCodeLine{00120\ \textcolor{preprocessor}{\ \ GTEST\_PRED1\_(pred,\ v1,\ GTEST\_FATAL\_FAILURE\_)}}
+\DoxyCodeLine{00121\ }
+\DoxyCodeLine{00122\ }
+\DoxyCodeLine{00123\ }
+\DoxyCodeLine{00124\ \textcolor{comment}{//\ Helper\ function\ for\ implementing\ \{EXPECT|ASSERT\}\_PRED2.\ \ Don't\ use}}
+\DoxyCodeLine{00125\ \textcolor{comment}{//\ this\ in\ your\ code.}}
+\DoxyCodeLine{00126\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Pred,}
+\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{typename}\ T1,}
+\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{typename}\ T2>}
+\DoxyCodeLine{00129\ AssertionResult\ AssertPred2Helper(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ pred\_text,}
+\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ e1,}
+\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ e2,}
+\DoxyCodeLine{00132\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Pred\ pred,}
+\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ T1\&\ v1,}
+\DoxyCodeLine{00134\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ T2\&\ v2)\ \{}
+\DoxyCodeLine{00135\ \ \ \textcolor{keywordflow}{if}\ (pred(v1,\ v2))\ \textcolor{keywordflow}{return}\ AssertionSuccess();}
+\DoxyCodeLine{00136\ }
+\DoxyCodeLine{00137\ \ \ \textcolor{keywordflow}{return}\ AssertionFailure()}
+\DoxyCodeLine{00138\ \ \ \ \ \ \ \ \ \ <<\ pred\_text\ <<\ \textcolor{stringliteral}{"{}("{}}\ <<\ e1\ <<\ \textcolor{stringliteral}{"{},\ "{}}\ <<\ e2}
+\DoxyCodeLine{00139\ \ \ \ \ \ \ \ \ \ <<\ \textcolor{stringliteral}{"{})\ evaluates\ to\ false,\ where"{}}}
+\DoxyCodeLine{00140\ \ \ \ \ \ \ \ \ \ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}}}
+\DoxyCodeLine{00141\ \ \ \ \ \ \ \ \ \ <<\ e1\ <<\ \textcolor{stringliteral}{"{}\ evaluates\ to\ "{}}\ <<\ ::testing::PrintToString(v1)\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}}}
+\DoxyCodeLine{00142\ \ \ \ \ \ \ \ \ \ <<\ e2\ <<\ \textcolor{stringliteral}{"{}\ evaluates\ to\ "{}}\ <<\ ::testing::PrintToString(v2);}
+\DoxyCodeLine{00143\ \}}
+\DoxyCodeLine{00144\ }
+\DoxyCodeLine{00145\ \textcolor{comment}{//\ Internal\ macro\ for\ implementing\ \{EXPECT|ASSERT\}\_PRED\_FORMAT2.}}
+\DoxyCodeLine{00146\ \textcolor{comment}{//\ Don't\ use\ this\ in\ your\ code.}}
+\DoxyCodeLine{00147\ \textcolor{preprocessor}{\#define\ GTEST\_PRED\_FORMAT2\_(pred\_format,\ v1,\ v2,\ on\_failure)\(\backslash\)}}
+\DoxyCodeLine{00148\ \textcolor{preprocessor}{\ \ GTEST\_ASSERT\_(pred\_format(\#v1,\ \#v2,\ v1,\ v2),\ \(\backslash\)}}
+\DoxyCodeLine{00149\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ on\_failure)}}
+\DoxyCodeLine{00150\ }
+\DoxyCodeLine{00151\ \textcolor{comment}{//\ Internal\ macro\ for\ implementing\ \{EXPECT|ASSERT\}\_PRED2.\ \ Don't\ use}}
+\DoxyCodeLine{00152\ \textcolor{comment}{//\ this\ in\ your\ code.}}
+\DoxyCodeLine{00153\ \textcolor{preprocessor}{\#define\ GTEST\_PRED2\_(pred,\ v1,\ v2,\ on\_failure)\(\backslash\)}}
+\DoxyCodeLine{00154\ \textcolor{preprocessor}{\ \ GTEST\_ASSERT\_(::testing::AssertPred2Helper(\#pred,\ \(\backslash\)}}
+\DoxyCodeLine{00155\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \#v1,\ \(\backslash\)}}
+\DoxyCodeLine{00156\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \#v2,\ \(\backslash\)}}
+\DoxyCodeLine{00157\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pred,\ \(\backslash\)}}
+\DoxyCodeLine{00158\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ v1,\ \(\backslash\)}}
+\DoxyCodeLine{00159\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ v2),\ on\_failure)}}
+\DoxyCodeLine{00160\ }
+\DoxyCodeLine{00161\ \textcolor{comment}{//\ Binary\ predicate\ assertion\ macros.}}
+\DoxyCodeLine{00162\ \textcolor{preprocessor}{\#define\ EXPECT\_PRED\_FORMAT2(pred\_format,\ v1,\ v2)\ \(\backslash\)}}
+\DoxyCodeLine{00163\ \textcolor{preprocessor}{\ \ GTEST\_PRED\_FORMAT2\_(pred\_format,\ v1,\ v2,\ GTEST\_NONFATAL\_FAILURE\_)}}
+\DoxyCodeLine{00164\ \textcolor{preprocessor}{\#define\ EXPECT\_PRED2(pred,\ v1,\ v2)\ \(\backslash\)}}
+\DoxyCodeLine{00165\ \textcolor{preprocessor}{\ \ GTEST\_PRED2\_(pred,\ v1,\ v2,\ GTEST\_NONFATAL\_FAILURE\_)}}
+\DoxyCodeLine{00166\ \textcolor{preprocessor}{\#define\ ASSERT\_PRED\_FORMAT2(pred\_format,\ v1,\ v2)\ \(\backslash\)}}
+\DoxyCodeLine{00167\ \textcolor{preprocessor}{\ \ GTEST\_PRED\_FORMAT2\_(pred\_format,\ v1,\ v2,\ GTEST\_FATAL\_FAILURE\_)}}
+\DoxyCodeLine{00168\ \textcolor{preprocessor}{\#define\ ASSERT\_PRED2(pred,\ v1,\ v2)\ \(\backslash\)}}
+\DoxyCodeLine{00169\ \textcolor{preprocessor}{\ \ GTEST\_PRED2\_(pred,\ v1,\ v2,\ GTEST\_FATAL\_FAILURE\_)}}
+\DoxyCodeLine{00170\ }
+\DoxyCodeLine{00171\ }
+\DoxyCodeLine{00172\ }
+\DoxyCodeLine{00173\ \textcolor{comment}{//\ Helper\ function\ for\ implementing\ \{EXPECT|ASSERT\}\_PRED3.\ \ Don't\ use}}
+\DoxyCodeLine{00174\ \textcolor{comment}{//\ this\ in\ your\ code.}}
+\DoxyCodeLine{00175\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Pred,}
+\DoxyCodeLine{00176\ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{typename}\ T1,}
+\DoxyCodeLine{00177\ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{typename}\ T2,}
+\DoxyCodeLine{00178\ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{typename}\ T3>}
+\DoxyCodeLine{00179\ AssertionResult\ AssertPred3Helper(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ pred\_text,}
+\DoxyCodeLine{00180\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ e1,}
+\DoxyCodeLine{00181\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ e2,}
+\DoxyCodeLine{00182\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ e3,}
+\DoxyCodeLine{00183\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Pred\ pred,}
+\DoxyCodeLine{00184\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ T1\&\ v1,}
+\DoxyCodeLine{00185\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ T2\&\ v2,}
+\DoxyCodeLine{00186\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ T3\&\ v3)\ \{}
+\DoxyCodeLine{00187\ \ \ \textcolor{keywordflow}{if}\ (pred(v1,\ v2,\ v3))\ \textcolor{keywordflow}{return}\ AssertionSuccess();}
+\DoxyCodeLine{00188\ }
+\DoxyCodeLine{00189\ \ \ \textcolor{keywordflow}{return}\ AssertionFailure()}
+\DoxyCodeLine{00190\ \ \ \ \ \ \ \ \ \ <<\ pred\_text\ <<\ \textcolor{stringliteral}{"{}("{}}\ <<\ e1\ <<\ \textcolor{stringliteral}{"{},\ "{}}\ <<\ e2\ <<\ \textcolor{stringliteral}{"{},\ "{}}\ <<\ e3}
+\DoxyCodeLine{00191\ \ \ \ \ \ \ \ \ \ <<\ \textcolor{stringliteral}{"{})\ evaluates\ to\ false,\ where"{}}}
+\DoxyCodeLine{00192\ \ \ \ \ \ \ \ \ \ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}}}
+\DoxyCodeLine{00193\ \ \ \ \ \ \ \ \ \ <<\ e1\ <<\ \textcolor{stringliteral}{"{}\ evaluates\ to\ "{}}\ <<\ ::testing::PrintToString(v1)\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}}}
+\DoxyCodeLine{00194\ \ \ \ \ \ \ \ \ \ <<\ e2\ <<\ \textcolor{stringliteral}{"{}\ evaluates\ to\ "{}}\ <<\ ::testing::PrintToString(v2)\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}}}
+\DoxyCodeLine{00195\ \ \ \ \ \ \ \ \ \ <<\ e3\ <<\ \textcolor{stringliteral}{"{}\ evaluates\ to\ "{}}\ <<\ ::testing::PrintToString(v3);}
+\DoxyCodeLine{00196\ \}}
+\DoxyCodeLine{00197\ }
+\DoxyCodeLine{00198\ \textcolor{comment}{//\ Internal\ macro\ for\ implementing\ \{EXPECT|ASSERT\}\_PRED\_FORMAT3.}}
+\DoxyCodeLine{00199\ \textcolor{comment}{//\ Don't\ use\ this\ in\ your\ code.}}
+\DoxyCodeLine{00200\ \textcolor{preprocessor}{\#define\ GTEST\_PRED\_FORMAT3\_(pred\_format,\ v1,\ v2,\ v3,\ on\_failure)\(\backslash\)}}
+\DoxyCodeLine{00201\ \textcolor{preprocessor}{\ \ GTEST\_ASSERT\_(pred\_format(\#v1,\ \#v2,\ \#v3,\ v1,\ v2,\ v3),\ \(\backslash\)}}
+\DoxyCodeLine{00202\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ on\_failure)}}
+\DoxyCodeLine{00203\ }
+\DoxyCodeLine{00204\ \textcolor{comment}{//\ Internal\ macro\ for\ implementing\ \{EXPECT|ASSERT\}\_PRED3.\ \ Don't\ use}}
+\DoxyCodeLine{00205\ \textcolor{comment}{//\ this\ in\ your\ code.}}
+\DoxyCodeLine{00206\ \textcolor{preprocessor}{\#define\ GTEST\_PRED3\_(pred,\ v1,\ v2,\ v3,\ on\_failure)\(\backslash\)}}
+\DoxyCodeLine{00207\ \textcolor{preprocessor}{\ \ GTEST\_ASSERT\_(::testing::AssertPred3Helper(\#pred,\ \(\backslash\)}}
+\DoxyCodeLine{00208\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \#v1,\ \(\backslash\)}}
+\DoxyCodeLine{00209\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \#v2,\ \(\backslash\)}}
+\DoxyCodeLine{00210\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \#v3,\ \(\backslash\)}}
+\DoxyCodeLine{00211\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pred,\ \(\backslash\)}}
+\DoxyCodeLine{00212\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ v1,\ \(\backslash\)}}
+\DoxyCodeLine{00213\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ v2,\ \(\backslash\)}}
+\DoxyCodeLine{00214\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ v3),\ on\_failure)}}
+\DoxyCodeLine{00215\ }
+\DoxyCodeLine{00216\ \textcolor{comment}{//\ Ternary\ predicate\ assertion\ macros.}}
+\DoxyCodeLine{00217\ \textcolor{preprocessor}{\#define\ EXPECT\_PRED\_FORMAT3(pred\_format,\ v1,\ v2,\ v3)\ \(\backslash\)}}
+\DoxyCodeLine{00218\ \textcolor{preprocessor}{\ \ GTEST\_PRED\_FORMAT3\_(pred\_format,\ v1,\ v2,\ v3,\ GTEST\_NONFATAL\_FAILURE\_)}}
+\DoxyCodeLine{00219\ \textcolor{preprocessor}{\#define\ EXPECT\_PRED3(pred,\ v1,\ v2,\ v3)\ \(\backslash\)}}
+\DoxyCodeLine{00220\ \textcolor{preprocessor}{\ \ GTEST\_PRED3\_(pred,\ v1,\ v2,\ v3,\ GTEST\_NONFATAL\_FAILURE\_)}}
+\DoxyCodeLine{00221\ \textcolor{preprocessor}{\#define\ ASSERT\_PRED\_FORMAT3(pred\_format,\ v1,\ v2,\ v3)\ \(\backslash\)}}
+\DoxyCodeLine{00222\ \textcolor{preprocessor}{\ \ GTEST\_PRED\_FORMAT3\_(pred\_format,\ v1,\ v2,\ v3,\ GTEST\_FATAL\_FAILURE\_)}}
+\DoxyCodeLine{00223\ \textcolor{preprocessor}{\#define\ ASSERT\_PRED3(pred,\ v1,\ v2,\ v3)\ \(\backslash\)}}
+\DoxyCodeLine{00224\ \textcolor{preprocessor}{\ \ GTEST\_PRED3\_(pred,\ v1,\ v2,\ v3,\ GTEST\_FATAL\_FAILURE\_)}}
+\DoxyCodeLine{00225\ }
+\DoxyCodeLine{00226\ }
+\DoxyCodeLine{00227\ }
+\DoxyCodeLine{00228\ \textcolor{comment}{//\ Helper\ function\ for\ implementing\ \{EXPECT|ASSERT\}\_PRED4.\ \ Don't\ use}}
+\DoxyCodeLine{00229\ \textcolor{comment}{//\ this\ in\ your\ code.}}
+\DoxyCodeLine{00230\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Pred,}
+\DoxyCodeLine{00231\ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{typename}\ T1,}
+\DoxyCodeLine{00232\ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{typename}\ T2,}
+\DoxyCodeLine{00233\ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{typename}\ T3,}
+\DoxyCodeLine{00234\ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{typename}\ T4>}
+\DoxyCodeLine{00235\ AssertionResult\ AssertPred4Helper(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ pred\_text,}
+\DoxyCodeLine{00236\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ e1,}
+\DoxyCodeLine{00237\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ e2,}
+\DoxyCodeLine{00238\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ e3,}
+\DoxyCodeLine{00239\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ e4,}
+\DoxyCodeLine{00240\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Pred\ pred,}
+\DoxyCodeLine{00241\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ T1\&\ v1,}
+\DoxyCodeLine{00242\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ T2\&\ v2,}
+\DoxyCodeLine{00243\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ T3\&\ v3,}
+\DoxyCodeLine{00244\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ T4\&\ v4)\ \{}
+\DoxyCodeLine{00245\ \ \ \textcolor{keywordflow}{if}\ (pred(v1,\ v2,\ v3,\ v4))\ \textcolor{keywordflow}{return}\ AssertionSuccess();}
+\DoxyCodeLine{00246\ }
+\DoxyCodeLine{00247\ \ \ \textcolor{keywordflow}{return}\ AssertionFailure()}
+\DoxyCodeLine{00248\ \ \ \ \ \ \ \ \ \ <<\ pred\_text\ <<\ \textcolor{stringliteral}{"{}("{}}\ <<\ e1\ <<\ \textcolor{stringliteral}{"{},\ "{}}\ <<\ e2\ <<\ \textcolor{stringliteral}{"{},\ "{}}\ <<\ e3\ <<\ \textcolor{stringliteral}{"{},\ "{}}\ <<\ e4}
+\DoxyCodeLine{00249\ \ \ \ \ \ \ \ \ \ <<\ \textcolor{stringliteral}{"{})\ evaluates\ to\ false,\ where"{}}}
+\DoxyCodeLine{00250\ \ \ \ \ \ \ \ \ \ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}}}
+\DoxyCodeLine{00251\ \ \ \ \ \ \ \ \ \ <<\ e1\ <<\ \textcolor{stringliteral}{"{}\ evaluates\ to\ "{}}\ <<\ ::testing::PrintToString(v1)\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}}}
+\DoxyCodeLine{00252\ \ \ \ \ \ \ \ \ \ <<\ e2\ <<\ \textcolor{stringliteral}{"{}\ evaluates\ to\ "{}}\ <<\ ::testing::PrintToString(v2)\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}}}
+\DoxyCodeLine{00253\ \ \ \ \ \ \ \ \ \ <<\ e3\ <<\ \textcolor{stringliteral}{"{}\ evaluates\ to\ "{}}\ <<\ ::testing::PrintToString(v3)\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}}}
+\DoxyCodeLine{00254\ \ \ \ \ \ \ \ \ \ <<\ e4\ <<\ \textcolor{stringliteral}{"{}\ evaluates\ to\ "{}}\ <<\ ::testing::PrintToString(v4);}
+\DoxyCodeLine{00255\ \}}
+\DoxyCodeLine{00256\ }
+\DoxyCodeLine{00257\ \textcolor{comment}{//\ Internal\ macro\ for\ implementing\ \{EXPECT|ASSERT\}\_PRED\_FORMAT4.}}
+\DoxyCodeLine{00258\ \textcolor{comment}{//\ Don't\ use\ this\ in\ your\ code.}}
+\DoxyCodeLine{00259\ \textcolor{preprocessor}{\#define\ GTEST\_PRED\_FORMAT4\_(pred\_format,\ v1,\ v2,\ v3,\ v4,\ on\_failure)\(\backslash\)}}
+\DoxyCodeLine{00260\ \textcolor{preprocessor}{\ \ GTEST\_ASSERT\_(pred\_format(\#v1,\ \#v2,\ \#v3,\ \#v4,\ v1,\ v2,\ v3,\ v4),\ \(\backslash\)}}
+\DoxyCodeLine{00261\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ on\_failure)}}
+\DoxyCodeLine{00262\ }
+\DoxyCodeLine{00263\ \textcolor{comment}{//\ Internal\ macro\ for\ implementing\ \{EXPECT|ASSERT\}\_PRED4.\ \ Don't\ use}}
+\DoxyCodeLine{00264\ \textcolor{comment}{//\ this\ in\ your\ code.}}
+\DoxyCodeLine{00265\ \textcolor{preprocessor}{\#define\ GTEST\_PRED4\_(pred,\ v1,\ v2,\ v3,\ v4,\ on\_failure)\(\backslash\)}}
+\DoxyCodeLine{00266\ \textcolor{preprocessor}{\ \ GTEST\_ASSERT\_(::testing::AssertPred4Helper(\#pred,\ \(\backslash\)}}
+\DoxyCodeLine{00267\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \#v1,\ \(\backslash\)}}
+\DoxyCodeLine{00268\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \#v2,\ \(\backslash\)}}
+\DoxyCodeLine{00269\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \#v3,\ \(\backslash\)}}
+\DoxyCodeLine{00270\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \#v4,\ \(\backslash\)}}
+\DoxyCodeLine{00271\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pred,\ \(\backslash\)}}
+\DoxyCodeLine{00272\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ v1,\ \(\backslash\)}}
+\DoxyCodeLine{00273\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ v2,\ \(\backslash\)}}
+\DoxyCodeLine{00274\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ v3,\ \(\backslash\)}}
+\DoxyCodeLine{00275\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ v4),\ on\_failure)}}
+\DoxyCodeLine{00276\ }
+\DoxyCodeLine{00277\ \textcolor{comment}{//\ 4-\/ary\ predicate\ assertion\ macros.}}
+\DoxyCodeLine{00278\ \textcolor{preprocessor}{\#define\ EXPECT\_PRED\_FORMAT4(pred\_format,\ v1,\ v2,\ v3,\ v4)\ \(\backslash\)}}
+\DoxyCodeLine{00279\ \textcolor{preprocessor}{\ \ GTEST\_PRED\_FORMAT4\_(pred\_format,\ v1,\ v2,\ v3,\ v4,\ GTEST\_NONFATAL\_FAILURE\_)}}
+\DoxyCodeLine{00280\ \textcolor{preprocessor}{\#define\ EXPECT\_PRED4(pred,\ v1,\ v2,\ v3,\ v4)\ \(\backslash\)}}
+\DoxyCodeLine{00281\ \textcolor{preprocessor}{\ \ GTEST\_PRED4\_(pred,\ v1,\ v2,\ v3,\ v4,\ GTEST\_NONFATAL\_FAILURE\_)}}
+\DoxyCodeLine{00282\ \textcolor{preprocessor}{\#define\ ASSERT\_PRED\_FORMAT4(pred\_format,\ v1,\ v2,\ v3,\ v4)\ \(\backslash\)}}
+\DoxyCodeLine{00283\ \textcolor{preprocessor}{\ \ GTEST\_PRED\_FORMAT4\_(pred\_format,\ v1,\ v2,\ v3,\ v4,\ GTEST\_FATAL\_FAILURE\_)}}
+\DoxyCodeLine{00284\ \textcolor{preprocessor}{\#define\ ASSERT\_PRED4(pred,\ v1,\ v2,\ v3,\ v4)\ \(\backslash\)}}
+\DoxyCodeLine{00285\ \textcolor{preprocessor}{\ \ GTEST\_PRED4\_(pred,\ v1,\ v2,\ v3,\ v4,\ GTEST\_FATAL\_FAILURE\_)}}
+\DoxyCodeLine{00286\ }
+\DoxyCodeLine{00287\ }
+\DoxyCodeLine{00288\ }
+\DoxyCodeLine{00289\ \textcolor{comment}{//\ Helper\ function\ for\ implementing\ \{EXPECT|ASSERT\}\_PRED5.\ \ Don't\ use}}
+\DoxyCodeLine{00290\ \textcolor{comment}{//\ this\ in\ your\ code.}}
+\DoxyCodeLine{00291\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Pred,}
+\DoxyCodeLine{00292\ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{typename}\ T1,}
+\DoxyCodeLine{00293\ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{typename}\ T2,}
+\DoxyCodeLine{00294\ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{typename}\ T3,}
+\DoxyCodeLine{00295\ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{typename}\ T4,}
+\DoxyCodeLine{00296\ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{typename}\ T5>}
+\DoxyCodeLine{00297\ AssertionResult\ AssertPred5Helper(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ pred\_text,}
+\DoxyCodeLine{00298\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ e1,}
+\DoxyCodeLine{00299\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ e2,}
+\DoxyCodeLine{00300\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ e3,}
+\DoxyCodeLine{00301\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ e4,}
+\DoxyCodeLine{00302\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ e5,}
+\DoxyCodeLine{00303\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Pred\ pred,}
+\DoxyCodeLine{00304\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ T1\&\ v1,}
+\DoxyCodeLine{00305\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ T2\&\ v2,}
+\DoxyCodeLine{00306\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ T3\&\ v3,}
+\DoxyCodeLine{00307\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ T4\&\ v4,}
+\DoxyCodeLine{00308\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ T5\&\ v5)\ \{}
+\DoxyCodeLine{00309\ \ \ \textcolor{keywordflow}{if}\ (pred(v1,\ v2,\ v3,\ v4,\ v5))\ \textcolor{keywordflow}{return}\ AssertionSuccess();}
+\DoxyCodeLine{00310\ }
+\DoxyCodeLine{00311\ \ \ \textcolor{keywordflow}{return}\ AssertionFailure()}
+\DoxyCodeLine{00312\ \ \ \ \ \ \ \ \ \ <<\ pred\_text\ <<\ \textcolor{stringliteral}{"{}("{}}\ <<\ e1\ <<\ \textcolor{stringliteral}{"{},\ "{}}\ <<\ e2\ <<\ \textcolor{stringliteral}{"{},\ "{}}\ <<\ e3\ <<\ \textcolor{stringliteral}{"{},\ "{}}\ <<\ e4}
+\DoxyCodeLine{00313\ \ \ \ \ \ \ \ \ \ <<\ \textcolor{stringliteral}{"{},\ "{}}\ <<\ e5\ <<\ \textcolor{stringliteral}{"{})\ evaluates\ to\ false,\ where"{}}}
+\DoxyCodeLine{00314\ \ \ \ \ \ \ \ \ \ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}}}
+\DoxyCodeLine{00315\ \ \ \ \ \ \ \ \ \ <<\ e1\ <<\ \textcolor{stringliteral}{"{}\ evaluates\ to\ "{}}\ <<\ ::testing::PrintToString(v1)\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}}}
+\DoxyCodeLine{00316\ \ \ \ \ \ \ \ \ \ <<\ e2\ <<\ \textcolor{stringliteral}{"{}\ evaluates\ to\ "{}}\ <<\ ::testing::PrintToString(v2)\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}}}
+\DoxyCodeLine{00317\ \ \ \ \ \ \ \ \ \ <<\ e3\ <<\ \textcolor{stringliteral}{"{}\ evaluates\ to\ "{}}\ <<\ ::testing::PrintToString(v3)\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}}}
+\DoxyCodeLine{00318\ \ \ \ \ \ \ \ \ \ <<\ e4\ <<\ \textcolor{stringliteral}{"{}\ evaluates\ to\ "{}}\ <<\ ::testing::PrintToString(v4)\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}}}
+\DoxyCodeLine{00319\ \ \ \ \ \ \ \ \ \ <<\ e5\ <<\ \textcolor{stringliteral}{"{}\ evaluates\ to\ "{}}\ <<\ ::testing::PrintToString(v5);}
+\DoxyCodeLine{00320\ \}}
+\DoxyCodeLine{00321\ }
+\DoxyCodeLine{00322\ \textcolor{comment}{//\ Internal\ macro\ for\ implementing\ \{EXPECT|ASSERT\}\_PRED\_FORMAT5.}}
+\DoxyCodeLine{00323\ \textcolor{comment}{//\ Don't\ use\ this\ in\ your\ code.}}
+\DoxyCodeLine{00324\ \textcolor{preprocessor}{\#define\ GTEST\_PRED\_FORMAT5\_(pred\_format,\ v1,\ v2,\ v3,\ v4,\ v5,\ on\_failure)\(\backslash\)}}
+\DoxyCodeLine{00325\ \textcolor{preprocessor}{\ \ GTEST\_ASSERT\_(pred\_format(\#v1,\ \#v2,\ \#v3,\ \#v4,\ \#v5,\ v1,\ v2,\ v3,\ v4,\ v5),\ \(\backslash\)}}
+\DoxyCodeLine{00326\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ on\_failure)}}
+\DoxyCodeLine{00327\ }
+\DoxyCodeLine{00328\ \textcolor{comment}{//\ Internal\ macro\ for\ implementing\ \{EXPECT|ASSERT\}\_PRED5.\ \ Don't\ use}}
+\DoxyCodeLine{00329\ \textcolor{comment}{//\ this\ in\ your\ code.}}
+\DoxyCodeLine{00330\ \textcolor{preprocessor}{\#define\ GTEST\_PRED5\_(pred,\ v1,\ v2,\ v3,\ v4,\ v5,\ on\_failure)\(\backslash\)}}
+\DoxyCodeLine{00331\ \textcolor{preprocessor}{\ \ GTEST\_ASSERT\_(::testing::AssertPred5Helper(\#pred,\ \(\backslash\)}}
+\DoxyCodeLine{00332\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \#v1,\ \(\backslash\)}}
+\DoxyCodeLine{00333\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \#v2,\ \(\backslash\)}}
+\DoxyCodeLine{00334\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \#v3,\ \(\backslash\)}}
+\DoxyCodeLine{00335\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \#v4,\ \(\backslash\)}}
+\DoxyCodeLine{00336\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \#v5,\ \(\backslash\)}}
+\DoxyCodeLine{00337\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pred,\ \(\backslash\)}}
+\DoxyCodeLine{00338\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ v1,\ \(\backslash\)}}
+\DoxyCodeLine{00339\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ v2,\ \(\backslash\)}}
+\DoxyCodeLine{00340\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ v3,\ \(\backslash\)}}
+\DoxyCodeLine{00341\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ v4,\ \(\backslash\)}}
+\DoxyCodeLine{00342\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ v5),\ on\_failure)}}
+\DoxyCodeLine{00343\ }
+\DoxyCodeLine{00344\ \textcolor{comment}{//\ 5-\/ary\ predicate\ assertion\ macros.}}
+\DoxyCodeLine{00345\ \textcolor{preprocessor}{\#define\ EXPECT\_PRED\_FORMAT5(pred\_format,\ v1,\ v2,\ v3,\ v4,\ v5)\ \(\backslash\)}}
+\DoxyCodeLine{00346\ \textcolor{preprocessor}{\ \ GTEST\_PRED\_FORMAT5\_(pred\_format,\ v1,\ v2,\ v3,\ v4,\ v5,\ GTEST\_NONFATAL\_FAILURE\_)}}
+\DoxyCodeLine{00347\ \textcolor{preprocessor}{\#define\ EXPECT\_PRED5(pred,\ v1,\ v2,\ v3,\ v4,\ v5)\ \(\backslash\)}}
+\DoxyCodeLine{00348\ \textcolor{preprocessor}{\ \ GTEST\_PRED5\_(pred,\ v1,\ v2,\ v3,\ v4,\ v5,\ GTEST\_NONFATAL\_FAILURE\_)}}
+\DoxyCodeLine{00349\ \textcolor{preprocessor}{\#define\ ASSERT\_PRED\_FORMAT5(pred\_format,\ v1,\ v2,\ v3,\ v4,\ v5)\ \(\backslash\)}}
+\DoxyCodeLine{00350\ \textcolor{preprocessor}{\ \ GTEST\_PRED\_FORMAT5\_(pred\_format,\ v1,\ v2,\ v3,\ v4,\ v5,\ GTEST\_FATAL\_FAILURE\_)}}
+\DoxyCodeLine{00351\ \textcolor{preprocessor}{\#define\ ASSERT\_PRED5(pred,\ v1,\ v2,\ v3,\ v4,\ v5)\ \(\backslash\)}}
+\DoxyCodeLine{00352\ \textcolor{preprocessor}{\ \ GTEST\_PRED5\_(pred,\ v1,\ v2,\ v3,\ v4,\ v5,\ GTEST\_FATAL\_FAILURE\_)}}
+\DoxyCodeLine{00353\ }
+\DoxyCodeLine{00354\ }
+\DoxyCodeLine{00355\ }
+\DoxyCodeLine{00356\ \}\ \ \textcolor{comment}{//\ namespace\ testing}}
+\DoxyCodeLine{00357\ }
+\DoxyCodeLine{00358\ \textcolor{preprocessor}{\#endif\ \ }\textcolor{comment}{//\ GOOGLETEST\_INCLUDE\_GTEST\_GTEST\_PRED\_IMPL\_H\_}}
+
+\end{DoxyCode}

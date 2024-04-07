@@ -1,0 +1,544 @@
+\doxysection{gmock-\/nice-\/strict\+\_\+test.cc}
+\hypertarget{gmock-nice-strict__test_8cc_source}{}\label{gmock-nice-strict__test_8cc_source}\index{lib/googletest-\/master/googlemock/test/gmock-\/nice-\/strict\_test.cc@{lib/googletest-\/master/googlemock/test/gmock-\/nice-\/strict\_test.cc}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//\ Copyright\ 2008,\ Google\ Inc.}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//\ All\ rights\ reserved.}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//}}
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ Redistribution\ and\ use\ in\ source\ and\ binary\ forms,\ with\ or\ without}}
+\DoxyCodeLine{00005\ \textcolor{comment}{//\ modification,\ are\ permitted\ provided\ that\ the\ following\ conditions\ are}}
+\DoxyCodeLine{00006\ \textcolor{comment}{//\ met:}}
+\DoxyCodeLine{00007\ \textcolor{comment}{//}}
+\DoxyCodeLine{00008\ \textcolor{comment}{//\ \ \ \ \ *\ Redistributions\ of\ source\ code\ must\ retain\ the\ above\ copyright}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//\ notice,\ this\ list\ of\ conditions\ and\ the\ following\ disclaimer.}}
+\DoxyCodeLine{00010\ \textcolor{comment}{//\ \ \ \ \ *\ Redistributions\ in\ binary\ form\ must\ reproduce\ the\ above}}
+\DoxyCodeLine{00011\ \textcolor{comment}{//\ copyright\ notice,\ this\ list\ of\ conditions\ and\ the\ following\ disclaimer}}
+\DoxyCodeLine{00012\ \textcolor{comment}{//\ in\ the\ documentation\ and/or\ other\ materials\ provided\ with\ the}}
+\DoxyCodeLine{00013\ \textcolor{comment}{//\ distribution.}}
+\DoxyCodeLine{00014\ \textcolor{comment}{//\ \ \ \ \ *\ Neither\ the\ name\ of\ Google\ Inc.\ nor\ the\ names\ of\ its}}
+\DoxyCodeLine{00015\ \textcolor{comment}{//\ contributors\ may\ be\ used\ to\ endorse\ or\ promote\ products\ derived\ from}}
+\DoxyCodeLine{00016\ \textcolor{comment}{//\ this\ software\ without\ specific\ prior\ written\ permission.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{//}}
+\DoxyCodeLine{00018\ \textcolor{comment}{//\ THIS\ SOFTWARE\ IS\ PROVIDED\ BY\ THE\ COPYRIGHT\ HOLDERS\ AND\ CONTRIBUTORS}}
+\DoxyCodeLine{00019\ \textcolor{comment}{//\ "{}AS\ IS"{}\ AND\ ANY\ EXPRESS\ OR\ IMPLIED\ WARRANTIES,\ INCLUDING,\ BUT\ NOT}}
+\DoxyCodeLine{00020\ \textcolor{comment}{//\ LIMITED\ TO,\ THE\ IMPLIED\ WARRANTIES\ OF\ MERCHANTABILITY\ AND\ FITNESS\ FOR}}
+\DoxyCodeLine{00021\ \textcolor{comment}{//\ A\ PARTICULAR\ PURPOSE\ ARE\ DISCLAIMED.\ IN\ NO\ EVENT\ SHALL\ THE\ COPYRIGHT}}
+\DoxyCodeLine{00022\ \textcolor{comment}{//\ OWNER\ OR\ CONTRIBUTORS\ BE\ LIABLE\ FOR\ ANY\ DIRECT,\ INDIRECT,\ INCIDENTAL,}}
+\DoxyCodeLine{00023\ \textcolor{comment}{//\ SPECIAL,\ EXEMPLARY,\ OR\ CONSEQUENTIAL\ DAMAGES\ (INCLUDING,\ BUT\ NOT}}
+\DoxyCodeLine{00024\ \textcolor{comment}{//\ LIMITED\ TO,\ PROCUREMENT\ OF\ SUBSTITUTE\ GOODS\ OR\ SERVICES;\ LOSS\ OF\ USE,}}
+\DoxyCodeLine{00025\ \textcolor{comment}{//\ DATA,\ OR\ PROFITS;\ OR\ BUSINESS\ INTERRUPTION)\ HOWEVER\ CAUSED\ AND\ ON\ ANY}}
+\DoxyCodeLine{00026\ \textcolor{comment}{//\ THEORY\ OF\ LIABILITY,\ WHETHER\ IN\ CONTRACT,\ STRICT\ LIABILITY,\ OR\ TORT}}
+\DoxyCodeLine{00027\ \textcolor{comment}{//\ (INCLUDING\ NEGLIGENCE\ OR\ OTHERWISE)\ ARISING\ IN\ ANY\ WAY\ OUT\ OF\ THE\ USE}}
+\DoxyCodeLine{00028\ \textcolor{comment}{//\ OF\ THIS\ SOFTWARE,\ EVEN\ IF\ ADVISED\ OF\ THE\ POSSIBILITY\ OF\ SUCH\ DAMAGE.}}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#include\ "{}gmock/gmock-\/nice-\/strict.h"{}}}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#include\ <utility>}}
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\#include\ "{}gmock/gmock.h"{}}}
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#include\ "{}gtest/gtest-\/spi.h"{}}}
+\DoxyCodeLine{00036\ \textcolor{preprocessor}{\#include\ "{}gtest/gtest.h"{}}}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \textcolor{comment}{//\ This\ must\ not\ be\ defined\ inside\ the\ ::testing\ namespace,\ or\ it\ will}}
+\DoxyCodeLine{00039\ \textcolor{comment}{//\ clash\ with\ ::testing::Mock.}}
+\DoxyCodeLine{00040\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_mock}{Mock}}\ \{}
+\DoxyCodeLine{00041\ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00042\ \ \ \mbox{\hyperlink{class_mock}{Mock}}()\ \{\}}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \ \ MOCK\_METHOD0(DoThis,\ \textcolor{keywordtype}{void}());}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00047\ \ \ GTEST\_DISALLOW\_COPY\_AND\_ASSIGN\_(\mbox{\hyperlink{class_mock}{Mock}});}
+\DoxyCodeLine{00048\ \};}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \textcolor{keyword}{namespace\ }testing\ \{}
+\DoxyCodeLine{00051\ \textcolor{keyword}{namespace\ }gmock\_nice\_strict\_test\ \{}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ \textcolor{keyword}{using\ }testing::HasSubstr;}
+\DoxyCodeLine{00054\ \textcolor{keyword}{using\ }\mbox{\hyperlink{classtesting_1_1_naggy_mock}{testing::NaggyMock}};}
+\DoxyCodeLine{00055\ \textcolor{keyword}{using\ }\mbox{\hyperlink{classtesting_1_1_nice_mock}{testing::NiceMock}};}
+\DoxyCodeLine{00056\ \textcolor{keyword}{using\ }\mbox{\hyperlink{classtesting_1_1_strict_mock}{testing::StrictMock}};}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ \textcolor{preprocessor}{\#if\ GTEST\_HAS\_STREAM\_REDIRECTION}}
+\DoxyCodeLine{00059\ \textcolor{keyword}{using\ }testing::internal::CaptureStdout;}
+\DoxyCodeLine{00060\ \textcolor{keyword}{using\ }testing::internal::GetCapturedStdout;}
+\DoxyCodeLine{00061\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00062\ }
+\DoxyCodeLine{00063\ \textcolor{comment}{//\ Class\ without\ default\ constructor.}}
+\DoxyCodeLine{00064\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classtesting_1_1gmock__nice__strict__test_1_1_not_default_constructible}{NotDefaultConstructible}}\ \{}
+\DoxyCodeLine{00065\ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00066\ \ \ \textcolor{keyword}{explicit}\ \mbox{\hyperlink{classtesting_1_1gmock__nice__strict__test_1_1_not_default_constructible}{NotDefaultConstructible}}(\textcolor{keywordtype}{int})\ \{\}}
+\DoxyCodeLine{00067\ \};}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classtesting_1_1gmock__nice__strict__test_1_1_calls_mock_method_in_destructor}{CallsMockMethodInDestructor}}\ \{}
+\DoxyCodeLine{00070\ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00071\ \ \ \mbox{\hyperlink{classtesting_1_1gmock__nice__strict__test_1_1_calls_mock_method_in_destructor}{\string~CallsMockMethodInDestructor}}()\ \{\ OnDestroy();\ \}}
+\DoxyCodeLine{00072\ \ \ MOCK\_METHOD(\textcolor{keywordtype}{void},\ OnDestroy,\ ());}
+\DoxyCodeLine{00073\ \};}
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00075\ \textcolor{comment}{//\ Defines\ some\ mock\ classes\ needed\ by\ the\ tests.}}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00077\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classtesting_1_1gmock__nice__strict__test_1_1_foo}{Foo}}\ \{}
+\DoxyCodeLine{00078\ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00079\ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{classtesting_1_1gmock__nice__strict__test_1_1_foo}{\string~Foo}}()\ \{\}}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00081\ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ DoThis()\ =\ 0;}
+\DoxyCodeLine{00082\ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ DoThat(\textcolor{keywordtype}{bool}\ flag)\ =\ 0;}
+\DoxyCodeLine{00083\ \};}
+\DoxyCodeLine{00084\ }
+\DoxyCodeLine{00085\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classtesting_1_1gmock__nice__strict__test_1_1_mock_foo}{MockFoo}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{classtesting_1_1gmock__nice__strict__test_1_1_foo}{Foo}}\ \{}
+\DoxyCodeLine{00086\ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00087\ \ \ \mbox{\hyperlink{classtesting_1_1gmock__nice__strict__test_1_1_mock_foo}{MockFoo}}()\ \{\}}
+\DoxyCodeLine{00088\ \ \ \textcolor{keywordtype}{void}\ Delete()\ \{\ \textcolor{keyword}{delete}\ \textcolor{keyword}{this};\ \}}
+\DoxyCodeLine{00089\ }
+\DoxyCodeLine{00090\ \ \ MOCK\_METHOD0(DoThis,\ \textcolor{keywordtype}{void}());}
+\DoxyCodeLine{00091\ \ \ MOCK\_METHOD1(DoThat,\ \textcolor{keywordtype}{int}(\textcolor{keywordtype}{bool}\ flag));}
+\DoxyCodeLine{00092\ \ \ MOCK\_METHOD0(ReturnNonDefaultConstructible,\ \mbox{\hyperlink{classtesting_1_1gmock__nice__strict__test_1_1_not_default_constructible}{NotDefaultConstructible}}());}
+\DoxyCodeLine{00093\ }
+\DoxyCodeLine{00094\ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00095\ \ \ GTEST\_DISALLOW\_COPY\_AND\_ASSIGN\_(\mbox{\hyperlink{classtesting_1_1gmock__nice__strict__test_1_1_mock_foo}{MockFoo}});}
+\DoxyCodeLine{00096\ \};}
+\DoxyCodeLine{00097\ }
+\DoxyCodeLine{00098\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classtesting_1_1gmock__nice__strict__test_1_1_mock_bar}{MockBar}}\ \{}
+\DoxyCodeLine{00099\ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00100\ \ \ \textcolor{keyword}{explicit}\ \mbox{\hyperlink{classtesting_1_1gmock__nice__strict__test_1_1_mock_bar}{MockBar}}(\textcolor{keyword}{const}\ std::string\&\ s)\ :\ str\_(s)\ \{\}}
+\DoxyCodeLine{00101\ }
+\DoxyCodeLine{00102\ \ \ \mbox{\hyperlink{classtesting_1_1gmock__nice__strict__test_1_1_mock_bar}{MockBar}}(\textcolor{keywordtype}{char}\ a1,\ \textcolor{keywordtype}{char}\ a2,\ std::string\ a3,\ std::string\ a4,\ \textcolor{keywordtype}{int}\ a5,\ \textcolor{keywordtype}{int}\ a6,}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\&\ a7,\ \textcolor{keyword}{const}\ std::string\&\ a8,\ \textcolor{keywordtype}{bool}\ a9,\ \textcolor{keywordtype}{bool}\ a10)\ \{}
+\DoxyCodeLine{00104\ \ \ \ \ str\_\ =\ std::string()\ +\ a1\ +\ a2\ +\ a3\ +\ a4\ +\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{char}\textcolor{keyword}{>}(a5)\ +}
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{char}\textcolor{keyword}{>}(a6)\ +\ a7\ +\ a8\ +\ (a9\ ?\ \textcolor{charliteral}{'T'}\ :\ \textcolor{charliteral}{'F'})\ +\ (a10\ ?\ \textcolor{charliteral}{'T'}\ :\ \textcolor{charliteral}{'F'});}
+\DoxyCodeLine{00106\ \ \ \}}
+\DoxyCodeLine{00107\ }
+\DoxyCodeLine{00108\ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{classtesting_1_1gmock__nice__strict__test_1_1_mock_bar}{\string~MockBar}}()\ \{\}}
+\DoxyCodeLine{00109\ }
+\DoxyCodeLine{00110\ \ \ \textcolor{keyword}{const}\ std::string\&\ str()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ str\_;\ \}}
+\DoxyCodeLine{00111\ }
+\DoxyCodeLine{00112\ \ \ MOCK\_METHOD0(This,\ \textcolor{keywordtype}{int}());}
+\DoxyCodeLine{00113\ \ \ MOCK\_METHOD2(That,\ std::string(\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{bool}));}
+\DoxyCodeLine{00114\ }
+\DoxyCodeLine{00115\ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00116\ \ \ std::string\ str\_;}
+\DoxyCodeLine{00117\ }
+\DoxyCodeLine{00118\ \ \ GTEST\_DISALLOW\_COPY\_AND\_ASSIGN\_(\mbox{\hyperlink{classtesting_1_1gmock__nice__strict__test_1_1_mock_bar}{MockBar}});}
+\DoxyCodeLine{00119\ \};}
+\DoxyCodeLine{00120\ }
+\DoxyCodeLine{00121\ }
+\DoxyCodeLine{00122\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classtesting_1_1gmock__nice__strict__test_1_1_mock_baz}{MockBaz}}\ \{}
+\DoxyCodeLine{00123\ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00124\ \ \ \textcolor{keyword}{class\ }\mbox{\hyperlink{classtesting_1_1gmock__nice__strict__test_1_1_mock_baz_1_1_move_only}{MoveOnly}}\ \{}
+\DoxyCodeLine{00125\ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00126\ \ \ \ \ \mbox{\hyperlink{classtesting_1_1gmock__nice__strict__test_1_1_mock_baz_1_1_move_only}{MoveOnly}}()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00127\ }
+\DoxyCodeLine{00128\ \ \ \ \ \mbox{\hyperlink{classtesting_1_1gmock__nice__strict__test_1_1_mock_baz_1_1_move_only}{MoveOnly}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{classtesting_1_1gmock__nice__strict__test_1_1_mock_baz_1_1_move_only}{MoveOnly}}\&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00129\ \ \ \ \ \mbox{\hyperlink{classtesting_1_1gmock__nice__strict__test_1_1_mock_baz_1_1_move_only}{MoveOnly}}\&\ operator=(\textcolor{keyword}{const}\ \mbox{\hyperlink{classtesting_1_1gmock__nice__strict__test_1_1_mock_baz_1_1_move_only}{MoveOnly}}\&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00130\ }
+\DoxyCodeLine{00131\ \ \ \ \ \mbox{\hyperlink{classtesting_1_1gmock__nice__strict__test_1_1_mock_baz_1_1_move_only}{MoveOnly}}(\mbox{\hyperlink{classtesting_1_1gmock__nice__strict__test_1_1_mock_baz_1_1_move_only}{MoveOnly}}\&\&)\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00132\ \ \ \ \ \mbox{\hyperlink{classtesting_1_1gmock__nice__strict__test_1_1_mock_baz_1_1_move_only}{MoveOnly}}\&\ operator=(\mbox{\hyperlink{classtesting_1_1gmock__nice__strict__test_1_1_mock_baz_1_1_move_only}{MoveOnly}}\&\&)\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00133\ \ \ \};}
+\DoxyCodeLine{00134\ }
+\DoxyCodeLine{00135\ \ \ \mbox{\hyperlink{classtesting_1_1gmock__nice__strict__test_1_1_mock_baz}{MockBaz}}(\mbox{\hyperlink{classtesting_1_1gmock__nice__strict__test_1_1_mock_baz_1_1_move_only}{MoveOnly}})\ \{\}}
+\DoxyCodeLine{00136\ \};}
+\DoxyCodeLine{00137\ }
+\DoxyCodeLine{00138\ \textcolor{preprocessor}{\#if\ GTEST\_HAS\_STREAM\_REDIRECTION}}
+\DoxyCodeLine{00139\ }
+\DoxyCodeLine{00140\ \textcolor{comment}{//\ Tests\ that\ a\ raw\ mock\ generates\ warnings\ for\ uninteresting\ calls.}}
+\DoxyCodeLine{00141\ TEST(RawMockTest,\ WarningForUninterestingCall)\ \{}
+\DoxyCodeLine{00142\ \ \ \textcolor{keyword}{const}\ std::string\ saved\_flag\ =\ GMOCK\_FLAG\_GET(verbose);}
+\DoxyCodeLine{00143\ \ \ GMOCK\_FLAG\_SET(verbose,\ \textcolor{stringliteral}{"{}warning"{}});}
+\DoxyCodeLine{00144\ }
+\DoxyCodeLine{00145\ \ \ MockFoo\ raw\_foo;}
+\DoxyCodeLine{00146\ }
+\DoxyCodeLine{00147\ \ \ CaptureStdout();}
+\DoxyCodeLine{00148\ \ \ raw\_foo.DoThis();}
+\DoxyCodeLine{00149\ \ \ raw\_foo.DoThat(\textcolor{keyword}{true});}
+\DoxyCodeLine{00150\ \ \ EXPECT\_THAT(GetCapturedStdout(),}
+\DoxyCodeLine{00151\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ HasSubstr(\textcolor{stringliteral}{"{}Uninteresting\ mock\ function\ call"{}}));}
+\DoxyCodeLine{00152\ }
+\DoxyCodeLine{00153\ \ \ GMOCK\_FLAG\_SET(verbose,\ saved\_flag);}
+\DoxyCodeLine{00154\ \}}
+\DoxyCodeLine{00155\ }
+\DoxyCodeLine{00156\ \textcolor{comment}{//\ Tests\ that\ a\ raw\ mock\ generates\ warnings\ for\ uninteresting\ calls}}
+\DoxyCodeLine{00157\ \textcolor{comment}{//\ that\ delete\ the\ mock\ object.}}
+\DoxyCodeLine{00158\ TEST(RawMockTest,\ WarningForUninterestingCallAfterDeath)\ \{}
+\DoxyCodeLine{00159\ \ \ \textcolor{keyword}{const}\ std::string\ saved\_flag\ =\ GMOCK\_FLAG\_GET(verbose);}
+\DoxyCodeLine{00160\ \ \ GMOCK\_FLAG\_SET(verbose,\ \textcolor{stringliteral}{"{}warning"{}});}
+\DoxyCodeLine{00161\ }
+\DoxyCodeLine{00162\ \ \ MockFoo*\ \textcolor{keyword}{const}\ raw\_foo\ =\ \textcolor{keyword}{new}\ MockFoo;}
+\DoxyCodeLine{00163\ }
+\DoxyCodeLine{00164\ \ \ ON\_CALL(*raw\_foo,\ DoThis())}
+\DoxyCodeLine{00165\ \ \ \ \ \ \ .WillByDefault(Invoke(raw\_foo,\ \&MockFoo::Delete));}
+\DoxyCodeLine{00166\ }
+\DoxyCodeLine{00167\ \ \ CaptureStdout();}
+\DoxyCodeLine{00168\ \ \ raw\_foo-\/>DoThis();}
+\DoxyCodeLine{00169\ \ \ EXPECT\_THAT(GetCapturedStdout(),}
+\DoxyCodeLine{00170\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ HasSubstr(\textcolor{stringliteral}{"{}Uninteresting\ mock\ function\ call"{}}));}
+\DoxyCodeLine{00171\ }
+\DoxyCodeLine{00172\ \ \ GMOCK\_FLAG\_SET(verbose,\ saved\_flag);}
+\DoxyCodeLine{00173\ \}}
+\DoxyCodeLine{00174\ }
+\DoxyCodeLine{00175\ \textcolor{comment}{//\ Tests\ that\ a\ raw\ mock\ generates\ informational\ logs\ for}}
+\DoxyCodeLine{00176\ \textcolor{comment}{//\ uninteresting\ calls.}}
+\DoxyCodeLine{00177\ TEST(RawMockTest,\ InfoForUninterestingCall)\ \{}
+\DoxyCodeLine{00178\ \ \ MockFoo\ raw\_foo;}
+\DoxyCodeLine{00179\ }
+\DoxyCodeLine{00180\ \ \ \textcolor{keyword}{const}\ std::string\ saved\_flag\ =\ GMOCK\_FLAG\_GET(verbose);}
+\DoxyCodeLine{00181\ \ \ GMOCK\_FLAG\_SET(verbose,\ \textcolor{stringliteral}{"{}info"{}});}
+\DoxyCodeLine{00182\ \ \ CaptureStdout();}
+\DoxyCodeLine{00183\ \ \ raw\_foo.DoThis();}
+\DoxyCodeLine{00184\ \ \ EXPECT\_THAT(GetCapturedStdout(),}
+\DoxyCodeLine{00185\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ HasSubstr(\textcolor{stringliteral}{"{}Uninteresting\ mock\ function\ call"{}}));}
+\DoxyCodeLine{00186\ }
+\DoxyCodeLine{00187\ \ \ GMOCK\_FLAG\_SET(verbose,\ saved\_flag);}
+\DoxyCodeLine{00188\ \}}
+\DoxyCodeLine{00189\ }
+\DoxyCodeLine{00190\ TEST(RawMockTest,\ IsNaggy\_IsNice\_IsStrict)\ \{}
+\DoxyCodeLine{00191\ \ \ MockFoo\ raw\_foo;}
+\DoxyCodeLine{00192\ \ \ EXPECT\_TRUE(Mock::IsNaggy(\&raw\_foo));}
+\DoxyCodeLine{00193\ \ \ EXPECT\_FALSE(Mock::IsNice(\&raw\_foo));}
+\DoxyCodeLine{00194\ \ \ EXPECT\_FALSE(Mock::IsStrict(\&raw\_foo));}
+\DoxyCodeLine{00195\ \}}
+\DoxyCodeLine{00196\ }
+\DoxyCodeLine{00197\ \textcolor{comment}{//\ Tests\ that\ a\ nice\ mock\ generates\ no\ warning\ for\ uninteresting\ calls.}}
+\DoxyCodeLine{00198\ TEST(NiceMockTest,\ NoWarningForUninterestingCall)\ \{}
+\DoxyCodeLine{00199\ \ \ NiceMock<MockFoo>\ nice\_foo;}
+\DoxyCodeLine{00200\ }
+\DoxyCodeLine{00201\ \ \ CaptureStdout();}
+\DoxyCodeLine{00202\ \ \ nice\_foo.DoThis();}
+\DoxyCodeLine{00203\ \ \ nice\_foo.DoThat(\textcolor{keyword}{true});}
+\DoxyCodeLine{00204\ \ \ EXPECT\_EQ(\textcolor{stringliteral}{"{}"{}},\ GetCapturedStdout());}
+\DoxyCodeLine{00205\ \}}
+\DoxyCodeLine{00206\ }
+\DoxyCodeLine{00207\ \textcolor{comment}{//\ Tests\ that\ a\ nice\ mock\ generates\ no\ warning\ for\ uninteresting\ calls}}
+\DoxyCodeLine{00208\ \textcolor{comment}{//\ that\ delete\ the\ mock\ object.}}
+\DoxyCodeLine{00209\ TEST(NiceMockTest,\ NoWarningForUninterestingCallAfterDeath)\ \{}
+\DoxyCodeLine{00210\ \ \ NiceMock<MockFoo>*\ \textcolor{keyword}{const}\ nice\_foo\ =\ \textcolor{keyword}{new}\ NiceMock<MockFoo>;}
+\DoxyCodeLine{00211\ }
+\DoxyCodeLine{00212\ \ \ ON\_CALL(*nice\_foo,\ DoThis())}
+\DoxyCodeLine{00213\ \ \ \ \ \ \ .WillByDefault(Invoke(nice\_foo,\ \&MockFoo::Delete));}
+\DoxyCodeLine{00214\ }
+\DoxyCodeLine{00215\ \ \ CaptureStdout();}
+\DoxyCodeLine{00216\ \ \ nice\_foo-\/>DoThis();}
+\DoxyCodeLine{00217\ \ \ EXPECT\_EQ(\textcolor{stringliteral}{"{}"{}},\ GetCapturedStdout());}
+\DoxyCodeLine{00218\ \}}
+\DoxyCodeLine{00219\ }
+\DoxyCodeLine{00220\ \textcolor{comment}{//\ Tests\ that\ a\ nice\ mock\ generates\ informational\ logs\ for}}
+\DoxyCodeLine{00221\ \textcolor{comment}{//\ uninteresting\ calls.}}
+\DoxyCodeLine{00222\ TEST(NiceMockTest,\ InfoForUninterestingCall)\ \{}
+\DoxyCodeLine{00223\ \ \ NiceMock<MockFoo>\ nice\_foo;}
+\DoxyCodeLine{00224\ }
+\DoxyCodeLine{00225\ \ \ \textcolor{keyword}{const}\ std::string\ saved\_flag\ =\ GMOCK\_FLAG\_GET(verbose);}
+\DoxyCodeLine{00226\ \ \ GMOCK\_FLAG\_SET(verbose,\ \textcolor{stringliteral}{"{}info"{}});}
+\DoxyCodeLine{00227\ \ \ CaptureStdout();}
+\DoxyCodeLine{00228\ \ \ nice\_foo.DoThis();}
+\DoxyCodeLine{00229\ \ \ EXPECT\_THAT(GetCapturedStdout(),}
+\DoxyCodeLine{00230\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ HasSubstr(\textcolor{stringliteral}{"{}Uninteresting\ mock\ function\ call"{}}));}
+\DoxyCodeLine{00231\ }
+\DoxyCodeLine{00232\ \ \ GMOCK\_FLAG\_SET(verbose,\ saved\_flag);}
+\DoxyCodeLine{00233\ \}}
+\DoxyCodeLine{00234\ }
+\DoxyCodeLine{00235\ \textcolor{preprocessor}{\#endif\ \ }\textcolor{comment}{//\ GTEST\_HAS\_STREAM\_REDIRECTION}}
+\DoxyCodeLine{00236\ }
+\DoxyCodeLine{00237\ \textcolor{comment}{//\ Tests\ that\ a\ nice\ mock\ allows\ expected\ calls.}}
+\DoxyCodeLine{00238\ TEST(NiceMockTest,\ AllowsExpectedCall)\ \{}
+\DoxyCodeLine{00239\ \ \ NiceMock<MockFoo>\ nice\_foo;}
+\DoxyCodeLine{00240\ }
+\DoxyCodeLine{00241\ \ \ EXPECT\_CALL(nice\_foo,\ DoThis());}
+\DoxyCodeLine{00242\ \ \ nice\_foo.DoThis();}
+\DoxyCodeLine{00243\ \}}
+\DoxyCodeLine{00244\ }
+\DoxyCodeLine{00245\ \textcolor{comment}{//\ Tests\ that\ an\ unexpected\ call\ on\ a\ nice\ mock\ which\ returns\ a}}
+\DoxyCodeLine{00246\ \textcolor{comment}{//\ not-\/default-\/constructible\ type\ throws\ an\ exception\ and\ the\ exception\ contains}}
+\DoxyCodeLine{00247\ \textcolor{comment}{//\ the\ method's\ name.}}
+\DoxyCodeLine{00248\ TEST(NiceMockTest,\ ThrowsExceptionForUnknownReturnTypes)\ \{}
+\DoxyCodeLine{00249\ \ \ NiceMock<MockFoo>\ nice\_foo;}
+\DoxyCodeLine{00250\ \textcolor{preprocessor}{\#if\ GTEST\_HAS\_EXCEPTIONS}}
+\DoxyCodeLine{00251\ \ \ \textcolor{keywordflow}{try}\ \{}
+\DoxyCodeLine{00252\ \ \ \ \ nice\_foo.ReturnNonDefaultConstructible();}
+\DoxyCodeLine{00253\ \ \ \ \ FAIL();}
+\DoxyCodeLine{00254\ \ \ \}\ \textcolor{keywordflow}{catch}\ (\textcolor{keyword}{const}\ std::runtime\_error\&\ ex)\ \{}
+\DoxyCodeLine{00255\ \ \ \ \ EXPECT\_THAT(ex.what(),\ HasSubstr(\textcolor{stringliteral}{"{}ReturnNonDefaultConstructible"{}}));}
+\DoxyCodeLine{00256\ \ \ \}}
+\DoxyCodeLine{00257\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00258\ \ \ EXPECT\_DEATH\_IF\_SUPPORTED(\{\ nice\_foo.ReturnNonDefaultConstructible();\ \},\ \textcolor{stringliteral}{"{}"{}});}
+\DoxyCodeLine{00259\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00260\ \}}
+\DoxyCodeLine{00261\ }
+\DoxyCodeLine{00262\ \textcolor{comment}{//\ Tests\ that\ an\ unexpected\ call\ on\ a\ nice\ mock\ fails.}}
+\DoxyCodeLine{00263\ TEST(NiceMockTest,\ UnexpectedCallFails)\ \{}
+\DoxyCodeLine{00264\ \ \ NiceMock<MockFoo>\ nice\_foo;}
+\DoxyCodeLine{00265\ }
+\DoxyCodeLine{00266\ \ \ EXPECT\_CALL(nice\_foo,\ DoThis()).Times(0);}
+\DoxyCodeLine{00267\ \ \ EXPECT\_NONFATAL\_FAILURE(nice\_foo.DoThis(),\ \textcolor{stringliteral}{"{}called\ more\ times\ than\ expected"{}});}
+\DoxyCodeLine{00268\ \}}
+\DoxyCodeLine{00269\ }
+\DoxyCodeLine{00270\ \textcolor{comment}{//\ Tests\ that\ NiceMock\ works\ with\ a\ mock\ class\ that\ has\ a\ non-\/default}}
+\DoxyCodeLine{00271\ \textcolor{comment}{//\ constructor.}}
+\DoxyCodeLine{00272\ TEST(NiceMockTest,\ NonDefaultConstructor)\ \{}
+\DoxyCodeLine{00273\ \ \ NiceMock<MockBar>\ nice\_bar(\textcolor{stringliteral}{"{}hi"{}});}
+\DoxyCodeLine{00274\ \ \ EXPECT\_EQ(\textcolor{stringliteral}{"{}hi"{}},\ nice\_bar.str());}
+\DoxyCodeLine{00275\ }
+\DoxyCodeLine{00276\ \ \ nice\_bar.This();}
+\DoxyCodeLine{00277\ \ \ nice\_bar.That(5,\ \textcolor{keyword}{true});}
+\DoxyCodeLine{00278\ \}}
+\DoxyCodeLine{00279\ }
+\DoxyCodeLine{00280\ \textcolor{comment}{//\ Tests\ that\ NiceMock\ works\ with\ a\ mock\ class\ that\ has\ a\ 10-\/ary}}
+\DoxyCodeLine{00281\ \textcolor{comment}{//\ non-\/default\ constructor.}}
+\DoxyCodeLine{00282\ TEST(NiceMockTest,\ NonDefaultConstructor10)\ \{}
+\DoxyCodeLine{00283\ \ \ NiceMock<MockBar>\ nice\_bar(\textcolor{charliteral}{'a'},\ \textcolor{charliteral}{'b'},\ \textcolor{stringliteral}{"{}c"{}},\ \textcolor{stringliteral}{"{}d"{}},\ \textcolor{charliteral}{'e'},\ \textcolor{charliteral}{'f'},}
+\DoxyCodeLine{00284\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}g"{}},\ \textcolor{stringliteral}{"{}h"{}},\ \textcolor{keyword}{true},\ \textcolor{keyword}{false});}
+\DoxyCodeLine{00285\ \ \ EXPECT\_EQ(\textcolor{stringliteral}{"{}abcdefghTF"{}},\ nice\_bar.str());}
+\DoxyCodeLine{00286\ }
+\DoxyCodeLine{00287\ \ \ nice\_bar.This();}
+\DoxyCodeLine{00288\ \ \ nice\_bar.That(5,\ \textcolor{keyword}{true});}
+\DoxyCodeLine{00289\ \}}
+\DoxyCodeLine{00290\ }
+\DoxyCodeLine{00291\ TEST(NiceMockTest,\ AllowLeak)\ \{}
+\DoxyCodeLine{00292\ \ \ NiceMock<MockFoo>*\ leaked\ =\ \textcolor{keyword}{new}\ NiceMock<MockFoo>;}
+\DoxyCodeLine{00293\ \ \ Mock::AllowLeak(leaked);}
+\DoxyCodeLine{00294\ \ \ EXPECT\_CALL(*leaked,\ DoThis());}
+\DoxyCodeLine{00295\ \ \ leaked-\/>DoThis();}
+\DoxyCodeLine{00296\ \}}
+\DoxyCodeLine{00297\ }
+\DoxyCodeLine{00298\ TEST(NiceMockTest,\ MoveOnlyConstructor)\ \{}
+\DoxyCodeLine{00299\ \ \ NiceMock<MockBaz>\ nice\_baz(MockBaz::MoveOnly\{\});}
+\DoxyCodeLine{00300\ \}}
+\DoxyCodeLine{00301\ }
+\DoxyCodeLine{00302\ \textcolor{comment}{//\ Tests\ that\ NiceMock<Mock>\ compiles\ where\ Mock\ is\ a\ user-\/defined}}
+\DoxyCodeLine{00303\ \textcolor{comment}{//\ class\ (as\ opposed\ to\ ::testing::Mock).}}
+\DoxyCodeLine{00304\ TEST(NiceMockTest,\ AcceptsClassNamedMock)\ \{}
+\DoxyCodeLine{00305\ \ \ NiceMock<\ ::Mock>\ nice;}
+\DoxyCodeLine{00306\ \ \ EXPECT\_CALL(nice,\ DoThis());}
+\DoxyCodeLine{00307\ \ \ nice.DoThis();}
+\DoxyCodeLine{00308\ \}}
+\DoxyCodeLine{00309\ }
+\DoxyCodeLine{00310\ TEST(NiceMockTest,\ IsNiceInDestructor)\ \{}
+\DoxyCodeLine{00311\ \ \ \{}
+\DoxyCodeLine{00312\ \ \ \ \ NiceMock<CallsMockMethodInDestructor>\ nice\_on\_destroy;}
+\DoxyCodeLine{00313\ \ \ \ \ \textcolor{comment}{//\ Don't\ add\ an\ expectation\ for\ the\ call\ before\ the\ mock\ goes\ out\ of\ scope.}}
+\DoxyCodeLine{00314\ \ \ \}}
+\DoxyCodeLine{00315\ \}}
+\DoxyCodeLine{00316\ }
+\DoxyCodeLine{00317\ TEST(NiceMockTest,\ IsNaggy\_IsNice\_IsStrict)\ \{}
+\DoxyCodeLine{00318\ \ \ NiceMock<MockFoo>\ nice\_foo;}
+\DoxyCodeLine{00319\ \ \ EXPECT\_FALSE(Mock::IsNaggy(\&nice\_foo));}
+\DoxyCodeLine{00320\ \ \ EXPECT\_TRUE(Mock::IsNice(\&nice\_foo));}
+\DoxyCodeLine{00321\ \ \ EXPECT\_FALSE(Mock::IsStrict(\&nice\_foo));}
+\DoxyCodeLine{00322\ \}}
+\DoxyCodeLine{00323\ }
+\DoxyCodeLine{00324\ \textcolor{preprocessor}{\#if\ GTEST\_HAS\_STREAM\_REDIRECTION}}
+\DoxyCodeLine{00325\ }
+\DoxyCodeLine{00326\ \textcolor{comment}{//\ Tests\ that\ a\ naggy\ mock\ generates\ warnings\ for\ uninteresting\ calls.}}
+\DoxyCodeLine{00327\ TEST(NaggyMockTest,\ WarningForUninterestingCall)\ \{}
+\DoxyCodeLine{00328\ \ \ \textcolor{keyword}{const}\ std::string\ saved\_flag\ =\ GMOCK\_FLAG\_GET(verbose);}
+\DoxyCodeLine{00329\ \ \ GMOCK\_FLAG\_SET(verbose,\ \textcolor{stringliteral}{"{}warning"{}});}
+\DoxyCodeLine{00330\ }
+\DoxyCodeLine{00331\ \ \ NaggyMock<MockFoo>\ naggy\_foo;}
+\DoxyCodeLine{00332\ }
+\DoxyCodeLine{00333\ \ \ CaptureStdout();}
+\DoxyCodeLine{00334\ \ \ naggy\_foo.DoThis();}
+\DoxyCodeLine{00335\ \ \ naggy\_foo.DoThat(\textcolor{keyword}{true});}
+\DoxyCodeLine{00336\ \ \ EXPECT\_THAT(GetCapturedStdout(),}
+\DoxyCodeLine{00337\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ HasSubstr(\textcolor{stringliteral}{"{}Uninteresting\ mock\ function\ call"{}}));}
+\DoxyCodeLine{00338\ }
+\DoxyCodeLine{00339\ \ \ GMOCK\_FLAG\_SET(verbose,\ saved\_flag);}
+\DoxyCodeLine{00340\ \}}
+\DoxyCodeLine{00341\ }
+\DoxyCodeLine{00342\ \textcolor{comment}{//\ Tests\ that\ a\ naggy\ mock\ generates\ a\ warning\ for\ an\ uninteresting\ call}}
+\DoxyCodeLine{00343\ \textcolor{comment}{//\ that\ deletes\ the\ mock\ object.}}
+\DoxyCodeLine{00344\ TEST(NaggyMockTest,\ WarningForUninterestingCallAfterDeath)\ \{}
+\DoxyCodeLine{00345\ \ \ \textcolor{keyword}{const}\ std::string\ saved\_flag\ =\ GMOCK\_FLAG\_GET(verbose);}
+\DoxyCodeLine{00346\ \ \ GMOCK\_FLAG\_SET(verbose,\ \textcolor{stringliteral}{"{}warning"{}});}
+\DoxyCodeLine{00347\ }
+\DoxyCodeLine{00348\ \ \ NaggyMock<MockFoo>*\ \textcolor{keyword}{const}\ naggy\_foo\ =\ \textcolor{keyword}{new}\ NaggyMock<MockFoo>;}
+\DoxyCodeLine{00349\ }
+\DoxyCodeLine{00350\ \ \ ON\_CALL(*naggy\_foo,\ DoThis())}
+\DoxyCodeLine{00351\ \ \ \ \ \ \ .WillByDefault(Invoke(naggy\_foo,\ \&MockFoo::Delete));}
+\DoxyCodeLine{00352\ }
+\DoxyCodeLine{00353\ \ \ CaptureStdout();}
+\DoxyCodeLine{00354\ \ \ naggy\_foo-\/>DoThis();}
+\DoxyCodeLine{00355\ \ \ EXPECT\_THAT(GetCapturedStdout(),}
+\DoxyCodeLine{00356\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ HasSubstr(\textcolor{stringliteral}{"{}Uninteresting\ mock\ function\ call"{}}));}
+\DoxyCodeLine{00357\ }
+\DoxyCodeLine{00358\ \ \ GMOCK\_FLAG\_SET(verbose,\ saved\_flag);}
+\DoxyCodeLine{00359\ \}}
+\DoxyCodeLine{00360\ }
+\DoxyCodeLine{00361\ \textcolor{preprocessor}{\#endif\ \ }\textcolor{comment}{//\ GTEST\_HAS\_STREAM\_REDIRECTION}}
+\DoxyCodeLine{00362\ }
+\DoxyCodeLine{00363\ \textcolor{comment}{//\ Tests\ that\ a\ naggy\ mock\ allows\ expected\ calls.}}
+\DoxyCodeLine{00364\ TEST(NaggyMockTest,\ AllowsExpectedCall)\ \{}
+\DoxyCodeLine{00365\ \ \ NaggyMock<MockFoo>\ naggy\_foo;}
+\DoxyCodeLine{00366\ }
+\DoxyCodeLine{00367\ \ \ EXPECT\_CALL(naggy\_foo,\ DoThis());}
+\DoxyCodeLine{00368\ \ \ naggy\_foo.DoThis();}
+\DoxyCodeLine{00369\ \}}
+\DoxyCodeLine{00370\ }
+\DoxyCodeLine{00371\ \textcolor{comment}{//\ Tests\ that\ an\ unexpected\ call\ on\ a\ naggy\ mock\ fails.}}
+\DoxyCodeLine{00372\ TEST(NaggyMockTest,\ UnexpectedCallFails)\ \{}
+\DoxyCodeLine{00373\ \ \ NaggyMock<MockFoo>\ naggy\_foo;}
+\DoxyCodeLine{00374\ }
+\DoxyCodeLine{00375\ \ \ EXPECT\_CALL(naggy\_foo,\ DoThis()).Times(0);}
+\DoxyCodeLine{00376\ \ \ EXPECT\_NONFATAL\_FAILURE(naggy\_foo.DoThis(),}
+\DoxyCodeLine{00377\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}called\ more\ times\ than\ expected"{}});}
+\DoxyCodeLine{00378\ \}}
+\DoxyCodeLine{00379\ }
+\DoxyCodeLine{00380\ \textcolor{comment}{//\ Tests\ that\ NaggyMock\ works\ with\ a\ mock\ class\ that\ has\ a\ non-\/default}}
+\DoxyCodeLine{00381\ \textcolor{comment}{//\ constructor.}}
+\DoxyCodeLine{00382\ TEST(NaggyMockTest,\ NonDefaultConstructor)\ \{}
+\DoxyCodeLine{00383\ \ \ NaggyMock<MockBar>\ naggy\_bar(\textcolor{stringliteral}{"{}hi"{}});}
+\DoxyCodeLine{00384\ \ \ EXPECT\_EQ(\textcolor{stringliteral}{"{}hi"{}},\ naggy\_bar.str());}
+\DoxyCodeLine{00385\ }
+\DoxyCodeLine{00386\ \ \ naggy\_bar.This();}
+\DoxyCodeLine{00387\ \ \ naggy\_bar.That(5,\ \textcolor{keyword}{true});}
+\DoxyCodeLine{00388\ \}}
+\DoxyCodeLine{00389\ }
+\DoxyCodeLine{00390\ \textcolor{comment}{//\ Tests\ that\ NaggyMock\ works\ with\ a\ mock\ class\ that\ has\ a\ 10-\/ary}}
+\DoxyCodeLine{00391\ \textcolor{comment}{//\ non-\/default\ constructor.}}
+\DoxyCodeLine{00392\ TEST(NaggyMockTest,\ NonDefaultConstructor10)\ \{}
+\DoxyCodeLine{00393\ \ \ NaggyMock<MockBar>\ naggy\_bar(\textcolor{charliteral}{'0'},\ \textcolor{charliteral}{'1'},\ \textcolor{stringliteral}{"{}2"{}},\ \textcolor{stringliteral}{"{}3"{}},\ \textcolor{charliteral}{'4'},\ \textcolor{charliteral}{'5'},}
+\DoxyCodeLine{00394\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}6"{}},\ \textcolor{stringliteral}{"{}7"{}},\ \textcolor{keyword}{true},\ \textcolor{keyword}{false});}
+\DoxyCodeLine{00395\ \ \ EXPECT\_EQ(\textcolor{stringliteral}{"{}01234567TF"{}},\ naggy\_bar.str());}
+\DoxyCodeLine{00396\ }
+\DoxyCodeLine{00397\ \ \ naggy\_bar.This();}
+\DoxyCodeLine{00398\ \ \ naggy\_bar.That(5,\ \textcolor{keyword}{true});}
+\DoxyCodeLine{00399\ \}}
+\DoxyCodeLine{00400\ }
+\DoxyCodeLine{00401\ TEST(NaggyMockTest,\ AllowLeak)\ \{}
+\DoxyCodeLine{00402\ \ \ NaggyMock<MockFoo>*\ leaked\ =\ \textcolor{keyword}{new}\ NaggyMock<MockFoo>;}
+\DoxyCodeLine{00403\ \ \ Mock::AllowLeak(leaked);}
+\DoxyCodeLine{00404\ \ \ EXPECT\_CALL(*leaked,\ DoThis());}
+\DoxyCodeLine{00405\ \ \ leaked-\/>DoThis();}
+\DoxyCodeLine{00406\ \}}
+\DoxyCodeLine{00407\ }
+\DoxyCodeLine{00408\ TEST(NaggyMockTest,\ MoveOnlyConstructor)\ \{}
+\DoxyCodeLine{00409\ \ \ NaggyMock<MockBaz>\ naggy\_baz(MockBaz::MoveOnly\{\});}
+\DoxyCodeLine{00410\ \}}
+\DoxyCodeLine{00411\ }
+\DoxyCodeLine{00412\ \textcolor{comment}{//\ Tests\ that\ NaggyMock<Mock>\ compiles\ where\ Mock\ is\ a\ user-\/defined}}
+\DoxyCodeLine{00413\ \textcolor{comment}{//\ class\ (as\ opposed\ to\ ::testing::Mock).}}
+\DoxyCodeLine{00414\ TEST(NaggyMockTest,\ AcceptsClassNamedMock)\ \{}
+\DoxyCodeLine{00415\ \ \ NaggyMock<\ ::Mock>\ naggy;}
+\DoxyCodeLine{00416\ \ \ EXPECT\_CALL(naggy,\ DoThis());}
+\DoxyCodeLine{00417\ \ \ naggy.DoThis();}
+\DoxyCodeLine{00418\ \}}
+\DoxyCodeLine{00419\ }
+\DoxyCodeLine{00420\ TEST(NaggyMockTest,\ IsNaggyInDestructor)\ \{}
+\DoxyCodeLine{00421\ \ \ \textcolor{keyword}{const}\ std::string\ saved\_flag\ =\ GMOCK\_FLAG\_GET(verbose);}
+\DoxyCodeLine{00422\ \ \ GMOCK\_FLAG\_SET(verbose,\ \textcolor{stringliteral}{"{}warning"{}});}
+\DoxyCodeLine{00423\ \ \ CaptureStdout();}
+\DoxyCodeLine{00424\ }
+\DoxyCodeLine{00425\ \ \ \{}
+\DoxyCodeLine{00426\ \ \ \ \ NaggyMock<CallsMockMethodInDestructor>\ naggy\_on\_destroy;}
+\DoxyCodeLine{00427\ \ \ \ \ \textcolor{comment}{//\ Don't\ add\ an\ expectation\ for\ the\ call\ before\ the\ mock\ goes\ out\ of\ scope.}}
+\DoxyCodeLine{00428\ \ \ \}}
+\DoxyCodeLine{00429\ }
+\DoxyCodeLine{00430\ \ \ EXPECT\_THAT(GetCapturedStdout(),}
+\DoxyCodeLine{00431\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ HasSubstr(\textcolor{stringliteral}{"{}Uninteresting\ mock\ function\ call"{}}));}
+\DoxyCodeLine{00432\ }
+\DoxyCodeLine{00433\ \ \ GMOCK\_FLAG\_SET(verbose,\ saved\_flag);}
+\DoxyCodeLine{00434\ \}}
+\DoxyCodeLine{00435\ }
+\DoxyCodeLine{00436\ TEST(NaggyMockTest,\ IsNaggy\_IsNice\_IsStrict)\ \{}
+\DoxyCodeLine{00437\ \ \ NaggyMock<MockFoo>\ naggy\_foo;}
+\DoxyCodeLine{00438\ \ \ EXPECT\_TRUE(Mock::IsNaggy(\&naggy\_foo));}
+\DoxyCodeLine{00439\ \ \ EXPECT\_FALSE(Mock::IsNice(\&naggy\_foo));}
+\DoxyCodeLine{00440\ \ \ EXPECT\_FALSE(Mock::IsStrict(\&naggy\_foo));}
+\DoxyCodeLine{00441\ \}}
+\DoxyCodeLine{00442\ }
+\DoxyCodeLine{00443\ \textcolor{comment}{//\ Tests\ that\ a\ strict\ mock\ allows\ expected\ calls.}}
+\DoxyCodeLine{00444\ TEST(StrictMockTest,\ AllowsExpectedCall)\ \{}
+\DoxyCodeLine{00445\ \ \ StrictMock<MockFoo>\ strict\_foo;}
+\DoxyCodeLine{00446\ }
+\DoxyCodeLine{00447\ \ \ EXPECT\_CALL(strict\_foo,\ DoThis());}
+\DoxyCodeLine{00448\ \ \ strict\_foo.DoThis();}
+\DoxyCodeLine{00449\ \}}
+\DoxyCodeLine{00450\ }
+\DoxyCodeLine{00451\ \textcolor{comment}{//\ Tests\ that\ an\ unexpected\ call\ on\ a\ strict\ mock\ fails.}}
+\DoxyCodeLine{00452\ TEST(StrictMockTest,\ UnexpectedCallFails)\ \{}
+\DoxyCodeLine{00453\ \ \ StrictMock<MockFoo>\ strict\_foo;}
+\DoxyCodeLine{00454\ }
+\DoxyCodeLine{00455\ \ \ EXPECT\_CALL(strict\_foo,\ DoThis()).Times(0);}
+\DoxyCodeLine{00456\ \ \ EXPECT\_NONFATAL\_FAILURE(strict\_foo.DoThis(),}
+\DoxyCodeLine{00457\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}called\ more\ times\ than\ expected"{}});}
+\DoxyCodeLine{00458\ \}}
+\DoxyCodeLine{00459\ }
+\DoxyCodeLine{00460\ \textcolor{comment}{//\ Tests\ that\ an\ uninteresting\ call\ on\ a\ strict\ mock\ fails.}}
+\DoxyCodeLine{00461\ TEST(StrictMockTest,\ UninterestingCallFails)\ \{}
+\DoxyCodeLine{00462\ \ \ StrictMock<MockFoo>\ strict\_foo;}
+\DoxyCodeLine{00463\ }
+\DoxyCodeLine{00464\ \ \ EXPECT\_NONFATAL\_FAILURE(strict\_foo.DoThis(),}
+\DoxyCodeLine{00465\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Uninteresting\ mock\ function\ call"{}});}
+\DoxyCodeLine{00466\ \}}
+\DoxyCodeLine{00467\ }
+\DoxyCodeLine{00468\ \textcolor{comment}{//\ Tests\ that\ an\ uninteresting\ call\ on\ a\ strict\ mock\ fails,\ even\ if}}
+\DoxyCodeLine{00469\ \textcolor{comment}{//\ the\ call\ deletes\ the\ mock\ object.}}
+\DoxyCodeLine{00470\ TEST(StrictMockTest,\ UninterestingCallFailsAfterDeath)\ \{}
+\DoxyCodeLine{00471\ \ \ StrictMock<MockFoo>*\ \textcolor{keyword}{const}\ strict\_foo\ =\ \textcolor{keyword}{new}\ StrictMock<MockFoo>;}
+\DoxyCodeLine{00472\ }
+\DoxyCodeLine{00473\ \ \ ON\_CALL(*strict\_foo,\ DoThis())}
+\DoxyCodeLine{00474\ \ \ \ \ \ \ .WillByDefault(Invoke(strict\_foo,\ \&MockFoo::Delete));}
+\DoxyCodeLine{00475\ }
+\DoxyCodeLine{00476\ \ \ EXPECT\_NONFATAL\_FAILURE(strict\_foo-\/>DoThis(),}
+\DoxyCodeLine{00477\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Uninteresting\ mock\ function\ call"{}});}
+\DoxyCodeLine{00478\ \}}
+\DoxyCodeLine{00479\ }
+\DoxyCodeLine{00480\ \textcolor{comment}{//\ Tests\ that\ StrictMock\ works\ with\ a\ mock\ class\ that\ has\ a}}
+\DoxyCodeLine{00481\ \textcolor{comment}{//\ non-\/default\ constructor.}}
+\DoxyCodeLine{00482\ TEST(StrictMockTest,\ NonDefaultConstructor)\ \{}
+\DoxyCodeLine{00483\ \ \ StrictMock<MockBar>\ strict\_bar(\textcolor{stringliteral}{"{}hi"{}});}
+\DoxyCodeLine{00484\ \ \ EXPECT\_EQ(\textcolor{stringliteral}{"{}hi"{}},\ strict\_bar.str());}
+\DoxyCodeLine{00485\ }
+\DoxyCodeLine{00486\ \ \ EXPECT\_NONFATAL\_FAILURE(strict\_bar.That(5,\ \textcolor{keyword}{true}),}
+\DoxyCodeLine{00487\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Uninteresting\ mock\ function\ call"{}});}
+\DoxyCodeLine{00488\ \}}
+\DoxyCodeLine{00489\ }
+\DoxyCodeLine{00490\ \textcolor{comment}{//\ Tests\ that\ StrictMock\ works\ with\ a\ mock\ class\ that\ has\ a\ 10-\/ary}}
+\DoxyCodeLine{00491\ \textcolor{comment}{//\ non-\/default\ constructor.}}
+\DoxyCodeLine{00492\ TEST(StrictMockTest,\ NonDefaultConstructor10)\ \{}
+\DoxyCodeLine{00493\ \ \ StrictMock<MockBar>\ strict\_bar(\textcolor{charliteral}{'a'},\ \textcolor{charliteral}{'b'},\ \textcolor{stringliteral}{"{}c"{}},\ \textcolor{stringliteral}{"{}d"{}},\ \textcolor{charliteral}{'e'},\ \textcolor{charliteral}{'f'},}
+\DoxyCodeLine{00494\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}g"{}},\ \textcolor{stringliteral}{"{}h"{}},\ \textcolor{keyword}{true},\ \textcolor{keyword}{false});}
+\DoxyCodeLine{00495\ \ \ EXPECT\_EQ(\textcolor{stringliteral}{"{}abcdefghTF"{}},\ strict\_bar.str());}
+\DoxyCodeLine{00496\ }
+\DoxyCodeLine{00497\ \ \ EXPECT\_NONFATAL\_FAILURE(strict\_bar.That(5,\ \textcolor{keyword}{true}),}
+\DoxyCodeLine{00498\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Uninteresting\ mock\ function\ call"{}});}
+\DoxyCodeLine{00499\ \}}
+\DoxyCodeLine{00500\ }
+\DoxyCodeLine{00501\ TEST(StrictMockTest,\ AllowLeak)\ \{}
+\DoxyCodeLine{00502\ \ \ StrictMock<MockFoo>*\ leaked\ =\ \textcolor{keyword}{new}\ StrictMock<MockFoo>;}
+\DoxyCodeLine{00503\ \ \ Mock::AllowLeak(leaked);}
+\DoxyCodeLine{00504\ \ \ EXPECT\_CALL(*leaked,\ DoThis());}
+\DoxyCodeLine{00505\ \ \ leaked-\/>DoThis();}
+\DoxyCodeLine{00506\ \}}
+\DoxyCodeLine{00507\ }
+\DoxyCodeLine{00508\ TEST(StrictMockTest,\ MoveOnlyConstructor)\ \{}
+\DoxyCodeLine{00509\ \ \ StrictMock<MockBaz>\ strict\_baz(MockBaz::MoveOnly\{\});}
+\DoxyCodeLine{00510\ \}}
+\DoxyCodeLine{00511\ }
+\DoxyCodeLine{00512\ \textcolor{comment}{//\ Tests\ that\ StrictMock<Mock>\ compiles\ where\ Mock\ is\ a\ user-\/defined}}
+\DoxyCodeLine{00513\ \textcolor{comment}{//\ class\ (as\ opposed\ to\ ::testing::Mock).}}
+\DoxyCodeLine{00514\ TEST(StrictMockTest,\ AcceptsClassNamedMock)\ \{}
+\DoxyCodeLine{00515\ \ \ StrictMock<\ ::Mock>\ strict;}
+\DoxyCodeLine{00516\ \ \ EXPECT\_CALL(strict,\ DoThis());}
+\DoxyCodeLine{00517\ \ \ strict.DoThis();}
+\DoxyCodeLine{00518\ \}}
+\DoxyCodeLine{00519\ }
+\DoxyCodeLine{00520\ TEST(StrictMockTest,\ IsStrictInDestructor)\ \{}
+\DoxyCodeLine{00521\ \ \ EXPECT\_NONFATAL\_FAILURE(}
+\DoxyCodeLine{00522\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00523\ \ \ \ \ \ \ \ \ StrictMock<CallsMockMethodInDestructor>\ strict\_on\_destroy;}
+\DoxyCodeLine{00524\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Don't\ add\ an\ expectation\ for\ the\ call\ before\ the\ mock\ goes\ out\ of}}
+\DoxyCodeLine{00525\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ scope.}}
+\DoxyCodeLine{00526\ \ \ \ \ \ \ \},}
+\DoxyCodeLine{00527\ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Uninteresting\ mock\ function\ call"{}});}
+\DoxyCodeLine{00528\ \}}
+\DoxyCodeLine{00529\ }
+\DoxyCodeLine{00530\ TEST(StrictMockTest,\ IsNaggy\_IsNice\_IsStrict)\ \{}
+\DoxyCodeLine{00531\ \ \ StrictMock<MockFoo>\ strict\_foo;}
+\DoxyCodeLine{00532\ \ \ EXPECT\_FALSE(Mock::IsNaggy(\&strict\_foo));}
+\DoxyCodeLine{00533\ \ \ EXPECT\_FALSE(Mock::IsNice(\&strict\_foo));}
+\DoxyCodeLine{00534\ \ \ EXPECT\_TRUE(Mock::IsStrict(\&strict\_foo));}
+\DoxyCodeLine{00535\ \}}
+\DoxyCodeLine{00536\ }
+\DoxyCodeLine{00537\ \}\ \ \textcolor{comment}{//\ namespace\ gmock\_nice\_strict\_test}}
+\DoxyCodeLine{00538\ \}\ \ \textcolor{comment}{//\ namespace\ testing}}
+
+\end{DoxyCode}

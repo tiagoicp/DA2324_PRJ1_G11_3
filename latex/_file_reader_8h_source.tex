@@ -1,0 +1,28 @@
+\doxysection{File\+Reader.\+h}
+\hypertarget{_file_reader_8h_source}{}\label{_file_reader_8h_source}\index{utils/FileReader.h@{utils/FileReader.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ FILEREADER\_H}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ FILEREADER\_H}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}../classes/Reservoir.h"{}}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}../classes/PumpingStation.h"{}}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}../classes/City.h"{}}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}../classes/WaterSupply.h"{}}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <iostream>}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <fstream>}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <sstream>}}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_file_reader}{FileReader}}\ \{}
+\DoxyCodeLine{00015\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00016\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ addReservoirs(\textcolor{keyword}{const}\ std::string\ \&\mbox{\hyperlink{class_edge}{filename}},\ \mbox{\hyperlink{class_water_supply}{WaterSupply}}\ \&\mbox{\hyperlink{class_edge}{network}});}
+\DoxyCodeLine{00017\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ addPumpingStations(\textcolor{keyword}{const}\ std::string\ \&\mbox{\hyperlink{class_edge}{filename}},\ \mbox{\hyperlink{class_water_supply}{WaterSupply}}\ \&\mbox{\hyperlink{class_edge}{network}});}
+\DoxyCodeLine{00018\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ addCities(\textcolor{keyword}{const}\ std::string\ \&\mbox{\hyperlink{class_edge}{filename}},\ \mbox{\hyperlink{class_water_supply}{WaterSupply}}\ \&\mbox{\hyperlink{class_edge}{network}});}
+\DoxyCodeLine{00019\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ addPipes(\textcolor{keyword}{const}\ std::string\ \&\mbox{\hyperlink{class_edge}{filename}},\ \mbox{\hyperlink{class_water_supply}{WaterSupply}}\ \&\mbox{\hyperlink{class_edge}{network}});}
+\DoxyCodeLine{00020\ \};}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//FILEREADER\_H}}
+
+\end{DoxyCode}

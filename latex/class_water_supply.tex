@@ -1,0 +1,101 @@
+\doxysection{Water\+Supply Class Reference}
+\hypertarget{class_water_supply}{}\label{class_water_supply}\index{WaterSupply@{WaterSupply}}
+Inheritance diagram for Water\+Supply\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_water_supply}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_water_supply_af16ccfc470ecd0f5f9adeb2e5f391fd5}\label{class_water_supply_af16ccfc470ecd0f5f9adeb2e5f391fd5} 
+{\bfseries Water\+Supply} (\mbox{\hyperlink{class_edge}{const}} \mbox{\hyperlink{class_water_supply}{Water\+Supply}} \&\mbox{\hyperlink{class_edge}{other}})
+\item 
+\Hypertarget{class_water_supply_a4ea21a93ec75c3d6c8209a303abac8ba}\label{class_water_supply_a4ea21a93ec75c3d6c8209a303abac8ba} 
+\mbox{\hyperlink{class_edge}{void}} {\bfseries add\+Node} (\mbox{\hyperlink{class_edge}{const}} \mbox{\hyperlink{class_edge}{string}} \&code)
+\item 
+\Hypertarget{class_water_supply_ab0d41e648c9391f7bf27e63f12013a29}\label{class_water_supply_ab0d41e648c9391f7bf27e63f12013a29} 
+\mbox{\hyperlink{class_edge}{void}} {\bfseries remove\+Node} (\mbox{\hyperlink{class_edge}{const}} \mbox{\hyperlink{class_edge}{string}} \&code)
+\item 
+\Hypertarget{class_water_supply_a5f65974760c5500622a3c75920a3bfb9}\label{class_water_supply_a5f65974760c5500622a3c75920a3bfb9} 
+\mbox{\hyperlink{class_edge}{void}} {\bfseries add\+Reservoir} (\mbox{\hyperlink{class_edge}{const}} \mbox{\hyperlink{class_edge}{string}} \&code, \mbox{\hyperlink{class_edge}{const}} \mbox{\hyperlink{class_reservoir}{Reservoir}} \&\mbox{\hyperlink{class_edge}{reservoir}})
+\item 
+\Hypertarget{class_water_supply_a1b699b6ac2780cef1e51a51e0eb0993a}\label{class_water_supply_a1b699b6ac2780cef1e51a51e0eb0993a} 
+\mbox{\hyperlink{class_edge}{void}} {\bfseries remove\+Reservoir} (\mbox{\hyperlink{class_edge}{const}} \mbox{\hyperlink{class_edge}{string}} \&code)
+\item 
+\Hypertarget{class_water_supply_ae4270ded327453b42cd31f438a413a7e}\label{class_water_supply_ae4270ded327453b42cd31f438a413a7e} 
+\mbox{\hyperlink{class_edge}{void}} {\bfseries add\+Pumping\+Station} (\mbox{\hyperlink{class_edge}{const}} \mbox{\hyperlink{class_edge}{string}} \&code, \mbox{\hyperlink{class_edge}{const}} \mbox{\hyperlink{class_pumping_station}{Pumping\+Station}} \&\mbox{\hyperlink{class_edge}{ps}})
+\item 
+\Hypertarget{class_water_supply_a12ceaf955c24799ad911ddc30de3c2df}\label{class_water_supply_a12ceaf955c24799ad911ddc30de3c2df} 
+\mbox{\hyperlink{class_edge}{void}} {\bfseries remove\+Pumping\+Station} (\mbox{\hyperlink{class_edge}{const}} \mbox{\hyperlink{class_edge}{string}} \&code)
+\item 
+\Hypertarget{class_water_supply_a2a28763a1ee1129af1f99f0900ebda6c}\label{class_water_supply_a2a28763a1ee1129af1f99f0900ebda6c} 
+\mbox{\hyperlink{class_edge}{void}} {\bfseries add\+City} (\mbox{\hyperlink{class_edge}{const}} \mbox{\hyperlink{class_edge}{string}} \&code, \mbox{\hyperlink{class_edge}{const}} \mbox{\hyperlink{class_city}{City}} \&city)
+\item 
+\Hypertarget{class_water_supply_a5dba01dd2c14101f4f49dbfb75388002}\label{class_water_supply_a5dba01dd2c14101f4f49dbfb75388002} 
+\mbox{\hyperlink{class_edge}{void}} {\bfseries remove\+City} (\mbox{\hyperlink{class_edge}{const}} \mbox{\hyperlink{class_edge}{string}} \&code)
+\item 
+\Hypertarget{class_water_supply_a2e6c9a699397b292bc6bdc0b88282c04}\label{class_water_supply_a2e6c9a699397b292bc6bdc0b88282c04} 
+\mbox{\hyperlink{class_edge}{void}} {\bfseries add\+Pipe} (\mbox{\hyperlink{class_edge}{const}} \mbox{\hyperlink{class_edge}{string}} \&\mbox{\hyperlink{class_edge}{service\+PointA}}, \mbox{\hyperlink{class_edge}{const}} \mbox{\hyperlink{class_edge}{string}} \&\mbox{\hyperlink{class_edge}{service\+PointB}}, \mbox{\hyperlink{class_edge}{int}} \mbox{\hyperlink{class_edge}{capacity}}, \mbox{\hyperlink{class_edge}{int}} \mbox{\hyperlink{class_edge}{direction}})
+\item 
+\Hypertarget{class_water_supply_aae07aa945b25e9047153e9ff95af72d0}\label{class_water_supply_aae07aa945b25e9047153e9ff95af72d0} 
+\mbox{\hyperlink{class_edge}{void}} {\bfseries remove\+Pipe} (\mbox{\hyperlink{class_edge}{const}} \mbox{\hyperlink{class_edge}{string}} \&\mbox{\hyperlink{class_edge}{service\+PointA}}, \mbox{\hyperlink{class_edge}{const}} \mbox{\hyperlink{class_edge}{string}} \&\mbox{\hyperlink{class_edge}{service\+PointB}}, \mbox{\hyperlink{class_edge}{int}} \mbox{\hyperlink{class_edge}{direction}})
+\item 
+\Hypertarget{class_water_supply_a0bfc23484494e9bd7d44939764fe0af1}\label{class_water_supply_a0bfc23484494e9bd7d44939764fe0af1} 
+\mbox{\hyperlink{class_vertex}{Vertex}}$<$ \mbox{\hyperlink{class_edge}{string}} $>$ \texorpdfstring{$\ast$}{*} {\bfseries find\+Node} (\mbox{\hyperlink{class_edge}{const}} \mbox{\hyperlink{class_edge}{string}} \&\mbox{\hyperlink{class_edge}{in}}) \mbox{\hyperlink{class_edge}{const}}
+\item 
+\Hypertarget{class_water_supply_acbe67bfeb9f29a2949e8ed8d8fc1fcaf}\label{class_water_supply_acbe67bfeb9f29a2949e8ed8d8fc1fcaf} 
+\mbox{\hyperlink{class_edge}{void}} {\bfseries add\+Src} (\mbox{\hyperlink{class_vertex}{Vertex}}$<$ \mbox{\hyperlink{class_edge}{string}} $>$ \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{class_edge}{src}})
+\item 
+\Hypertarget{class_water_supply_a5a56491dc61f393cb4144474f1e94ca6}\label{class_water_supply_a5a56491dc61f393cb4144474f1e94ca6} 
+\mbox{\hyperlink{class_edge}{void}} {\bfseries add\+Dst} (\mbox{\hyperlink{class_vertex}{Vertex}}$<$ \mbox{\hyperlink{class_edge}{string}} $>$ \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{class_edge}{dst}})
+\item 
+\Hypertarget{class_water_supply_a7d47612cfd60015defe8366b3b77ac94}\label{class_water_supply_a7d47612cfd60015defe8366b3b77ac94} 
+\mbox{\hyperlink{class_edge}{void}} {\bfseries add\+PS} (\mbox{\hyperlink{class_vertex}{Vertex}}$<$ \mbox{\hyperlink{class_edge}{string}} $>$ \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{class_edge}{ps}})
+\item 
+\Hypertarget{class_water_supply_a9ff4f246fe90eae9e2efeee63b250beb}\label{class_water_supply_a9ff4f246fe90eae9e2efeee63b250beb} 
+\mbox{\hyperlink{class_edge}{void}} {\bfseries reset\+Graph\+Flow} ()
+\item 
+\Hypertarget{class_water_supply_ad72e8795f07f0058f75479f814107012}\label{class_water_supply_ad72e8795f07f0058f75479f814107012} 
+\mbox{\hyperlink{class_edge}{const}} \mbox{\hyperlink{class_edge}{unordered\+\_\+map}}$<$ \mbox{\hyperlink{class_edge}{string}}, \mbox{\hyperlink{class_reservoir}{Reservoir}} $>$ \& {\bfseries get\+Reservoirs} () \mbox{\hyperlink{class_edge}{const}}
+\item 
+\Hypertarget{class_water_supply_a9b73d01ecdd001fc903e806a3a6c84cf}\label{class_water_supply_a9b73d01ecdd001fc903e806a3a6c84cf} 
+\mbox{\hyperlink{class_edge}{const}} \mbox{\hyperlink{class_edge}{unordered\+\_\+map}}$<$ \mbox{\hyperlink{class_edge}{string}}, \mbox{\hyperlink{class_pumping_station}{Pumping\+Station}} $>$ \& {\bfseries get\+Pumping\+Stations} () \mbox{\hyperlink{class_edge}{const}}
+\item 
+\Hypertarget{class_water_supply_a1912c397857c8d8a3edb61f1d9baaa7a}\label{class_water_supply_a1912c397857c8d8a3edb61f1d9baaa7a} 
+\mbox{\hyperlink{class_edge}{const}} \mbox{\hyperlink{class_edge}{unordered\+\_\+map}}$<$ \mbox{\hyperlink{class_edge}{string}}, \mbox{\hyperlink{class_city}{City}} $>$ \& {\bfseries get\+Cities} () \mbox{\hyperlink{class_edge}{const}}
+\item 
+\Hypertarget{class_water_supply_adb3f86d8fdaed1c70df1baa3162c2142}\label{class_water_supply_adb3f86d8fdaed1c70df1baa3162c2142} 
+\mbox{\hyperlink{class_edge}{vector}}$<$ \mbox{\hyperlink{class_vertex}{Vertex}}$<$ \mbox{\hyperlink{class_edge}{string}} $>$ \texorpdfstring{$\ast$}{*} $>$ {\bfseries get\+Node\+Set} () \mbox{\hyperlink{class_edge}{const}}
+\item 
+\Hypertarget{class_water_supply_aad1fa2c4aa431559f79bb9f3bf425c41}\label{class_water_supply_aad1fa2c4aa431559f79bb9f3bf425c41} 
+\mbox{\hyperlink{class_edge}{vector}}$<$ \mbox{\hyperlink{class_vertex}{Vertex}}$<$ \mbox{\hyperlink{class_edge}{string}} $>$ \texorpdfstring{$\ast$}{*} $>$ {\bfseries get\+Src\+Set} () \mbox{\hyperlink{class_edge}{const}}
+\item 
+\Hypertarget{class_water_supply_ad09b3cdca44de1636986c94446efeee4}\label{class_water_supply_ad09b3cdca44de1636986c94446efeee4} 
+\mbox{\hyperlink{class_edge}{vector}}$<$ \mbox{\hyperlink{class_vertex}{Vertex}}$<$ \mbox{\hyperlink{class_edge}{string}} $>$ \texorpdfstring{$\ast$}{*} $>$ {\bfseries get\+Dst\+Set} () \mbox{\hyperlink{class_edge}{const}}
+\item 
+\Hypertarget{class_water_supply_a1daa2d8a075e254a02f3bb788f653ba6}\label{class_water_supply_a1daa2d8a075e254a02f3bb788f653ba6} 
+\mbox{\hyperlink{class_edge}{vector}}$<$ \mbox{\hyperlink{class_vertex}{Vertex}}$<$ \mbox{\hyperlink{class_edge}{string}} $>$ \texorpdfstring{$\ast$}{*} $>$ {\bfseries get\+PSSet} () \mbox{\hyperlink{class_edge}{const}}
+\item 
+\Hypertarget{class_water_supply_a994703d3a4c4c897e1a786b1c86f5daf}\label{class_water_supply_a994703d3a4c4c897e1a786b1c86f5daf} 
+\mbox{\hyperlink{class_edge}{void}} {\bfseries connected\+Reservoirs\+Dfs\+Visit} (\mbox{\hyperlink{class_vertex}{Vertex}}$<$ \mbox{\hyperlink{class_edge}{string}} $>$ \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{class_edge}{src}}, \mbox{\hyperlink{class_edge}{string}} \&dest, \mbox{\hyperlink{class_edge}{bool}} \&\mbox{\hyperlink{class_edge}{found}})
+\item 
+\Hypertarget{class_water_supply_afadb4992d90b7d27e1d5bd8706e7a3f2}\label{class_water_supply_afadb4992d90b7d27e1d5bd8706e7a3f2} 
+\mbox{\hyperlink{class_edge}{void}} {\bfseries connected\+Reservoirs\+Dfs} (\mbox{\hyperlink{class_vertex}{Vertex}}$<$ \mbox{\hyperlink{class_edge}{string}} $>$ \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{class_edge}{src}}, \mbox{\hyperlink{class_edge}{string}} \&dest, \mbox{\hyperlink{class_edge}{vector}}$<$ \mbox{\hyperlink{class_vertex}{Vertex}}$<$ \mbox{\hyperlink{class_edge}{string}} $>$ \texorpdfstring{$\ast$}{*} $>$ \&\mbox{\hyperlink{class_edge}{res}})
+\item 
+\Hypertarget{class_water_supply_a346b3aba0e2de1c65a29efa82b3c174a}\label{class_water_supply_a346b3aba0e2de1c65a29efa82b3c174a} 
+\mbox{\hyperlink{class_edge}{double}} {\bfseries get\+Total\+Sink\+Flow} ()
+\item 
+\Hypertarget{class_water_supply_ab38304ec4917aea6155a712a684f46c8}\label{class_water_supply_ab38304ec4917aea6155a712a684f46c8} 
+\mbox{\hyperlink{class_edge}{double}} {\bfseries get\+City\+Flow} (\mbox{\hyperlink{class_vertex}{Vertex}}$<$ \mbox{\hyperlink{class_edge}{string}} $>$ \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{class_edge}{city\+Vertex}})
+\item 
+\Hypertarget{class_water_supply_a52bd49e03f57d4ee728231beed3085e2}\label{class_water_supply_a52bd49e03f57d4ee728231beed3085e2} 
+\mbox{\hyperlink{class_edge}{vector}}$<$ \mbox{\hyperlink{class_edge}{double}} $>$ {\bfseries get\+Network\+Balance\+Stats} () \mbox{\hyperlink{class_edge}{const}}
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+classes/Water\+Supply.\+h\item 
+classes/Water\+Supply.\+cpp\end{DoxyCompactItemize}

@@ -1,0 +1,2042 @@
+\doxysection{gmock-\/spec-\/builders.h}
+\hypertarget{gmock-spec-builders_8h_source}{}\label{gmock-spec-builders_8h_source}\index{lib/googletest-\/master/googlemock/include/gmock/gmock-\/spec-\/builders.h@{lib/googletest-\/master/googlemock/include/gmock/gmock-\/spec-\/builders.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//\ Copyright\ 2007,\ Google\ Inc.}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//\ All\ rights\ reserved.}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//}}
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ Redistribution\ and\ use\ in\ source\ and\ binary\ forms,\ with\ or\ without}}
+\DoxyCodeLine{00005\ \textcolor{comment}{//\ modification,\ are\ permitted\ provided\ that\ the\ following\ conditions\ are}}
+\DoxyCodeLine{00006\ \textcolor{comment}{//\ met:}}
+\DoxyCodeLine{00007\ \textcolor{comment}{//}}
+\DoxyCodeLine{00008\ \textcolor{comment}{//\ \ \ \ \ *\ Redistributions\ of\ source\ code\ must\ retain\ the\ above\ copyright}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//\ notice,\ this\ list\ of\ conditions\ and\ the\ following\ disclaimer.}}
+\DoxyCodeLine{00010\ \textcolor{comment}{//\ \ \ \ \ *\ Redistributions\ in\ binary\ form\ must\ reproduce\ the\ above}}
+\DoxyCodeLine{00011\ \textcolor{comment}{//\ copyright\ notice,\ this\ list\ of\ conditions\ and\ the\ following\ disclaimer}}
+\DoxyCodeLine{00012\ \textcolor{comment}{//\ in\ the\ documentation\ and/or\ other\ materials\ provided\ with\ the}}
+\DoxyCodeLine{00013\ \textcolor{comment}{//\ distribution.}}
+\DoxyCodeLine{00014\ \textcolor{comment}{//\ \ \ \ \ *\ Neither\ the\ name\ of\ Google\ Inc.\ nor\ the\ names\ of\ its}}
+\DoxyCodeLine{00015\ \textcolor{comment}{//\ contributors\ may\ be\ used\ to\ endorse\ or\ promote\ products\ derived\ from}}
+\DoxyCodeLine{00016\ \textcolor{comment}{//\ this\ software\ without\ specific\ prior\ written\ permission.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{//}}
+\DoxyCodeLine{00018\ \textcolor{comment}{//\ THIS\ SOFTWARE\ IS\ PROVIDED\ BY\ THE\ COPYRIGHT\ HOLDERS\ AND\ CONTRIBUTORS}}
+\DoxyCodeLine{00019\ \textcolor{comment}{//\ "{}AS\ IS"{}\ AND\ ANY\ EXPRESS\ OR\ IMPLIED\ WARRANTIES,\ INCLUDING,\ BUT\ NOT}}
+\DoxyCodeLine{00020\ \textcolor{comment}{//\ LIMITED\ TO,\ THE\ IMPLIED\ WARRANTIES\ OF\ MERCHANTABILITY\ AND\ FITNESS\ FOR}}
+\DoxyCodeLine{00021\ \textcolor{comment}{//\ A\ PARTICULAR\ PURPOSE\ ARE\ DISCLAIMED.\ IN\ NO\ EVENT\ SHALL\ THE\ COPYRIGHT}}
+\DoxyCodeLine{00022\ \textcolor{comment}{//\ OWNER\ OR\ CONTRIBUTORS\ BE\ LIABLE\ FOR\ ANY\ DIRECT,\ INDIRECT,\ INCIDENTAL,}}
+\DoxyCodeLine{00023\ \textcolor{comment}{//\ SPECIAL,\ EXEMPLARY,\ OR\ CONSEQUENTIAL\ DAMAGES\ (INCLUDING,\ BUT\ NOT}}
+\DoxyCodeLine{00024\ \textcolor{comment}{//\ LIMITED\ TO,\ PROCUREMENT\ OF\ SUBSTITUTE\ GOODS\ OR\ SERVICES;\ LOSS\ OF\ USE,}}
+\DoxyCodeLine{00025\ \textcolor{comment}{//\ DATA,\ OR\ PROFITS;\ OR\ BUSINESS\ INTERRUPTION)\ HOWEVER\ CAUSED\ AND\ ON\ ANY}}
+\DoxyCodeLine{00026\ \textcolor{comment}{//\ THEORY\ OF\ LIABILITY,\ WHETHER\ IN\ CONTRACT,\ STRICT\ LIABILITY,\ OR\ TORT}}
+\DoxyCodeLine{00027\ \textcolor{comment}{//\ (INCLUDING\ NEGLIGENCE\ OR\ OTHERWISE)\ ARISING\ IN\ ANY\ WAY\ OUT\ OF\ THE\ USE}}
+\DoxyCodeLine{00028\ \textcolor{comment}{//\ OF\ THIS\ SOFTWARE,\ EVEN\ IF\ ADVISED\ OF\ THE\ POSSIBILITY\ OF\ SUCH\ DAMAGE.}}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \textcolor{comment}{//\ Google\ Mock\ -\/\ a\ framework\ for\ writing\ C++\ mock\ classes.}}
+\DoxyCodeLine{00032\ \textcolor{comment}{//}}
+\DoxyCodeLine{00033\ \textcolor{comment}{//\ This\ file\ implements\ the\ ON\_CALL()\ and\ EXPECT\_CALL()\ macros.}}
+\DoxyCodeLine{00034\ \textcolor{comment}{//}}
+\DoxyCodeLine{00035\ \textcolor{comment}{//\ A\ user\ can\ use\ the\ ON\_CALL()\ macro\ to\ specify\ the\ default\ action\ of}}
+\DoxyCodeLine{00036\ \textcolor{comment}{//\ a\ mock\ method.\ \ The\ syntax\ is:}}
+\DoxyCodeLine{00037\ \textcolor{comment}{//}}
+\DoxyCodeLine{00038\ \textcolor{comment}{//\ \ \ ON\_CALL(mock\_object,\ Method(argument-\/matchers))}}
+\DoxyCodeLine{00039\ \textcolor{comment}{//\ \ \ \ \ \ \ .With(multi-\/argument-\/matcher)}}
+\DoxyCodeLine{00040\ \textcolor{comment}{//\ \ \ \ \ \ \ .WillByDefault(action);}}
+\DoxyCodeLine{00041\ \textcolor{comment}{//}}
+\DoxyCodeLine{00042\ \textcolor{comment}{//\ \ where\ the\ .With()\ clause\ is\ optional.}}
+\DoxyCodeLine{00043\ \textcolor{comment}{//}}
+\DoxyCodeLine{00044\ \textcolor{comment}{//\ A\ user\ can\ use\ the\ EXPECT\_CALL()\ macro\ to\ specify\ an\ expectation\ on}}
+\DoxyCodeLine{00045\ \textcolor{comment}{//\ a\ mock\ method.\ \ The\ syntax\ is:}}
+\DoxyCodeLine{00046\ \textcolor{comment}{//}}
+\DoxyCodeLine{00047\ \textcolor{comment}{//\ \ \ EXPECT\_CALL(mock\_object,\ Method(argument-\/matchers))}}
+\DoxyCodeLine{00048\ \textcolor{comment}{//\ \ \ \ \ \ \ .With(multi-\/argument-\/matchers)}}
+\DoxyCodeLine{00049\ \textcolor{comment}{//\ \ \ \ \ \ \ .Times(cardinality)}}
+\DoxyCodeLine{00050\ \textcolor{comment}{//\ \ \ \ \ \ \ .InSequence(sequences)}}
+\DoxyCodeLine{00051\ \textcolor{comment}{//\ \ \ \ \ \ \ .After(expectations)}}
+\DoxyCodeLine{00052\ \textcolor{comment}{//\ \ \ \ \ \ \ .WillOnce(action)}}
+\DoxyCodeLine{00053\ \textcolor{comment}{//\ \ \ \ \ \ \ .WillRepeatedly(action)}}
+\DoxyCodeLine{00054\ \textcolor{comment}{//\ \ \ \ \ \ \ .RetiresOnSaturation();}}
+\DoxyCodeLine{00055\ \textcolor{comment}{//}}
+\DoxyCodeLine{00056\ \textcolor{comment}{//\ where\ all\ clauses\ are\ optional,\ and\ .InSequence()/.After()/}}
+\DoxyCodeLine{00057\ \textcolor{comment}{//\ .WillOnce()\ can\ appear\ any\ number\ of\ times.}}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ \textcolor{preprocessor}{\#ifndef\ GOOGLEMOCK\_INCLUDE\_GMOCK\_GMOCK\_SPEC\_BUILDERS\_H\_}}
+\DoxyCodeLine{00060\ \textcolor{preprocessor}{\#define\ GOOGLEMOCK\_INCLUDE\_GMOCK\_GMOCK\_SPEC\_BUILDERS\_H\_}}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ \textcolor{preprocessor}{\#include\ <functional>}}
+\DoxyCodeLine{00063\ \textcolor{preprocessor}{\#include\ <map>}}
+\DoxyCodeLine{00064\ \textcolor{preprocessor}{\#include\ <memory>}}
+\DoxyCodeLine{00065\ \textcolor{preprocessor}{\#include\ <set>}}
+\DoxyCodeLine{00066\ \textcolor{preprocessor}{\#include\ <sstream>}}
+\DoxyCodeLine{00067\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00068\ \textcolor{preprocessor}{\#include\ <type\_traits>}}
+\DoxyCodeLine{00069\ \textcolor{preprocessor}{\#include\ <utility>}}
+\DoxyCodeLine{00070\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00071\ \textcolor{preprocessor}{\#include\ "{}gmock/gmock-\/actions.h"{}}}
+\DoxyCodeLine{00072\ \textcolor{preprocessor}{\#include\ "{}gmock/gmock-\/cardinalities.h"{}}}
+\DoxyCodeLine{00073\ \textcolor{preprocessor}{\#include\ "{}gmock/gmock-\/matchers.h"{}}}
+\DoxyCodeLine{00074\ \textcolor{preprocessor}{\#include\ "{}gmock/internal/gmock-\/internal-\/utils.h"{}}}
+\DoxyCodeLine{00075\ \textcolor{preprocessor}{\#include\ "{}gmock/internal/gmock-\/port.h"{}}}
+\DoxyCodeLine{00076\ \textcolor{preprocessor}{\#include\ "{}gtest/gtest.h"{}}}
+\DoxyCodeLine{00077\ }
+\DoxyCodeLine{00078\ \textcolor{preprocessor}{\#if\ GTEST\_HAS\_EXCEPTIONS}}
+\DoxyCodeLine{00079\ \textcolor{preprocessor}{\#\ include\ <stdexcept>}\ \ \textcolor{comment}{//\ NOLINT}}
+\DoxyCodeLine{00080\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00081\ }
+\DoxyCodeLine{00082\ GTEST\_DISABLE\_MSC\_WARNINGS\_PUSH\_(4251\ \(\backslash\)}
+\DoxyCodeLine{00083\ \textcolor{comment}{/*\ class\ A\ needs\ to\ have\ dll-\/interface\ to\ be\ used\ by\ clients\ of\ class\ B\ */})}
+\DoxyCodeLine{00084\ }
+\DoxyCodeLine{00085\ namespace\ testing\ \{}
+\DoxyCodeLine{00086\ }
+\DoxyCodeLine{00087\ \textcolor{comment}{//\ An\ abstract\ handle\ of\ an\ expectation.}}
+\DoxyCodeLine{00088\ \textcolor{keyword}{class\ }Expectation;}
+\DoxyCodeLine{00089\ }
+\DoxyCodeLine{00090\ \textcolor{comment}{//\ A\ set\ of\ expectation\ handles.}}
+\DoxyCodeLine{00091\ \textcolor{keyword}{class\ }ExpectationSet;}
+\DoxyCodeLine{00092\ }
+\DoxyCodeLine{00093\ \textcolor{comment}{//\ Anything\ inside\ the\ 'internal'\ namespace\ IS\ INTERNAL\ IMPLEMENTATION}}
+\DoxyCodeLine{00094\ \textcolor{comment}{//\ and\ MUST\ NOT\ BE\ USED\ IN\ USER\ CODE!!!}}
+\DoxyCodeLine{00095\ \textcolor{keyword}{namespace\ }internal\ \{}
+\DoxyCodeLine{00096\ }
+\DoxyCodeLine{00097\ \textcolor{comment}{//\ Implements\ a\ mock\ function.}}
+\DoxyCodeLine{00098\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ F>\ \textcolor{keyword}{class\ }FunctionMocker;}
+\DoxyCodeLine{00099\ }
+\DoxyCodeLine{00100\ \textcolor{comment}{//\ Base\ class\ for\ expectations.}}
+\DoxyCodeLine{00101\ \textcolor{keyword}{class\ }ExpectationBase;}
+\DoxyCodeLine{00102\ }
+\DoxyCodeLine{00103\ \textcolor{comment}{//\ Implements\ an\ expectation.}}
+\DoxyCodeLine{00104\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ F>\ \textcolor{keyword}{class\ }TypedExpectation;}
+\DoxyCodeLine{00105\ }
+\DoxyCodeLine{00106\ \textcolor{comment}{//\ Helper\ class\ for\ testing\ the\ Expectation\ class\ template.}}
+\DoxyCodeLine{00107\ \textcolor{keyword}{class\ }ExpectationTester;}
+\DoxyCodeLine{00108\ }
+\DoxyCodeLine{00109\ \textcolor{comment}{//\ Helper\ classes\ for\ implementing\ NiceMock,\ StrictMock,\ and\ NaggyMock.}}
+\DoxyCodeLine{00110\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ MockClass>}
+\DoxyCodeLine{00111\ \textcolor{keyword}{class\ }NiceMockImpl;}
+\DoxyCodeLine{00112\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ MockClass>}
+\DoxyCodeLine{00113\ \textcolor{keyword}{class\ }StrictMockImpl;}
+\DoxyCodeLine{00114\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ MockClass>}
+\DoxyCodeLine{00115\ \textcolor{keyword}{class\ }NaggyMockImpl;}
+\DoxyCodeLine{00116\ }
+\DoxyCodeLine{00117\ \textcolor{comment}{//\ Protects\ the\ mock\ object\ registry\ (in\ class\ Mock),\ all\ function}}
+\DoxyCodeLine{00118\ \textcolor{comment}{//\ mockers,\ and\ all\ expectations.}}
+\DoxyCodeLine{00119\ \textcolor{comment}{//}}
+\DoxyCodeLine{00120\ \textcolor{comment}{//\ The\ reason\ we\ don't\ use\ more\ fine-\/grained\ protection\ is:\ when\ a}}
+\DoxyCodeLine{00121\ \textcolor{comment}{//\ mock\ function\ Foo()\ is\ called,\ it\ needs\ to\ consult\ its\ expectations}}
+\DoxyCodeLine{00122\ \textcolor{comment}{//\ to\ see\ which\ one\ should\ be\ picked.\ \ If\ another\ thread\ is\ allowed\ to}}
+\DoxyCodeLine{00123\ \textcolor{comment}{//\ call\ a\ mock\ function\ (either\ Foo()\ or\ a\ different\ one)\ at\ the\ same}}
+\DoxyCodeLine{00124\ \textcolor{comment}{//\ time,\ it\ could\ affect\ the\ "{}retired"{}\ attributes\ of\ Foo()'s}}
+\DoxyCodeLine{00125\ \textcolor{comment}{//\ expectations\ when\ InSequence()\ is\ used,\ and\ thus\ affect\ which}}
+\DoxyCodeLine{00126\ \textcolor{comment}{//\ expectation\ gets\ picked.\ \ Therefore,\ we\ sequence\ all\ mock\ function}}
+\DoxyCodeLine{00127\ \textcolor{comment}{//\ calls\ to\ ensure\ the\ integrity\ of\ the\ mock\ objects'\ states.}}
+\DoxyCodeLine{00128\ GTEST\_API\_\ GTEST\_DECLARE\_STATIC\_MUTEX\_(g\_gmock\_mutex);}
+\DoxyCodeLine{00129\ }
+\DoxyCodeLine{00130\ \textcolor{comment}{//\ Untyped\ base\ class\ for\ ActionResultHolder<R>.}}
+\DoxyCodeLine{00131\ \textcolor{keyword}{class\ }UntypedActionResultHolderBase;}
+\DoxyCodeLine{00132\ }
+\DoxyCodeLine{00133\ \textcolor{comment}{//\ Abstract\ base\ class\ of\ FunctionMocker.\ \ This\ is\ the}}
+\DoxyCodeLine{00134\ \textcolor{comment}{//\ type-\/agnostic\ part\ of\ the\ function\ mocker\ interface.\ \ Its\ pure}}
+\DoxyCodeLine{00135\ \textcolor{comment}{//\ virtual\ methods\ are\ implemented\ by\ FunctionMocker.}}
+\DoxyCodeLine{00136\ \textcolor{keyword}{class\ }GTEST\_API\_\ UntypedFunctionMockerBase\ \{}
+\DoxyCodeLine{00137\ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00138\ \ \ UntypedFunctionMockerBase();}
+\DoxyCodeLine{00139\ \ \ \textcolor{keyword}{virtual}\ \string~UntypedFunctionMockerBase();}
+\DoxyCodeLine{00140\ }
+\DoxyCodeLine{00141\ \ \ \textcolor{comment}{//\ Verifies\ that\ all\ expectations\ on\ this\ mock\ function\ have\ been}}
+\DoxyCodeLine{00142\ \ \ \textcolor{comment}{//\ satisfied.\ \ Reports\ one\ or\ more\ Google\ Test\ non-\/fatal\ failures}}
+\DoxyCodeLine{00143\ \ \ \textcolor{comment}{//\ and\ returns\ false\ if\ not.}}
+\DoxyCodeLine{00144\ \ \ \textcolor{keywordtype}{bool}\ VerifyAndClearExpectationsLocked()}
+\DoxyCodeLine{00145\ \ \ \ \ \ \ GTEST\_EXCLUSIVE\_LOCK\_REQUIRED\_(g\_gmock\_mutex);}
+\DoxyCodeLine{00146\ }
+\DoxyCodeLine{00147\ \ \ \textcolor{comment}{//\ Clears\ the\ ON\_CALL()s\ set\ on\ this\ mock\ function.}}
+\DoxyCodeLine{00148\ \ \ virtual\ \textcolor{keywordtype}{void}\ ClearDefaultActionsLocked()}
+\DoxyCodeLine{00149\ \ \ \ \ \ \ GTEST\_EXCLUSIVE\_LOCK\_REQUIRED\_(g\_gmock\_mutex)\ =\ 0;}
+\DoxyCodeLine{00150\ }
+\DoxyCodeLine{00151\ \ \ \textcolor{comment}{//\ In\ all\ of\ the\ following\ Untyped*\ functions,\ it's\ the\ caller's}}
+\DoxyCodeLine{00152\ \ \ \textcolor{comment}{//\ responsibility\ to\ guarantee\ the\ correctness\ of\ the\ arguments'}}
+\DoxyCodeLine{00153\ \ \ \textcolor{comment}{//\ types.}}
+\DoxyCodeLine{00154\ }
+\DoxyCodeLine{00155\ \ \ \textcolor{comment}{//\ Performs\ the\ default\ action\ with\ the\ given\ arguments\ and\ returns}}
+\DoxyCodeLine{00156\ \ \ \textcolor{comment}{//\ the\ action's\ result.\ \ The\ call\ description\ string\ will\ be\ used\ in}}
+\DoxyCodeLine{00157\ \ \ \textcolor{comment}{//\ the\ error\ message\ to\ describe\ the\ call\ in\ the\ case\ the\ default}}
+\DoxyCodeLine{00158\ \ \ \textcolor{comment}{//\ action\ fails.}}
+\DoxyCodeLine{00159\ \ \ \textcolor{comment}{//\ L\ =\ *}}
+\DoxyCodeLine{00160\ \ \ virtual\ UntypedActionResultHolderBase*\ UntypedPerformDefaultAction(}
+\DoxyCodeLine{00161\ \ \ \ \ \ \ \textcolor{keywordtype}{void}*\ untyped\_args,\ const\ std::\textcolor{keywordtype}{string}\&\ call\_description)\ const\ =\ 0;}
+\DoxyCodeLine{00162\ }
+\DoxyCodeLine{00163\ \ \ \textcolor{comment}{//\ Performs\ the\ given\ action\ with\ the\ given\ arguments\ and\ returns}}
+\DoxyCodeLine{00164\ \ \ \textcolor{comment}{//\ the\ action's\ result.}}
+\DoxyCodeLine{00165\ \ \ \textcolor{comment}{//\ L\ =\ *}}
+\DoxyCodeLine{00166\ \ \ virtual\ UntypedActionResultHolderBase*\ UntypedPerformAction(}
+\DoxyCodeLine{00167\ \ \ \ \ \ \ const\ \textcolor{keywordtype}{void}*\ untyped\_action,\ \textcolor{keywordtype}{void}*\ untyped\_args)\ const\ =\ 0;}
+\DoxyCodeLine{00168\ }
+\DoxyCodeLine{00169\ \ \ \textcolor{comment}{//\ Writes\ a\ message\ that\ the\ call\ is\ uninteresting\ (i.e.\ neither}}
+\DoxyCodeLine{00170\ \ \ \textcolor{comment}{//\ explicitly\ expected\ nor\ explicitly\ unexpected)\ to\ the\ given}}
+\DoxyCodeLine{00171\ \ \ \textcolor{comment}{//\ ostream.}}
+\DoxyCodeLine{00172\ \ \ virtual\ \textcolor{keywordtype}{void}\ UntypedDescribeUninterestingCall(}
+\DoxyCodeLine{00173\ \ \ \ \ \ \ const\ \textcolor{keywordtype}{void}*\ untyped\_args,}
+\DoxyCodeLine{00174\ \ \ \ \ \ \ ::std::ostream*\ os)\ const}
+\DoxyCodeLine{00175\ \ \ \ \ \ \ \ \ \ \ GTEST\_LOCK\_EXCLUDED\_(g\_gmock\_mutex)\ =\ 0;}
+\DoxyCodeLine{00176\ }
+\DoxyCodeLine{00177\ \ \ \textcolor{comment}{//\ Returns\ the\ expectation\ that\ matches\ the\ given\ function\ arguments}}
+\DoxyCodeLine{00178\ \ \ \textcolor{comment}{//\ (or\ NULL\ is\ there's\ no\ match);\ when\ a\ match\ is\ found,}}
+\DoxyCodeLine{00179\ \ \ \textcolor{comment}{//\ untyped\_action\ is\ set\ to\ point\ to\ the\ action\ that\ should\ be}}
+\DoxyCodeLine{00180\ \ \ \textcolor{comment}{//\ performed\ (or\ NULL\ if\ the\ action\ is\ "{}do\ default"{}),\ and}}
+\DoxyCodeLine{00181\ \ \ \textcolor{comment}{//\ is\_excessive\ is\ modified\ to\ indicate\ whether\ the\ call\ exceeds\ the}}
+\DoxyCodeLine{00182\ \ \ \textcolor{comment}{//\ expected\ number.}}
+\DoxyCodeLine{00183\ \ \ virtual\ const\ ExpectationBase*\ UntypedFindMatchingExpectation(}
+\DoxyCodeLine{00184\ \ \ \ \ \ \ const\ \textcolor{keywordtype}{void}*\ untyped\_args,}
+\DoxyCodeLine{00185\ \ \ \ \ \ \ const\ \textcolor{keywordtype}{void}**\ untyped\_action,\ \textcolor{keywordtype}{bool}*\ is\_excessive,}
+\DoxyCodeLine{00186\ \ \ \ \ \ \ ::std::ostream*\ what,\ ::std::ostream*\ why)}
+\DoxyCodeLine{00187\ \ \ \ \ \ \ \ \ \ \ GTEST\_LOCK\_EXCLUDED\_(g\_gmock\_mutex)\ =\ 0;}
+\DoxyCodeLine{00188\ }
+\DoxyCodeLine{00189\ \ \ \textcolor{comment}{//\ Prints\ the\ given\ function\ arguments\ to\ the\ ostream.}}
+\DoxyCodeLine{00190\ \ \ virtual\ \textcolor{keywordtype}{void}\ UntypedPrintArgs(const\ \textcolor{keywordtype}{void}*\ untyped\_args,}
+\DoxyCodeLine{00191\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ::std::ostream*\ os)\ const\ =\ 0;}
+\DoxyCodeLine{00192\ }
+\DoxyCodeLine{00193\ \ \ \textcolor{comment}{//\ Sets\ the\ mock\ object\ this\ mock\ method\ belongs\ to,\ and\ registers}}
+\DoxyCodeLine{00194\ \ \ \textcolor{comment}{//\ this\ information\ in\ the\ global\ mock\ registry.\ \ Will\ be\ called}}
+\DoxyCodeLine{00195\ \ \ \textcolor{comment}{//\ whenever\ an\ EXPECT\_CALL()\ or\ ON\_CALL()\ is\ executed\ on\ this\ mock}}
+\DoxyCodeLine{00196\ \ \ \textcolor{comment}{//\ method.}}
+\DoxyCodeLine{00197\ \ \ \textcolor{keywordtype}{void}\ RegisterOwner(const\ \textcolor{keywordtype}{void}*\ mock\_obj)}
+\DoxyCodeLine{00198\ \ \ \ \ \ \ GTEST\_LOCK\_EXCLUDED\_(g\_gmock\_mutex);}
+\DoxyCodeLine{00199\ }
+\DoxyCodeLine{00200\ \ \ \textcolor{comment}{//\ Sets\ the\ mock\ object\ this\ mock\ method\ belongs\ to,\ and\ sets\ the}}
+\DoxyCodeLine{00201\ \ \ \textcolor{comment}{//\ name\ of\ the\ mock\ function.\ \ Will\ be\ called\ upon\ each\ invocation}}
+\DoxyCodeLine{00202\ \ \ \textcolor{comment}{//\ of\ this\ mock\ function.}}
+\DoxyCodeLine{00203\ \ \ \textcolor{keywordtype}{void}\ SetOwnerAndName(const\ \textcolor{keywordtype}{void}*\ mock\_obj,\ const\ \textcolor{keywordtype}{char}*\ name)}
+\DoxyCodeLine{00204\ \ \ \ \ \ \ GTEST\_LOCK\_EXCLUDED\_(g\_gmock\_mutex);}
+\DoxyCodeLine{00205\ }
+\DoxyCodeLine{00206\ \ \ \textcolor{comment}{//\ Returns\ the\ mock\ object\ this\ mock\ method\ belongs\ to.\ \ Must\ be}}
+\DoxyCodeLine{00207\ \ \ \textcolor{comment}{//\ called\ after\ RegisterOwner()\ or\ SetOwnerAndName()\ has\ been}}
+\DoxyCodeLine{00208\ \ \ \textcolor{comment}{//\ called.}}
+\DoxyCodeLine{00209\ \ \ const\ \textcolor{keywordtype}{void}*\ MockObject()\ const}
+\DoxyCodeLine{00210\ \ \ \ \ \ \ GTEST\_LOCK\_EXCLUDED\_(g\_gmock\_mutex);}
+\DoxyCodeLine{00211\ }
+\DoxyCodeLine{00212\ \ \ \textcolor{comment}{//\ Returns\ the\ name\ of\ this\ mock\ method.\ \ Must\ be\ called\ after}}
+\DoxyCodeLine{00213\ \ \ \textcolor{comment}{//\ SetOwnerAndName()\ has\ been\ called.}}
+\DoxyCodeLine{00214\ \ \ const\ \textcolor{keywordtype}{char}*\ Name()\ const}
+\DoxyCodeLine{00215\ \ \ \ \ \ \ GTEST\_LOCK\_EXCLUDED\_(g\_gmock\_mutex);}
+\DoxyCodeLine{00216\ }
+\DoxyCodeLine{00217\ \ \ \textcolor{comment}{//\ Returns\ the\ result\ of\ invoking\ this\ mock\ function\ with\ the\ given}}
+\DoxyCodeLine{00218\ \ \ \textcolor{comment}{//\ arguments.\ \ This\ function\ can\ be\ safely\ called\ from\ multiple}}
+\DoxyCodeLine{00219\ \ \ \textcolor{comment}{//\ threads\ concurrently.\ \ The\ caller\ is\ responsible\ for\ deleting\ the}}
+\DoxyCodeLine{00220\ \ \ \textcolor{comment}{//\ result.}}
+\DoxyCodeLine{00221\ \ \ UntypedActionResultHolderBase*\ UntypedInvokeWith(\textcolor{keywordtype}{void}*\ untyped\_args)}
+\DoxyCodeLine{00222\ \ \ \ \ \ \ GTEST\_LOCK\_EXCLUDED\_(g\_gmock\_mutex);}
+\DoxyCodeLine{00223\ }
+\DoxyCodeLine{00224\ \ protected:}
+\DoxyCodeLine{00225\ \ \ typedef\ std::vector<const\ \textcolor{keywordtype}{void}*>\ UntypedOnCallSpecs;}
+\DoxyCodeLine{00226\ }
+\DoxyCodeLine{00227\ \ \ using\ UntypedExpectations\ =\ std::vector<std::shared\_ptr<ExpectationBase>>;}
+\DoxyCodeLine{00228\ }
+\DoxyCodeLine{00229\ \ \ \textcolor{comment}{//\ Returns\ an\ Expectation\ object\ that\ references\ and\ co-\/owns\ exp,}}
+\DoxyCodeLine{00230\ \ \ \textcolor{comment}{//\ which\ must\ be\ an\ expectation\ on\ this\ mock\ function.}}
+\DoxyCodeLine{00231\ \ \ Expectation\ GetHandleOf(ExpectationBase*\ exp);}
+\DoxyCodeLine{00232\ }
+\DoxyCodeLine{00233\ \ \ \textcolor{comment}{//\ Address\ of\ the\ mock\ object\ this\ mock\ method\ belongs\ to.\ \ Only}}
+\DoxyCodeLine{00234\ \ \ \textcolor{comment}{//\ valid\ after\ this\ mock\ method\ has\ been\ called\ or}}
+\DoxyCodeLine{00235\ \ \ \textcolor{comment}{//\ ON\_CALL/EXPECT\_CALL\ has\ been\ invoked\ on\ it.}}
+\DoxyCodeLine{00236\ \ \ const\ \textcolor{keywordtype}{void}*\ mock\_obj\_;\ \ \textcolor{comment}{//\ Protected\ by\ g\_gmock\_mutex.}}
+\DoxyCodeLine{00237\ }
+\DoxyCodeLine{00238\ \ \ \textcolor{comment}{//\ Name\ of\ the\ function\ being\ mocked.\ \ Only\ valid\ after\ this\ mock}}
+\DoxyCodeLine{00239\ \ \ \textcolor{comment}{//\ method\ has\ been\ called.}}
+\DoxyCodeLine{00240\ \ \ const\ \textcolor{keywordtype}{char}*\ name\_;\ \ \textcolor{comment}{//\ Protected\ by\ g\_gmock\_mutex.}}
+\DoxyCodeLine{00241\ }
+\DoxyCodeLine{00242\ \ \ \textcolor{comment}{//\ All\ default\ action\ specs\ for\ this\ function\ mocker.}}
+\DoxyCodeLine{00243\ \ \ UntypedOnCallSpecs\ untyped\_on\_call\_specs\_;}
+\DoxyCodeLine{00244\ }
+\DoxyCodeLine{00245\ \ \ \textcolor{comment}{//\ All\ expectations\ for\ this\ function\ mocker.}}
+\DoxyCodeLine{00246\ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00247\ \ \ \textcolor{comment}{//\ It's\ undefined\ behavior\ to\ interleave\ expectations\ (EXPECT\_CALLs}}
+\DoxyCodeLine{00248\ \ \ \textcolor{comment}{//\ or\ ON\_CALLs)\ and\ mock\ function\ calls.\ \ Also,\ the\ order\ of}}
+\DoxyCodeLine{00249\ \ \ \textcolor{comment}{//\ expectations\ is\ important.\ \ Therefore\ it's\ a\ logic\ race\ condition}}
+\DoxyCodeLine{00250\ \ \ \textcolor{comment}{//\ to\ read/write\ untyped\_expectations\_\ concurrently.\ \ In\ order\ for}}
+\DoxyCodeLine{00251\ \ \ \textcolor{comment}{//\ tools\ like\ tsan\ to\ catch\ concurrent\ read/write\ accesses\ to}}
+\DoxyCodeLine{00252\ \ \ \textcolor{comment}{//\ untyped\_expectations,\ we\ deliberately\ leave\ accesses\ to\ it}}
+\DoxyCodeLine{00253\ \ \ \textcolor{comment}{//\ unprotected.}}
+\DoxyCodeLine{00254\ \ \ UntypedExpectations\ untyped\_expectations\_;}
+\DoxyCodeLine{00255\ \};\ \ \textcolor{comment}{//\ class\ UntypedFunctionMockerBase}}
+\DoxyCodeLine{00256\ }
+\DoxyCodeLine{00257\ \textcolor{comment}{//\ Untyped\ base\ class\ for\ OnCallSpec<F>.}}
+\DoxyCodeLine{00258\ class\ UntypedOnCallSpecBase\ \{}
+\DoxyCodeLine{00259\ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00260\ \ \ \textcolor{comment}{//\ The\ arguments\ are\ the\ location\ of\ the\ ON\_CALL()\ statement.}}
+\DoxyCodeLine{00261\ \ \ UntypedOnCallSpecBase(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ a\_file,\ \textcolor{keywordtype}{int}\ a\_line)}
+\DoxyCodeLine{00262\ \ \ \ \ \ \ :\ file\_(a\_file),\ line\_(a\_line),\ last\_clause\_(kNone)\ \{\}}
+\DoxyCodeLine{00263\ }
+\DoxyCodeLine{00264\ \ \ \textcolor{comment}{//\ Where\ in\ the\ source\ file\ was\ the\ default\ action\ spec\ defined?}}
+\DoxyCodeLine{00265\ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ file()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ file\_;\ \}}
+\DoxyCodeLine{00266\ \ \ \textcolor{keywordtype}{int}\ line()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ line\_;\ \}}
+\DoxyCodeLine{00267\ }
+\DoxyCodeLine{00268\ \ \textcolor{keyword}{protected}:}
+\DoxyCodeLine{00269\ \ \ \textcolor{comment}{//\ Gives\ each\ clause\ in\ the\ ON\_CALL()\ statement\ a\ name.}}
+\DoxyCodeLine{00270\ \ \ \textcolor{keyword}{enum}\ Clause\ \{}
+\DoxyCodeLine{00271\ \ \ \ \ \textcolor{comment}{//\ Do\ not\ change\ the\ order\ of\ the\ enum\ members!\ \ The\ run-\/time}}
+\DoxyCodeLine{00272\ \ \ \ \ \textcolor{comment}{//\ syntax\ checking\ relies\ on\ it.}}
+\DoxyCodeLine{00273\ \ \ \ \ kNone,}
+\DoxyCodeLine{00274\ \ \ \ \ kWith,}
+\DoxyCodeLine{00275\ \ \ \ \ kWillByDefault}
+\DoxyCodeLine{00276\ \ \ \};}
+\DoxyCodeLine{00277\ }
+\DoxyCodeLine{00278\ \ \ \textcolor{comment}{//\ Asserts\ that\ the\ ON\_CALL()\ statement\ has\ a\ certain\ property.}}
+\DoxyCodeLine{00279\ \ \ \textcolor{keywordtype}{void}\ AssertSpecProperty(\textcolor{keywordtype}{bool}\ property,}
+\DoxyCodeLine{00280\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\&\ failure\_message)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00281\ \ \ \ \ Assert(property,\ file\_,\ line\_,\ failure\_message);}
+\DoxyCodeLine{00282\ \ \ \}}
+\DoxyCodeLine{00283\ }
+\DoxyCodeLine{00284\ \ \ \textcolor{comment}{//\ Expects\ that\ the\ ON\_CALL()\ statement\ has\ a\ certain\ property.}}
+\DoxyCodeLine{00285\ \ \ \textcolor{keywordtype}{void}\ ExpectSpecProperty(\textcolor{keywordtype}{bool}\ property,}
+\DoxyCodeLine{00286\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\&\ failure\_message)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00287\ \ \ \ \ Expect(property,\ file\_,\ line\_,\ failure\_message);}
+\DoxyCodeLine{00288\ \ \ \}}
+\DoxyCodeLine{00289\ }
+\DoxyCodeLine{00290\ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ file\_;}
+\DoxyCodeLine{00291\ \ \ \textcolor{keywordtype}{int}\ line\_;}
+\DoxyCodeLine{00292\ }
+\DoxyCodeLine{00293\ \ \ \textcolor{comment}{//\ The\ last\ clause\ in\ the\ ON\_CALL()\ statement\ as\ seen\ so\ far.}}
+\DoxyCodeLine{00294\ \ \ \textcolor{comment}{//\ Initially\ kNone\ and\ changes\ as\ the\ statement\ is\ parsed.}}
+\DoxyCodeLine{00295\ \ \ Clause\ last\_clause\_;}
+\DoxyCodeLine{00296\ \};\ \ \textcolor{comment}{//\ class\ UntypedOnCallSpecBase}}
+\DoxyCodeLine{00297\ }
+\DoxyCodeLine{00298\ \textcolor{comment}{//\ This\ template\ class\ implements\ an\ ON\_CALL\ spec.}}
+\DoxyCodeLine{00299\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ F>}
+\DoxyCodeLine{00300\ \textcolor{keyword}{class\ }OnCallSpec\ :\ \textcolor{keyword}{public}\ UntypedOnCallSpecBase\ \{}
+\DoxyCodeLine{00301\ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00302\ \ \ \textcolor{keyword}{typedef}\ \textcolor{keyword}{typename}\ Function<F>::ArgumentTuple\ ArgumentTuple;}
+\DoxyCodeLine{00303\ \ \ \textcolor{keyword}{typedef}\ \textcolor{keyword}{typename}\ Function<F>::ArgumentMatcherTuple\ ArgumentMatcherTuple;}
+\DoxyCodeLine{00304\ }
+\DoxyCodeLine{00305\ \ \ \textcolor{comment}{//\ Constructs\ an\ OnCallSpec\ object\ from\ the\ information\ inside}}
+\DoxyCodeLine{00306\ \ \ \textcolor{comment}{//\ the\ parenthesis\ of\ an\ ON\_CALL()\ statement.}}
+\DoxyCodeLine{00307\ \ \ OnCallSpec(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ a\_file,\ \textcolor{keywordtype}{int}\ a\_line,}
+\DoxyCodeLine{00308\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ ArgumentMatcherTuple\&\ matchers)}
+\DoxyCodeLine{00309\ \ \ \ \ \ \ :\ UntypedOnCallSpecBase(a\_file,\ a\_line),}
+\DoxyCodeLine{00310\ \ \ \ \ \ \ \ \ matchers\_(matchers),}
+\DoxyCodeLine{00311\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ By\ default,\ extra\_matcher\_\ should\ match\ anything.\ \ However,}}
+\DoxyCodeLine{00312\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ we\ cannot\ initialize\ it\ with\ \_\ as\ that\ causes\ ambiguity\ between}}
+\DoxyCodeLine{00313\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Matcher's\ copy\ and\ move\ constructor\ for\ some\ argument\ types.}}
+\DoxyCodeLine{00314\ \ \ \ \ \ \ \ \ extra\_matcher\_(A<const\ ArgumentTuple\&>())\ \{\}}
+\DoxyCodeLine{00315\ }
+\DoxyCodeLine{00316\ \ \ \textcolor{comment}{//\ Implements\ the\ .With()\ clause.}}
+\DoxyCodeLine{00317\ \ \ OnCallSpec\&\ With(\textcolor{keyword}{const}\ Matcher<const\ ArgumentTuple\&>\&\ m)\ \{}
+\DoxyCodeLine{00318\ \ \ \ \ \textcolor{comment}{//\ Makes\ sure\ this\ is\ called\ at\ most\ once.}}
+\DoxyCodeLine{00319\ \ \ \ \ ExpectSpecProperty(last\_clause\_\ <\ kWith,}
+\DoxyCodeLine{00320\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}.With()\ cannot\ appear\ "{}}}
+\DoxyCodeLine{00321\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}more\ than\ once\ in\ an\ ON\_CALL()."{}});}
+\DoxyCodeLine{00322\ \ \ \ \ last\_clause\_\ =\ kWith;}
+\DoxyCodeLine{00323\ }
+\DoxyCodeLine{00324\ \ \ \ \ extra\_matcher\_\ =\ m;}
+\DoxyCodeLine{00325\ \ \ \ \ \textcolor{keywordflow}{return}\ *\textcolor{keyword}{this};}
+\DoxyCodeLine{00326\ \ \ \}}
+\DoxyCodeLine{00327\ }
+\DoxyCodeLine{00328\ \ \ \textcolor{comment}{//\ Implements\ the\ .WillByDefault()\ clause.}}
+\DoxyCodeLine{00329\ \ \ OnCallSpec\&\ WillByDefault(\textcolor{keyword}{const}\ Action<F>\&\ action)\ \{}
+\DoxyCodeLine{00330\ \ \ \ \ ExpectSpecProperty(last\_clause\_\ <\ kWillByDefault,}
+\DoxyCodeLine{00331\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}.WillByDefault()\ must\ appear\ "{}}}
+\DoxyCodeLine{00332\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}exactly\ once\ in\ an\ ON\_CALL()."{}});}
+\DoxyCodeLine{00333\ \ \ \ \ last\_clause\_\ =\ kWillByDefault;}
+\DoxyCodeLine{00334\ }
+\DoxyCodeLine{00335\ \ \ \ \ ExpectSpecProperty(!action.IsDoDefault(),}
+\DoxyCodeLine{00336\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}DoDefault()\ cannot\ be\ used\ in\ ON\_CALL()."{}});}
+\DoxyCodeLine{00337\ \ \ \ \ action\_\ =\ action;}
+\DoxyCodeLine{00338\ \ \ \ \ \textcolor{keywordflow}{return}\ *\textcolor{keyword}{this};}
+\DoxyCodeLine{00339\ \ \ \}}
+\DoxyCodeLine{00340\ }
+\DoxyCodeLine{00341\ \ \ \textcolor{comment}{//\ Returns\ true\ if\ and\ only\ if\ the\ given\ arguments\ match\ the\ matchers.}}
+\DoxyCodeLine{00342\ \ \ \textcolor{keywordtype}{bool}\ Matches(\textcolor{keyword}{const}\ ArgumentTuple\&\ args)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00343\ \ \ \ \ \textcolor{keywordflow}{return}\ TupleMatches(matchers\_,\ args)\ \&\&\ extra\_matcher\_.Matches(args);}
+\DoxyCodeLine{00344\ \ \ \}}
+\DoxyCodeLine{00345\ }
+\DoxyCodeLine{00346\ \ \ \textcolor{comment}{//\ Returns\ the\ action\ specified\ by\ the\ user.}}
+\DoxyCodeLine{00347\ \ \ \textcolor{keyword}{const}\ Action<F>\&\ GetAction()\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00348\ \ \ \ \ AssertSpecProperty(last\_clause\_\ ==\ kWillByDefault,}
+\DoxyCodeLine{00349\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}.WillByDefault()\ must\ appear\ exactly\ "{}}}
+\DoxyCodeLine{00350\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}once\ in\ an\ ON\_CALL()."{}});}
+\DoxyCodeLine{00351\ \ \ \ \ \textcolor{keywordflow}{return}\ action\_;}
+\DoxyCodeLine{00352\ \ \ \}}
+\DoxyCodeLine{00353\ }
+\DoxyCodeLine{00354\ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00355\ \ \ \textcolor{comment}{//\ The\ information\ in\ statement}}
+\DoxyCodeLine{00356\ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00357\ \ \ \textcolor{comment}{//\ \ \ ON\_CALL(mock\_object,\ Method(matchers))}}
+\DoxyCodeLine{00358\ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ .With(multi-\/argument-\/matcher)}}
+\DoxyCodeLine{00359\ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ .WillByDefault(action);}}
+\DoxyCodeLine{00360\ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00361\ \ \ \textcolor{comment}{//\ is\ recorded\ in\ the\ data\ members\ like\ this:}}
+\DoxyCodeLine{00362\ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00363\ \ \ \textcolor{comment}{//\ \ \ source\ file\ that\ contains\ the\ statement\ =>\ file\_}}
+\DoxyCodeLine{00364\ \ \ \textcolor{comment}{//\ \ \ line\ number\ of\ the\ statement\ \ \ \ \ \ \ \ \ \ \ \ =>\ line\_}}
+\DoxyCodeLine{00365\ \ \ \textcolor{comment}{//\ \ \ matchers\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =>\ matchers\_}}
+\DoxyCodeLine{00366\ \ \ \textcolor{comment}{//\ \ \ multi-\/argument-\/matcher\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =>\ extra\_matcher\_}}
+\DoxyCodeLine{00367\ \ \ \textcolor{comment}{//\ \ \ action\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =>\ action\_}}
+\DoxyCodeLine{00368\ \ \ ArgumentMatcherTuple\ matchers\_;}
+\DoxyCodeLine{00369\ \ \ Matcher<const\ ArgumentTuple\&>\ extra\_matcher\_;}
+\DoxyCodeLine{00370\ \ \ Action<F>\ action\_;}
+\DoxyCodeLine{00371\ \};\ \ \textcolor{comment}{//\ class\ OnCallSpec}}
+\DoxyCodeLine{00372\ }
+\DoxyCodeLine{00373\ \textcolor{comment}{//\ Possible\ reactions\ on\ uninteresting\ calls.}}
+\DoxyCodeLine{00374\ \textcolor{keyword}{enum}\ CallReaction\ \{}
+\DoxyCodeLine{00375\ \ \ kAllow,}
+\DoxyCodeLine{00376\ \ \ kWarn,}
+\DoxyCodeLine{00377\ \ \ kFail,}
+\DoxyCodeLine{00378\ \};}
+\DoxyCodeLine{00379\ }
+\DoxyCodeLine{00380\ \}\ \ \textcolor{comment}{//\ namespace\ internal}}
+\DoxyCodeLine{00381\ }
+\DoxyCodeLine{00382\ \textcolor{comment}{//\ Utilities\ for\ manipulating\ mock\ objects.}}
+\DoxyCodeLine{00383\ \textcolor{keyword}{class\ }GTEST\_API\_\ \mbox{\hyperlink{class_mock}{Mock}}\ \{}
+\DoxyCodeLine{00384\ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00385\ \ \ \textcolor{comment}{//\ The\ following\ public\ methods\ can\ be\ called\ concurrently.}}
+\DoxyCodeLine{00386\ }
+\DoxyCodeLine{00387\ \ \ \textcolor{comment}{//\ Tells\ Google\ Mock\ to\ ignore\ mock\_obj\ when\ checking\ for\ leaked}}
+\DoxyCodeLine{00388\ \ \ \textcolor{comment}{//\ mock\ objects.}}
+\DoxyCodeLine{00389\ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ AllowLeak(\textcolor{keyword}{const}\ \textcolor{keywordtype}{void}*\ mock\_obj)}
+\DoxyCodeLine{00390\ \ \ \ \ \ \ GTEST\_LOCK\_EXCLUDED\_(internal::g\_gmock\_mutex);}
+\DoxyCodeLine{00391\ }
+\DoxyCodeLine{00392\ \ \ \textcolor{comment}{//\ Verifies\ and\ clears\ all\ expectations\ on\ the\ given\ mock\ object.}}
+\DoxyCodeLine{00393\ \ \ \textcolor{comment}{//\ If\ the\ expectations\ aren't\ satisfied,\ generates\ one\ or\ more}}
+\DoxyCodeLine{00394\ \ \ \textcolor{comment}{//\ Google\ Test\ non-\/fatal\ failures\ and\ returns\ false.}}
+\DoxyCodeLine{00395\ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{bool}\ VerifyAndClearExpectations(\textcolor{keywordtype}{void}*\ mock\_obj)}
+\DoxyCodeLine{00396\ \ \ \ \ \ \ GTEST\_LOCK\_EXCLUDED\_(internal::g\_gmock\_mutex);}
+\DoxyCodeLine{00397\ }
+\DoxyCodeLine{00398\ \ \ \textcolor{comment}{//\ Verifies\ all\ expectations\ on\ the\ given\ mock\ object\ and\ clears\ its}}
+\DoxyCodeLine{00399\ \ \ \textcolor{comment}{//\ default\ actions\ and\ expectations.\ \ Returns\ true\ if\ and\ only\ if\ the}}
+\DoxyCodeLine{00400\ \ \ \textcolor{comment}{//\ verification\ was\ successful.}}
+\DoxyCodeLine{00401\ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{bool}\ VerifyAndClear(\textcolor{keywordtype}{void}*\ mock\_obj)}
+\DoxyCodeLine{00402\ \ \ \ \ \ \ GTEST\_LOCK\_EXCLUDED\_(internal::g\_gmock\_mutex);}
+\DoxyCodeLine{00403\ }
+\DoxyCodeLine{00404\ \ \ \textcolor{comment}{//\ Returns\ whether\ the\ mock\ was\ created\ as\ a\ naggy\ mock\ (default)}}
+\DoxyCodeLine{00405\ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{bool}\ IsNaggy(\textcolor{keywordtype}{void}*\ mock\_obj)}
+\DoxyCodeLine{00406\ \ \ \ \ \ \ GTEST\_LOCK\_EXCLUDED\_(internal::g\_gmock\_mutex);}
+\DoxyCodeLine{00407\ \ \ \textcolor{comment}{//\ Returns\ whether\ the\ mock\ was\ created\ as\ a\ nice\ mock}}
+\DoxyCodeLine{00408\ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{bool}\ IsNice(\textcolor{keywordtype}{void}*\ mock\_obj)}
+\DoxyCodeLine{00409\ \ \ \ \ \ \ GTEST\_LOCK\_EXCLUDED\_(internal::g\_gmock\_mutex);}
+\DoxyCodeLine{00410\ \ \ \textcolor{comment}{//\ Returns\ whether\ the\ mock\ was\ created\ as\ a\ strict\ mock}}
+\DoxyCodeLine{00411\ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{bool}\ IsStrict(\textcolor{keywordtype}{void}*\ mock\_obj)}
+\DoxyCodeLine{00412\ \ \ \ \ \ \ GTEST\_LOCK\_EXCLUDED\_(internal::g\_gmock\_mutex);}
+\DoxyCodeLine{00413\ }
+\DoxyCodeLine{00414\ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00415\ \ \ \textcolor{keyword}{friend}\ \textcolor{keyword}{class\ }internal::UntypedFunctionMockerBase;}
+\DoxyCodeLine{00416\ }
+\DoxyCodeLine{00417\ \ \ \textcolor{comment}{//\ Needed\ for\ a\ function\ mocker\ to\ register\ itself\ (so\ that\ we\ know}}
+\DoxyCodeLine{00418\ \ \ \textcolor{comment}{//\ how\ to\ clear\ a\ mock\ object).}}
+\DoxyCodeLine{00419\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ F>}
+\DoxyCodeLine{00420\ \ \ \textcolor{keyword}{friend}\ \textcolor{keyword}{class\ }internal::FunctionMocker;}
+\DoxyCodeLine{00421\ }
+\DoxyCodeLine{00422\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ MockClass>}
+\DoxyCodeLine{00423\ \ \ \textcolor{keyword}{friend}\ \textcolor{keyword}{class\ }internal::NiceMockImpl;}
+\DoxyCodeLine{00424\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ MockClass>}
+\DoxyCodeLine{00425\ \ \ \textcolor{keyword}{friend}\ \textcolor{keyword}{class\ }internal::NaggyMockImpl;}
+\DoxyCodeLine{00426\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ MockClass>}
+\DoxyCodeLine{00427\ \ \ \textcolor{keyword}{friend}\ \textcolor{keyword}{class\ }internal::StrictMockImpl;}
+\DoxyCodeLine{00428\ }
+\DoxyCodeLine{00429\ \ \ \textcolor{comment}{//\ Tells\ Google\ Mock\ to\ allow\ uninteresting\ calls\ on\ the\ given\ mock}}
+\DoxyCodeLine{00430\ \ \ \textcolor{comment}{//\ object.}}
+\DoxyCodeLine{00431\ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ AllowUninterestingCalls(\textcolor{keyword}{const}\ \textcolor{keywordtype}{void}*\ mock\_obj)}
+\DoxyCodeLine{00432\ \ \ \ \ \ \ GTEST\_LOCK\_EXCLUDED\_(internal::g\_gmock\_mutex);}
+\DoxyCodeLine{00433\ }
+\DoxyCodeLine{00434\ \ \ \textcolor{comment}{//\ Tells\ Google\ Mock\ to\ warn\ the\ user\ about\ uninteresting\ calls\ on}}
+\DoxyCodeLine{00435\ \ \ \textcolor{comment}{//\ the\ given\ mock\ object.}}
+\DoxyCodeLine{00436\ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ WarnUninterestingCalls(\textcolor{keyword}{const}\ \textcolor{keywordtype}{void}*\ mock\_obj)}
+\DoxyCodeLine{00437\ \ \ \ \ \ \ GTEST\_LOCK\_EXCLUDED\_(internal::g\_gmock\_mutex);}
+\DoxyCodeLine{00438\ }
+\DoxyCodeLine{00439\ \ \ \textcolor{comment}{//\ Tells\ Google\ Mock\ to\ fail\ uninteresting\ calls\ on\ the\ given\ mock}}
+\DoxyCodeLine{00440\ \ \ \textcolor{comment}{//\ object.}}
+\DoxyCodeLine{00441\ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ FailUninterestingCalls(\textcolor{keyword}{const}\ \textcolor{keywordtype}{void}*\ mock\_obj)}
+\DoxyCodeLine{00442\ \ \ \ \ \ \ GTEST\_LOCK\_EXCLUDED\_(internal::g\_gmock\_mutex);}
+\DoxyCodeLine{00443\ }
+\DoxyCodeLine{00444\ \ \ \textcolor{comment}{//\ Tells\ Google\ Mock\ the\ given\ mock\ object\ is\ being\ destroyed\ and}}
+\DoxyCodeLine{00445\ \ \ \textcolor{comment}{//\ its\ entry\ in\ the\ call-\/reaction\ table\ should\ be\ removed.}}
+\DoxyCodeLine{00446\ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ UnregisterCallReaction(\textcolor{keyword}{const}\ \textcolor{keywordtype}{void}*\ mock\_obj)}
+\DoxyCodeLine{00447\ \ \ \ \ \ \ GTEST\_LOCK\_EXCLUDED\_(internal::g\_gmock\_mutex);}
+\DoxyCodeLine{00448\ }
+\DoxyCodeLine{00449\ \ \ \textcolor{comment}{//\ Returns\ the\ reaction\ Google\ Mock\ will\ have\ on\ uninteresting\ calls}}
+\DoxyCodeLine{00450\ \ \ \textcolor{comment}{//\ made\ on\ the\ given\ mock\ object.}}
+\DoxyCodeLine{00451\ \ \ \textcolor{keyword}{static}\ internal::CallReaction\ GetReactionOnUninterestingCalls(}
+\DoxyCodeLine{00452\ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}*\ mock\_obj)}
+\DoxyCodeLine{00453\ \ \ \ \ \ \ \ \ \ \ GTEST\_LOCK\_EXCLUDED\_(internal::g\_gmock\_mutex);}
+\DoxyCodeLine{00454\ }
+\DoxyCodeLine{00455\ \ \ \textcolor{comment}{//\ Verifies\ that\ all\ expectations\ on\ the\ given\ mock\ object\ have\ been}}
+\DoxyCodeLine{00456\ \ \ \textcolor{comment}{//\ satisfied.\ \ Reports\ one\ or\ more\ Google\ Test\ non-\/fatal\ failures}}
+\DoxyCodeLine{00457\ \ \ \textcolor{comment}{//\ and\ returns\ false\ if\ not.}}
+\DoxyCodeLine{00458\ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{bool}\ VerifyAndClearExpectationsLocked(\textcolor{keywordtype}{void}*\ mock\_obj)}
+\DoxyCodeLine{00459\ \ \ \ \ \ \ GTEST\_EXCLUSIVE\_LOCK\_REQUIRED\_(internal::g\_gmock\_mutex);}
+\DoxyCodeLine{00460\ }
+\DoxyCodeLine{00461\ \ \ \textcolor{comment}{//\ Clears\ all\ ON\_CALL()s\ set\ on\ the\ given\ mock\ object.}}
+\DoxyCodeLine{00462\ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ClearDefaultActionsLocked(\textcolor{keywordtype}{void}*\ mock\_obj)}
+\DoxyCodeLine{00463\ \ \ \ \ \ \ GTEST\_EXCLUSIVE\_LOCK\_REQUIRED\_(internal::g\_gmock\_mutex);}
+\DoxyCodeLine{00464\ }
+\DoxyCodeLine{00465\ \ \ \textcolor{comment}{//\ Registers\ a\ mock\ object\ and\ a\ mock\ method\ it\ owns.}}
+\DoxyCodeLine{00466\ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ Register(}
+\DoxyCodeLine{00467\ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}*\ mock\_obj,}
+\DoxyCodeLine{00468\ \ \ \ \ \ \ internal::UntypedFunctionMockerBase*\ mocker)}
+\DoxyCodeLine{00469\ \ \ \ \ \ \ \ \ \ \ GTEST\_LOCK\_EXCLUDED\_(internal::g\_gmock\_mutex);}
+\DoxyCodeLine{00470\ }
+\DoxyCodeLine{00471\ \ \ \textcolor{comment}{//\ Tells\ Google\ Mock\ where\ in\ the\ source\ code\ mock\_obj\ is\ used\ in\ an}}
+\DoxyCodeLine{00472\ \ \ \textcolor{comment}{//\ ON\_CALL\ or\ EXPECT\_CALL.\ \ In\ case\ mock\_obj\ is\ leaked,\ this}}
+\DoxyCodeLine{00473\ \ \ \textcolor{comment}{//\ information\ helps\ the\ user\ identify\ which\ object\ it\ is.}}
+\DoxyCodeLine{00474\ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ RegisterUseByOnCallOrExpectCall(}
+\DoxyCodeLine{00475\ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}*\ mock\_obj,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ file,\ \textcolor{keywordtype}{int}\ line)}
+\DoxyCodeLine{00476\ \ \ \ \ \ \ \ \ \ \ GTEST\_LOCK\_EXCLUDED\_(internal::g\_gmock\_mutex);}
+\DoxyCodeLine{00477\ }
+\DoxyCodeLine{00478\ \ \ \textcolor{comment}{//\ Unregisters\ a\ mock\ method;\ removes\ the\ owning\ mock\ object\ from}}
+\DoxyCodeLine{00479\ \ \ \textcolor{comment}{//\ the\ registry\ when\ the\ last\ mock\ method\ associated\ with\ it\ has}}
+\DoxyCodeLine{00480\ \ \ \textcolor{comment}{//\ been\ unregistered.\ \ This\ is\ called\ only\ in\ the\ destructor\ of}}
+\DoxyCodeLine{00481\ \ \ \textcolor{comment}{//\ FunctionMocker.}}
+\DoxyCodeLine{00482\ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ UnregisterLocked(internal::UntypedFunctionMockerBase*\ mocker)}
+\DoxyCodeLine{00483\ \ \ \ \ \ \ GTEST\_EXCLUSIVE\_LOCK\_REQUIRED\_(internal::g\_gmock\_mutex);}
+\DoxyCodeLine{00484\ \};\ \ \textcolor{comment}{//\ class\ Mock}}
+\DoxyCodeLine{00485\ }
+\DoxyCodeLine{00486\ \textcolor{comment}{//\ An\ abstract\ handle\ of\ an\ expectation.\ \ Useful\ in\ the\ .After()}}
+\DoxyCodeLine{00487\ \textcolor{comment}{//\ clause\ of\ EXPECT\_CALL()\ for\ setting\ the\ (partial)\ order\ of}}
+\DoxyCodeLine{00488\ \textcolor{comment}{//\ expectations.\ \ The\ syntax:}}
+\DoxyCodeLine{00489\ \textcolor{comment}{//}}
+\DoxyCodeLine{00490\ \textcolor{comment}{//\ \ \ Expectation\ e1\ =\ EXPECT\_CALL(...)...;}}
+\DoxyCodeLine{00491\ \textcolor{comment}{//\ \ \ EXPECT\_CALL(...).After(e1)...;}}
+\DoxyCodeLine{00492\ \textcolor{comment}{//}}
+\DoxyCodeLine{00493\ \textcolor{comment}{//\ sets\ two\ expectations\ where\ the\ latter\ can\ only\ be\ matched\ after}}
+\DoxyCodeLine{00494\ \textcolor{comment}{//\ the\ former\ has\ been\ satisfied.}}
+\DoxyCodeLine{00495\ \textcolor{comment}{//}}
+\DoxyCodeLine{00496\ \textcolor{comment}{//\ Notes:}}
+\DoxyCodeLine{00497\ \textcolor{comment}{//\ \ \ -\/\ This\ class\ is\ copyable\ and\ has\ value\ semantics.}}
+\DoxyCodeLine{00498\ \textcolor{comment}{//\ \ \ -\/\ Constness\ is\ shallow:\ a\ const\ Expectation\ object\ itself\ cannot}}
+\DoxyCodeLine{00499\ \textcolor{comment}{//\ \ \ \ \ be\ modified,\ but\ the\ mutable\ methods\ of\ the\ ExpectationBase}}
+\DoxyCodeLine{00500\ \textcolor{comment}{//\ \ \ \ \ object\ it\ references\ can\ be\ called\ via\ expectation\_base().}}
+\DoxyCodeLine{00501\ }
+\DoxyCodeLine{00502\ \textcolor{keyword}{class\ }GTEST\_API\_\ Expectation\ \{}
+\DoxyCodeLine{00503\ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00504\ \ \ \textcolor{comment}{//\ Constructs\ a\ null\ object\ that\ doesn't\ reference\ any\ expectation.}}
+\DoxyCodeLine{00505\ \ \ Expectation();}
+\DoxyCodeLine{00506\ \ \ Expectation(Expectation\&\&)\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00507\ \ \ Expectation(\textcolor{keyword}{const}\ Expectation\&)\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00508\ \ \ Expectation\&\ operator=(Expectation\&\&)\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00509\ \ \ Expectation\&\ operator=(\textcolor{keyword}{const}\ Expectation\&)\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00510\ \ \ \string~Expectation();}
+\DoxyCodeLine{00511\ }
+\DoxyCodeLine{00512\ \ \ \textcolor{comment}{//\ This\ single-\/argument\ ctor\ must\ not\ be\ explicit,\ in\ order\ to\ support\ the}}
+\DoxyCodeLine{00513\ \ \ \textcolor{comment}{//\ \ \ Expectation\ e\ =\ EXPECT\_CALL(...);}}
+\DoxyCodeLine{00514\ \ \ \textcolor{comment}{//\ syntax.}}
+\DoxyCodeLine{00515\ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00516\ \ \ \textcolor{comment}{//\ A\ TypedExpectation\ object\ stores\ its\ pre-\/requisites\ as}}
+\DoxyCodeLine{00517\ \ \ \textcolor{comment}{//\ Expectation\ objects,\ and\ needs\ to\ call\ the\ non-\/const\ Retire()}}
+\DoxyCodeLine{00518\ \ \ \textcolor{comment}{//\ method\ on\ the\ ExpectationBase\ objects\ they\ reference.\ \ Therefore}}
+\DoxyCodeLine{00519\ \ \ \textcolor{comment}{//\ Expectation\ must\ receive\ a\ *non-\/const*\ reference\ to\ the}}
+\DoxyCodeLine{00520\ \ \ \textcolor{comment}{//\ ExpectationBase\ object.}}
+\DoxyCodeLine{00521\ \ \ Expectation(internal::ExpectationBase\&\ exp);\ \ \textcolor{comment}{//\ NOLINT}}
+\DoxyCodeLine{00522\ }
+\DoxyCodeLine{00523\ \ \ \textcolor{comment}{//\ The\ compiler-\/generated\ copy\ ctor\ and\ operator=\ work\ exactly\ as}}
+\DoxyCodeLine{00524\ \ \ \textcolor{comment}{//\ intended,\ so\ we\ don't\ need\ to\ define\ our\ own.}}
+\DoxyCodeLine{00525\ }
+\DoxyCodeLine{00526\ \ \ \textcolor{comment}{//\ Returns\ true\ if\ and\ only\ if\ rhs\ references\ the\ same\ expectation\ as\ this}}
+\DoxyCodeLine{00527\ \ \ \textcolor{comment}{//\ object\ does.}}
+\DoxyCodeLine{00528\ \ \ \textcolor{keywordtype}{bool}\ operator==(\textcolor{keyword}{const}\ Expectation\&\ rhs)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00529\ \ \ \ \ \textcolor{keywordflow}{return}\ expectation\_base\_\ ==\ rhs.expectation\_base\_;}
+\DoxyCodeLine{00530\ \ \ \}}
+\DoxyCodeLine{00531\ }
+\DoxyCodeLine{00532\ \ \ \textcolor{keywordtype}{bool}\ operator!=(\textcolor{keyword}{const}\ Expectation\&\ rhs)\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ !(*\textcolor{keyword}{this}\ ==\ rhs);\ \}}
+\DoxyCodeLine{00533\ }
+\DoxyCodeLine{00534\ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00535\ \ \ \textcolor{keyword}{friend}\ \textcolor{keyword}{class\ }ExpectationSet;}
+\DoxyCodeLine{00536\ \ \ \textcolor{keyword}{friend}\ \textcolor{keyword}{class\ }Sequence;}
+\DoxyCodeLine{00537\ \ \ \textcolor{keyword}{friend}\ class\ ::testing::internal::ExpectationBase;}
+\DoxyCodeLine{00538\ \ \ \textcolor{keyword}{friend}\ class\ ::testing::internal::UntypedFunctionMockerBase;}
+\DoxyCodeLine{00539\ }
+\DoxyCodeLine{00540\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ F>}
+\DoxyCodeLine{00541\ \ \ \textcolor{keyword}{friend}\ class\ ::testing::internal::FunctionMocker;}
+\DoxyCodeLine{00542\ }
+\DoxyCodeLine{00543\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ F>}
+\DoxyCodeLine{00544\ \ \ \textcolor{keyword}{friend}\ class\ ::testing::internal::TypedExpectation;}
+\DoxyCodeLine{00545\ }
+\DoxyCodeLine{00546\ \ \ \textcolor{comment}{//\ This\ comparator\ is\ needed\ for\ putting\ Expectation\ objects\ into\ a\ set.}}
+\DoxyCodeLine{00547\ \ \ \textcolor{keyword}{class\ }Less\ \{}
+\DoxyCodeLine{00548\ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00549\ \ \ \ \ \textcolor{keywordtype}{bool}\ operator()(\textcolor{keyword}{const}\ Expectation\&\ lhs,\ \textcolor{keyword}{const}\ Expectation\&\ rhs)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00550\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ lhs.expectation\_base\_.get()\ <\ rhs.expectation\_base\_.get();}
+\DoxyCodeLine{00551\ \ \ \ \ \}}
+\DoxyCodeLine{00552\ \ \ \};}
+\DoxyCodeLine{00553\ }
+\DoxyCodeLine{00554\ \ \ typedef\ ::std::set<Expectation,\ Less>\ Set;}
+\DoxyCodeLine{00555\ }
+\DoxyCodeLine{00556\ \ \ Expectation(}
+\DoxyCodeLine{00557\ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::shared\_ptr<internal::ExpectationBase>\&\ expectation\_base);}
+\DoxyCodeLine{00558\ }
+\DoxyCodeLine{00559\ \ \ \textcolor{comment}{//\ Returns\ the\ expectation\ this\ object\ references.}}
+\DoxyCodeLine{00560\ \ \ \textcolor{keyword}{const}\ std::shared\_ptr<internal::ExpectationBase>\&\ expectation\_base()\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00561\ \ \ \ \ \textcolor{keywordflow}{return}\ expectation\_base\_;}
+\DoxyCodeLine{00562\ \ \ \}}
+\DoxyCodeLine{00563\ }
+\DoxyCodeLine{00564\ \ \ \textcolor{comment}{//\ A\ shared\_ptr\ that\ co-\/owns\ the\ expectation\ this\ handle\ references.}}
+\DoxyCodeLine{00565\ \ \ std::shared\_ptr<internal::ExpectationBase>\ expectation\_base\_;}
+\DoxyCodeLine{00566\ \};}
+\DoxyCodeLine{00567\ }
+\DoxyCodeLine{00568\ \textcolor{comment}{//\ A\ set\ of\ expectation\ handles.\ \ Useful\ in\ the\ .After()\ clause\ of}}
+\DoxyCodeLine{00569\ \textcolor{comment}{//\ EXPECT\_CALL()\ for\ setting\ the\ (partial)\ order\ of\ expectations.\ \ The}}
+\DoxyCodeLine{00570\ \textcolor{comment}{//\ syntax:}}
+\DoxyCodeLine{00571\ \textcolor{comment}{//}}
+\DoxyCodeLine{00572\ \textcolor{comment}{//\ \ \ ExpectationSet\ es;}}
+\DoxyCodeLine{00573\ \textcolor{comment}{//\ \ \ es\ +=\ EXPECT\_CALL(...)...;}}
+\DoxyCodeLine{00574\ \textcolor{comment}{//\ \ \ es\ +=\ EXPECT\_CALL(...)...;}}
+\DoxyCodeLine{00575\ \textcolor{comment}{//\ \ \ EXPECT\_CALL(...).After(es)...;}}
+\DoxyCodeLine{00576\ \textcolor{comment}{//}}
+\DoxyCodeLine{00577\ \textcolor{comment}{//\ sets\ three\ expectations\ where\ the\ last\ one\ can\ only\ be\ matched}}
+\DoxyCodeLine{00578\ \textcolor{comment}{//\ after\ the\ first\ two\ have\ both\ been\ satisfied.}}
+\DoxyCodeLine{00579\ \textcolor{comment}{//}}
+\DoxyCodeLine{00580\ \textcolor{comment}{//\ This\ class\ is\ copyable\ and\ has\ value\ semantics.}}
+\DoxyCodeLine{00581\ \textcolor{keyword}{class\ }ExpectationSet\ \{}
+\DoxyCodeLine{00582\ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00583\ \ \ \textcolor{comment}{//\ A\ bidirectional\ iterator\ that\ can\ read\ a\ const\ element\ in\ the\ set.}}
+\DoxyCodeLine{00584\ \ \ \textcolor{keyword}{typedef}\ Expectation::Set::const\_iterator\ const\_iterator;}
+\DoxyCodeLine{00585\ }
+\DoxyCodeLine{00586\ \ \ \textcolor{comment}{//\ An\ object\ stored\ in\ the\ set.\ \ This\ is\ an\ alias\ of\ Expectation.}}
+\DoxyCodeLine{00587\ \ \ \textcolor{keyword}{typedef}\ Expectation::Set::value\_type\ value\_type;}
+\DoxyCodeLine{00588\ }
+\DoxyCodeLine{00589\ \ \ \textcolor{comment}{//\ Constructs\ an\ empty\ set.}}
+\DoxyCodeLine{00590\ \ \ ExpectationSet()\ \{\}}
+\DoxyCodeLine{00591\ }
+\DoxyCodeLine{00592\ \ \ \textcolor{comment}{//\ This\ single-\/argument\ ctor\ must\ not\ be\ explicit,\ in\ order\ to\ support\ the}}
+\DoxyCodeLine{00593\ \ \ \textcolor{comment}{//\ \ \ ExpectationSet\ es\ =\ EXPECT\_CALL(...);}}
+\DoxyCodeLine{00594\ \ \ \textcolor{comment}{//\ syntax.}}
+\DoxyCodeLine{00595\ \ \ ExpectationSet(internal::ExpectationBase\&\ exp)\ \{\ \ \textcolor{comment}{//\ NOLINT}}
+\DoxyCodeLine{00596\ \ \ \ \ *\textcolor{keyword}{this}\ +=\ Expectation(exp);}
+\DoxyCodeLine{00597\ \ \ \}}
+\DoxyCodeLine{00598\ }
+\DoxyCodeLine{00599\ \ \ \textcolor{comment}{//\ This\ single-\/argument\ ctor\ implements\ implicit\ conversion\ from}}
+\DoxyCodeLine{00600\ \ \ \textcolor{comment}{//\ Expectation\ and\ thus\ must\ not\ be\ explicit.\ \ This\ allows\ either\ an}}
+\DoxyCodeLine{00601\ \ \ \textcolor{comment}{//\ Expectation\ or\ an\ ExpectationSet\ to\ be\ used\ in\ .After().}}
+\DoxyCodeLine{00602\ \ \ ExpectationSet(\textcolor{keyword}{const}\ Expectation\&\ e)\ \{\ \ \textcolor{comment}{//\ NOLINT}}
+\DoxyCodeLine{00603\ \ \ \ \ *\textcolor{keyword}{this}\ +=\ e;}
+\DoxyCodeLine{00604\ \ \ \}}
+\DoxyCodeLine{00605\ }
+\DoxyCodeLine{00606\ \ \ \textcolor{comment}{//\ The\ compiler-\/generator\ ctor\ and\ operator=\ works\ exactly\ as}}
+\DoxyCodeLine{00607\ \ \ \textcolor{comment}{//\ intended,\ so\ we\ don't\ need\ to\ define\ our\ own.}}
+\DoxyCodeLine{00608\ }
+\DoxyCodeLine{00609\ \ \ \textcolor{comment}{//\ Returns\ true\ if\ and\ only\ if\ rhs\ contains\ the\ same\ set\ of\ Expectation}}
+\DoxyCodeLine{00610\ \ \ \textcolor{comment}{//\ objects\ as\ this\ does.}}
+\DoxyCodeLine{00611\ \ \ \textcolor{keywordtype}{bool}\ operator==(\textcolor{keyword}{const}\ ExpectationSet\&\ rhs)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00612\ \ \ \ \ \textcolor{keywordflow}{return}\ expectations\_\ ==\ rhs.expectations\_;}
+\DoxyCodeLine{00613\ \ \ \}}
+\DoxyCodeLine{00614\ }
+\DoxyCodeLine{00615\ \ \ \textcolor{keywordtype}{bool}\ operator!=(\textcolor{keyword}{const}\ ExpectationSet\&\ rhs)\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ !(*\textcolor{keyword}{this}\ ==\ rhs);\ \}}
+\DoxyCodeLine{00616\ }
+\DoxyCodeLine{00617\ \ \ \textcolor{comment}{//\ Implements\ the\ syntax}}
+\DoxyCodeLine{00618\ \ \ \textcolor{comment}{//\ \ \ expectation\_set\ +=\ EXPECT\_CALL(...);}}
+\DoxyCodeLine{00619\ \ \ ExpectationSet\&\ operator+=(\textcolor{keyword}{const}\ Expectation\&\ e)\ \{}
+\DoxyCodeLine{00620\ \ \ \ \ expectations\_.insert(e);}
+\DoxyCodeLine{00621\ \ \ \ \ \textcolor{keywordflow}{return}\ *\textcolor{keyword}{this};}
+\DoxyCodeLine{00622\ \ \ \}}
+\DoxyCodeLine{00623\ }
+\DoxyCodeLine{00624\ \ \ \textcolor{keywordtype}{int}\ size()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(expectations\_.size());\ \}}
+\DoxyCodeLine{00625\ }
+\DoxyCodeLine{00626\ \ \ const\_iterator\ begin()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ expectations\_.begin();\ \}}
+\DoxyCodeLine{00627\ \ \ const\_iterator\ end()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ expectations\_.end();\ \}}
+\DoxyCodeLine{00628\ }
+\DoxyCodeLine{00629\ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00630\ \ \ Expectation::Set\ expectations\_;}
+\DoxyCodeLine{00631\ \};}
+\DoxyCodeLine{00632\ }
+\DoxyCodeLine{00633\ }
+\DoxyCodeLine{00634\ \textcolor{comment}{//\ Sequence\ objects\ are\ used\ by\ a\ user\ to\ specify\ the\ relative\ order}}
+\DoxyCodeLine{00635\ \textcolor{comment}{//\ in\ which\ the\ expectations\ should\ match.\ \ They\ are\ copyable\ (we\ rely}}
+\DoxyCodeLine{00636\ \textcolor{comment}{//\ on\ the\ compiler-\/defined\ copy\ constructor\ and\ assignment\ operator).}}
+\DoxyCodeLine{00637\ \textcolor{keyword}{class\ }GTEST\_API\_\ Sequence\ \{}
+\DoxyCodeLine{00638\ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00639\ \ \ \textcolor{comment}{//\ Constructs\ an\ empty\ sequence.}}
+\DoxyCodeLine{00640\ \ \ Sequence()\ :\ last\_expectation\_(new\ Expectation)\ \{\}}
+\DoxyCodeLine{00641\ }
+\DoxyCodeLine{00642\ \ \ \textcolor{comment}{//\ Adds\ an\ expectation\ to\ this\ sequence.\ \ The\ caller\ must\ ensure}}
+\DoxyCodeLine{00643\ \ \ \textcolor{comment}{//\ that\ no\ other\ thread\ is\ accessing\ this\ Sequence\ object.}}
+\DoxyCodeLine{00644\ \ \ \textcolor{keywordtype}{void}\ AddExpectation(\textcolor{keyword}{const}\ Expectation\&\ expectation)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00645\ }
+\DoxyCodeLine{00646\ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00647\ \ \ \textcolor{comment}{//\ The\ last\ expectation\ in\ this\ sequence.}}
+\DoxyCodeLine{00648\ \ \ std::shared\_ptr<Expectation>\ last\_expectation\_;}
+\DoxyCodeLine{00649\ \};\ \ \textcolor{comment}{//\ class\ Sequence}}
+\DoxyCodeLine{00650\ }
+\DoxyCodeLine{00651\ \textcolor{comment}{//\ An\ object\ of\ this\ type\ causes\ all\ EXPECT\_CALL()\ statements}}
+\DoxyCodeLine{00652\ \textcolor{comment}{//\ encountered\ in\ its\ scope\ to\ be\ put\ in\ an\ anonymous\ sequence.\ \ The}}
+\DoxyCodeLine{00653\ \textcolor{comment}{//\ work\ is\ done\ in\ the\ constructor\ and\ destructor.\ \ You\ should\ only}}
+\DoxyCodeLine{00654\ \textcolor{comment}{//\ create\ an\ InSequence\ object\ on\ the\ stack.}}
+\DoxyCodeLine{00655\ \textcolor{comment}{//}}
+\DoxyCodeLine{00656\ \textcolor{comment}{//\ The\ sole\ purpose\ for\ this\ class\ is\ to\ support\ easy\ definition\ of}}
+\DoxyCodeLine{00657\ \textcolor{comment}{//\ sequential\ expectations,\ e.g.}}
+\DoxyCodeLine{00658\ \textcolor{comment}{//}}
+\DoxyCodeLine{00659\ \textcolor{comment}{//\ \ \ \{}}
+\DoxyCodeLine{00660\ \textcolor{comment}{//\ \ \ \ \ InSequence\ dummy;\ \ //\ The\ name\ of\ the\ object\ doesn't\ matter.}}
+\DoxyCodeLine{00661\ \textcolor{comment}{//}}
+\DoxyCodeLine{00662\ \textcolor{comment}{//\ \ \ \ \ //\ The\ following\ expectations\ must\ match\ in\ the\ order\ they\ appear.}}
+\DoxyCodeLine{00663\ \textcolor{comment}{//\ \ \ \ \ EXPECT\_CALL(a,\ Bar())...;}}
+\DoxyCodeLine{00664\ \textcolor{comment}{//\ \ \ \ \ EXPECT\_CALL(a,\ Baz())...;}}
+\DoxyCodeLine{00665\ \textcolor{comment}{//\ \ \ \ \ ...}}
+\DoxyCodeLine{00666\ \textcolor{comment}{//\ \ \ \ \ EXPECT\_CALL(b,\ Xyz())...;}}
+\DoxyCodeLine{00667\ \textcolor{comment}{//\ \ \ \}}}
+\DoxyCodeLine{00668\ \textcolor{comment}{//}}
+\DoxyCodeLine{00669\ \textcolor{comment}{//\ You\ can\ create\ InSequence\ objects\ in\ multiple\ threads,\ as\ long\ as}}
+\DoxyCodeLine{00670\ \textcolor{comment}{//\ they\ are\ used\ to\ affect\ different\ mock\ objects.\ \ The\ idea\ is\ that}}
+\DoxyCodeLine{00671\ \textcolor{comment}{//\ each\ thread\ can\ create\ and\ set\ up\ its\ own\ mocks\ as\ if\ it's\ the\ only}}
+\DoxyCodeLine{00672\ \textcolor{comment}{//\ thread.\ \ However,\ for\ clarity\ of\ your\ tests\ we\ recommend\ you\ to\ set}}
+\DoxyCodeLine{00673\ \textcolor{comment}{//\ up\ mocks\ in\ the\ main\ thread\ unless\ you\ have\ a\ good\ reason\ not\ to\ do}}
+\DoxyCodeLine{00674\ \textcolor{comment}{//\ so.}}
+\DoxyCodeLine{00675\ \textcolor{keyword}{class\ }GTEST\_API\_\ InSequence\ \{}
+\DoxyCodeLine{00676\ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00677\ \ \ InSequence();}
+\DoxyCodeLine{00678\ \ \ \string~InSequence();}
+\DoxyCodeLine{00679\ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00680\ \ \ \textcolor{keywordtype}{bool}\ sequence\_created\_;}
+\DoxyCodeLine{00681\ }
+\DoxyCodeLine{00682\ \ \ GTEST\_DISALLOW\_COPY\_AND\_ASSIGN\_(InSequence);\ \ \textcolor{comment}{//\ NOLINT}}
+\DoxyCodeLine{00683\ \}\ GTEST\_ATTRIBUTE\_UNUSED\_;}
+\DoxyCodeLine{00684\ }
+\DoxyCodeLine{00685\ \textcolor{keyword}{namespace\ }internal\ \{}
+\DoxyCodeLine{00686\ }
+\DoxyCodeLine{00687\ \textcolor{comment}{//\ Points\ to\ the\ implicit\ sequence\ introduced\ by\ a\ living\ InSequence}}
+\DoxyCodeLine{00688\ \textcolor{comment}{//\ object\ (if\ any)\ in\ the\ current\ thread\ or\ NULL.}}
+\DoxyCodeLine{00689\ GTEST\_API\_\ \textcolor{keyword}{extern}\ ThreadLocal<Sequence*>\ g\_gmock\_implicit\_sequence;}
+\DoxyCodeLine{00690\ }
+\DoxyCodeLine{00691\ \textcolor{comment}{//\ Base\ class\ for\ implementing\ expectations.}}
+\DoxyCodeLine{00692\ \textcolor{comment}{//}}
+\DoxyCodeLine{00693\ \textcolor{comment}{//\ There\ are\ two\ reasons\ for\ having\ a\ type-\/agnostic\ base\ class\ for}}
+\DoxyCodeLine{00694\ \textcolor{comment}{//\ Expectation:}}
+\DoxyCodeLine{00695\ \textcolor{comment}{//}}
+\DoxyCodeLine{00696\ \textcolor{comment}{//\ \ \ 1.\ We\ need\ to\ store\ collections\ of\ expectations\ of\ different}}
+\DoxyCodeLine{00697\ \textcolor{comment}{//\ \ \ types\ (e.g.\ all\ pre-\/requisites\ of\ a\ particular\ expectation,\ all}}
+\DoxyCodeLine{00698\ \textcolor{comment}{//\ \ \ expectations\ in\ a\ sequence).\ \ Therefore\ these\ expectation\ objects}}
+\DoxyCodeLine{00699\ \textcolor{comment}{//\ \ \ must\ share\ a\ common\ base\ class.}}
+\DoxyCodeLine{00700\ \textcolor{comment}{//}}
+\DoxyCodeLine{00701\ \textcolor{comment}{//\ \ \ 2.\ We\ can\ avoid\ binary\ code\ bloat\ by\ moving\ methods\ not\ depending}}
+\DoxyCodeLine{00702\ \textcolor{comment}{//\ \ \ on\ the\ template\ argument\ of\ Expectation\ to\ the\ base\ class.}}
+\DoxyCodeLine{00703\ \textcolor{comment}{//}}
+\DoxyCodeLine{00704\ \textcolor{comment}{//\ This\ class\ is\ internal\ and\ mustn't\ be\ used\ by\ user\ code\ directly.}}
+\DoxyCodeLine{00705\ \textcolor{keyword}{class\ }GTEST\_API\_\ ExpectationBase\ \{}
+\DoxyCodeLine{00706\ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00707\ \ \ \textcolor{comment}{//\ source\_text\ is\ the\ EXPECT\_CALL(...)\ source\ that\ created\ this\ Expectation.}}
+\DoxyCodeLine{00708\ \ \ ExpectationBase(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ file,\ \textcolor{keywordtype}{int}\ line,\ \textcolor{keyword}{const}\ std::string\&\ source\_text);}
+\DoxyCodeLine{00709\ }
+\DoxyCodeLine{00710\ \ \ \textcolor{keyword}{virtual}\ \string~ExpectationBase();}
+\DoxyCodeLine{00711\ }
+\DoxyCodeLine{00712\ \ \ \textcolor{comment}{//\ Where\ in\ the\ source\ file\ was\ the\ expectation\ spec\ defined?}}
+\DoxyCodeLine{00713\ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ file()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ file\_;\ \}}
+\DoxyCodeLine{00714\ \ \ \textcolor{keywordtype}{int}\ line()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ line\_;\ \}}
+\DoxyCodeLine{00715\ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ source\_text()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ source\_text\_.c\_str();\ \}}
+\DoxyCodeLine{00716\ \ \ \textcolor{comment}{//\ Returns\ the\ cardinality\ specified\ in\ the\ expectation\ spec.}}
+\DoxyCodeLine{00717\ \ \ \textcolor{keyword}{const}\ Cardinality\&\ cardinality()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ cardinality\_;\ \}}
+\DoxyCodeLine{00718\ }
+\DoxyCodeLine{00719\ \ \ \textcolor{comment}{//\ Describes\ the\ source\ file\ location\ of\ this\ expectation.}}
+\DoxyCodeLine{00720\ \ \ \textcolor{keywordtype}{void}\ DescribeLocationTo(::std::ostream*\ os)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00721\ \ \ \ \ *os\ <<\ FormatFileLocation(file(),\ line())\ <<\ \textcolor{stringliteral}{"{}\ "{}};}
+\DoxyCodeLine{00722\ \ \ \}}
+\DoxyCodeLine{00723\ }
+\DoxyCodeLine{00724\ \ \ \textcolor{comment}{//\ Describes\ how\ many\ times\ a\ function\ call\ matching\ this}}
+\DoxyCodeLine{00725\ \ \ \textcolor{comment}{//\ expectation\ has\ occurred.}}
+\DoxyCodeLine{00726\ \ \ \textcolor{keywordtype}{void}\ DescribeCallCountTo(::std::ostream*\ os)\ \textcolor{keyword}{const}}
+\DoxyCodeLine{00727\ \ \ \ \ \ \ GTEST\_EXCLUSIVE\_LOCK\_REQUIRED\_(g\_gmock\_mutex);}
+\DoxyCodeLine{00728\ }
+\DoxyCodeLine{00729\ \ \ \textcolor{comment}{//\ If\ this\ mock\ method\ has\ an\ extra\ matcher\ (i.e.\ .With(matcher)),}}
+\DoxyCodeLine{00730\ \ \ \textcolor{comment}{//\ describes\ it\ to\ the\ ostream.}}
+\DoxyCodeLine{00731\ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ MaybeDescribeExtraMatcherTo(::std::ostream*\ os)\ =\ 0;}
+\DoxyCodeLine{00732\ }
+\DoxyCodeLine{00733\ \ \textcolor{keyword}{protected}:}
+\DoxyCodeLine{00734\ \ \ \textcolor{keyword}{friend}\ class\ ::testing::Expectation;}
+\DoxyCodeLine{00735\ \ \ \textcolor{keyword}{friend}\ \textcolor{keyword}{class\ }UntypedFunctionMockerBase;}
+\DoxyCodeLine{00736\ }
+\DoxyCodeLine{00737\ \ \ \textcolor{keyword}{enum}\ Clause\ \{}
+\DoxyCodeLine{00738\ \ \ \ \ \textcolor{comment}{//\ Don't\ change\ the\ order\ of\ the\ enum\ members!}}
+\DoxyCodeLine{00739\ \ \ \ \ kNone,}
+\DoxyCodeLine{00740\ \ \ \ \ kWith,}
+\DoxyCodeLine{00741\ \ \ \ \ kTimes,}
+\DoxyCodeLine{00742\ \ \ \ \ kInSequence,}
+\DoxyCodeLine{00743\ \ \ \ \ kAfter,}
+\DoxyCodeLine{00744\ \ \ \ \ kWillOnce,}
+\DoxyCodeLine{00745\ \ \ \ \ kWillRepeatedly,}
+\DoxyCodeLine{00746\ \ \ \ \ kRetiresOnSaturation}
+\DoxyCodeLine{00747\ \ \ \};}
+\DoxyCodeLine{00748\ }
+\DoxyCodeLine{00749\ \ \ \textcolor{keyword}{typedef}\ std::vector<const\ void*>\ UntypedActions;}
+\DoxyCodeLine{00750\ }
+\DoxyCodeLine{00751\ \ \ \textcolor{comment}{//\ Returns\ an\ Expectation\ object\ that\ references\ and\ co-\/owns\ this}}
+\DoxyCodeLine{00752\ \ \ \textcolor{comment}{//\ expectation.}}
+\DoxyCodeLine{00753\ \ \ \textcolor{keyword}{virtual}\ Expectation\ GetHandle()\ =\ 0;}
+\DoxyCodeLine{00754\ }
+\DoxyCodeLine{00755\ \ \ \textcolor{comment}{//\ Asserts\ that\ the\ EXPECT\_CALL()\ statement\ has\ the\ given\ property.}}
+\DoxyCodeLine{00756\ \ \ \textcolor{keywordtype}{void}\ AssertSpecProperty(\textcolor{keywordtype}{bool}\ property,}
+\DoxyCodeLine{00757\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\&\ failure\_message)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00758\ \ \ \ \ Assert(property,\ file\_,\ line\_,\ failure\_message);}
+\DoxyCodeLine{00759\ \ \ \}}
+\DoxyCodeLine{00760\ }
+\DoxyCodeLine{00761\ \ \ \textcolor{comment}{//\ Expects\ that\ the\ EXPECT\_CALL()\ statement\ has\ the\ given\ property.}}
+\DoxyCodeLine{00762\ \ \ \textcolor{keywordtype}{void}\ ExpectSpecProperty(\textcolor{keywordtype}{bool}\ property,}
+\DoxyCodeLine{00763\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\&\ failure\_message)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00764\ \ \ \ \ Expect(property,\ file\_,\ line\_,\ failure\_message);}
+\DoxyCodeLine{00765\ \ \ \}}
+\DoxyCodeLine{00766\ }
+\DoxyCodeLine{00767\ \ \ \textcolor{comment}{//\ Explicitly\ specifies\ the\ cardinality\ of\ this\ expectation.\ \ Used}}
+\DoxyCodeLine{00768\ \ \ \textcolor{comment}{//\ by\ the\ subclasses\ to\ implement\ the\ .Times()\ clause.}}
+\DoxyCodeLine{00769\ \ \ \textcolor{keywordtype}{void}\ SpecifyCardinality(\textcolor{keyword}{const}\ Cardinality\&\ cardinality);}
+\DoxyCodeLine{00770\ }
+\DoxyCodeLine{00771\ \ \ \textcolor{comment}{//\ Returns\ true\ if\ and\ only\ if\ the\ user\ specified\ the\ cardinality}}
+\DoxyCodeLine{00772\ \ \ \textcolor{comment}{//\ explicitly\ using\ a\ .Times().}}
+\DoxyCodeLine{00773\ \ \ \textcolor{keywordtype}{bool}\ cardinality\_specified()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ cardinality\_specified\_;\ \}}
+\DoxyCodeLine{00774\ }
+\DoxyCodeLine{00775\ \ \ \textcolor{comment}{//\ Sets\ the\ cardinality\ of\ this\ expectation\ spec.}}
+\DoxyCodeLine{00776\ \ \ \textcolor{keywordtype}{void}\ set\_cardinality(\textcolor{keyword}{const}\ Cardinality\&\ a\_cardinality)\ \{}
+\DoxyCodeLine{00777\ \ \ \ \ cardinality\_\ =\ a\_cardinality;}
+\DoxyCodeLine{00778\ \ \ \}}
+\DoxyCodeLine{00779\ }
+\DoxyCodeLine{00780\ \ \ \textcolor{comment}{//\ The\ following\ group\ of\ methods\ should\ only\ be\ called\ after\ the}}
+\DoxyCodeLine{00781\ \ \ \textcolor{comment}{//\ EXPECT\_CALL()\ statement,\ and\ only\ when\ g\_gmock\_mutex\ is\ held\ by}}
+\DoxyCodeLine{00782\ \ \ \textcolor{comment}{//\ the\ current\ thread.}}
+\DoxyCodeLine{00783\ }
+\DoxyCodeLine{00784\ \ \ \textcolor{comment}{//\ Retires\ all\ pre-\/requisites\ of\ this\ expectation.}}
+\DoxyCodeLine{00785\ \ \ \textcolor{keywordtype}{void}\ RetireAllPreRequisites()}
+\DoxyCodeLine{00786\ \ \ \ \ \ \ GTEST\_EXCLUSIVE\_LOCK\_REQUIRED\_(g\_gmock\_mutex);}
+\DoxyCodeLine{00787\ }
+\DoxyCodeLine{00788\ \ \ \textcolor{comment}{//\ Returns\ true\ if\ and\ only\ if\ this\ expectation\ is\ retired.}}
+\DoxyCodeLine{00789\ \ \ \textcolor{keywordtype}{bool}\ is\_retired()\ const}
+\DoxyCodeLine{00790\ \ \ \ \ \ \ GTEST\_EXCLUSIVE\_LOCK\_REQUIRED\_(g\_gmock\_mutex)\ \{}
+\DoxyCodeLine{00791\ \ \ \ \ g\_gmock\_mutex.AssertHeld();}
+\DoxyCodeLine{00792\ \ \ \ \ \textcolor{keywordflow}{return}\ retired\_;}
+\DoxyCodeLine{00793\ \ \ \}}
+\DoxyCodeLine{00794\ }
+\DoxyCodeLine{00795\ \ \ \textcolor{comment}{//\ Retires\ this\ expectation.}}
+\DoxyCodeLine{00796\ \ \ \textcolor{keywordtype}{void}\ Retire()}
+\DoxyCodeLine{00797\ \ \ \ \ \ \ GTEST\_EXCLUSIVE\_LOCK\_REQUIRED\_(g\_gmock\_mutex)\ \{}
+\DoxyCodeLine{00798\ \ \ \ \ g\_gmock\_mutex.AssertHeld();}
+\DoxyCodeLine{00799\ \ \ \ \ retired\_\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00800\ \ \ \}}
+\DoxyCodeLine{00801\ }
+\DoxyCodeLine{00802\ \ \ \textcolor{comment}{//\ Returns\ true\ if\ and\ only\ if\ this\ expectation\ is\ satisfied.}}
+\DoxyCodeLine{00803\ \ \ \textcolor{keywordtype}{bool}\ IsSatisfied()\ const}
+\DoxyCodeLine{00804\ \ \ \ \ \ \ GTEST\_EXCLUSIVE\_LOCK\_REQUIRED\_(g\_gmock\_mutex)\ \{}
+\DoxyCodeLine{00805\ \ \ \ \ g\_gmock\_mutex.AssertHeld();}
+\DoxyCodeLine{00806\ \ \ \ \ \textcolor{keywordflow}{return}\ cardinality().IsSatisfiedByCallCount(call\_count\_);}
+\DoxyCodeLine{00807\ \ \ \}}
+\DoxyCodeLine{00808\ }
+\DoxyCodeLine{00809\ \ \ \textcolor{comment}{//\ Returns\ true\ if\ and\ only\ if\ this\ expectation\ is\ saturated.}}
+\DoxyCodeLine{00810\ \ \ \textcolor{keywordtype}{bool}\ IsSaturated()\ const}
+\DoxyCodeLine{00811\ \ \ \ \ \ \ GTEST\_EXCLUSIVE\_LOCK\_REQUIRED\_(g\_gmock\_mutex)\ \{}
+\DoxyCodeLine{00812\ \ \ \ \ g\_gmock\_mutex.AssertHeld();}
+\DoxyCodeLine{00813\ \ \ \ \ \textcolor{keywordflow}{return}\ cardinality().IsSaturatedByCallCount(call\_count\_);}
+\DoxyCodeLine{00814\ \ \ \}}
+\DoxyCodeLine{00815\ }
+\DoxyCodeLine{00816\ \ \ \textcolor{comment}{//\ Returns\ true\ if\ and\ only\ if\ this\ expectation\ is\ over-\/saturated.}}
+\DoxyCodeLine{00817\ \ \ \textcolor{keywordtype}{bool}\ IsOverSaturated()\ const}
+\DoxyCodeLine{00818\ \ \ \ \ \ \ GTEST\_EXCLUSIVE\_LOCK\_REQUIRED\_(g\_gmock\_mutex)\ \{}
+\DoxyCodeLine{00819\ \ \ \ \ g\_gmock\_mutex.AssertHeld();}
+\DoxyCodeLine{00820\ \ \ \ \ \textcolor{keywordflow}{return}\ cardinality().IsOverSaturatedByCallCount(call\_count\_);}
+\DoxyCodeLine{00821\ \ \ \}}
+\DoxyCodeLine{00822\ }
+\DoxyCodeLine{00823\ \ \ \textcolor{comment}{//\ Returns\ true\ if\ and\ only\ if\ all\ pre-\/requisites\ of\ this\ expectation\ are}}
+\DoxyCodeLine{00824\ \ \ \textcolor{comment}{//\ satisfied.}}
+\DoxyCodeLine{00825\ \ \ \textcolor{keywordtype}{bool}\ AllPrerequisitesAreSatisfied()\ const}
+\DoxyCodeLine{00826\ \ \ \ \ \ \ GTEST\_EXCLUSIVE\_LOCK\_REQUIRED\_(g\_gmock\_mutex);}
+\DoxyCodeLine{00827\ }
+\DoxyCodeLine{00828\ \ \ \textcolor{comment}{//\ Adds\ unsatisfied\ pre-\/requisites\ of\ this\ expectation\ to\ 'result'.}}
+\DoxyCodeLine{00829\ \ \ \textcolor{keywordtype}{void}\ FindUnsatisfiedPrerequisites(ExpectationSet*\ result)\ const}
+\DoxyCodeLine{00830\ \ \ \ \ \ \ GTEST\_EXCLUSIVE\_LOCK\_REQUIRED\_(g\_gmock\_mutex);}
+\DoxyCodeLine{00831\ }
+\DoxyCodeLine{00832\ \ \ \textcolor{comment}{//\ Returns\ the\ number\ this\ expectation\ has\ been\ invoked.}}
+\DoxyCodeLine{00833\ \ \ \textcolor{keywordtype}{int}\ call\_count()\ const}
+\DoxyCodeLine{00834\ \ \ \ \ \ \ GTEST\_EXCLUSIVE\_LOCK\_REQUIRED\_(g\_gmock\_mutex)\ \{}
+\DoxyCodeLine{00835\ \ \ \ \ g\_gmock\_mutex.AssertHeld();}
+\DoxyCodeLine{00836\ \ \ \ \ \textcolor{keywordflow}{return}\ call\_count\_;}
+\DoxyCodeLine{00837\ \ \ \}}
+\DoxyCodeLine{00838\ }
+\DoxyCodeLine{00839\ \ \ \textcolor{comment}{//\ Increments\ the\ number\ this\ expectation\ has\ been\ invoked.}}
+\DoxyCodeLine{00840\ \ \ \textcolor{keywordtype}{void}\ IncrementCallCount()}
+\DoxyCodeLine{00841\ \ \ \ \ \ \ GTEST\_EXCLUSIVE\_LOCK\_REQUIRED\_(g\_gmock\_mutex)\ \{}
+\DoxyCodeLine{00842\ \ \ \ \ g\_gmock\_mutex.AssertHeld();}
+\DoxyCodeLine{00843\ \ \ \ \ call\_count\_++;}
+\DoxyCodeLine{00844\ \ \ \}}
+\DoxyCodeLine{00845\ }
+\DoxyCodeLine{00846\ \ \ \textcolor{comment}{//\ Checks\ the\ action\ count\ (i.e.\ the\ number\ of\ WillOnce()\ and}}
+\DoxyCodeLine{00847\ \ \ \textcolor{comment}{//\ WillRepeatedly()\ clauses)\ against\ the\ cardinality\ if\ this\ hasn't}}
+\DoxyCodeLine{00848\ \ \ \textcolor{comment}{//\ been\ done\ before.\ \ Prints\ a\ warning\ if\ there\ are\ too\ many\ or\ too}}
+\DoxyCodeLine{00849\ \ \ \textcolor{comment}{//\ few\ actions.}}
+\DoxyCodeLine{00850\ \ \ \textcolor{keywordtype}{void}\ CheckActionCountIfNotDone()\ const}
+\DoxyCodeLine{00851\ \ \ \ \ \ \ GTEST\_LOCK\_EXCLUDED\_(mutex\_);}
+\DoxyCodeLine{00852\ }
+\DoxyCodeLine{00853\ \ \ friend\ class\ ::testing::Sequence;}
+\DoxyCodeLine{00854\ \ \ friend\ class\ ::testing::internal::ExpectationTester;}
+\DoxyCodeLine{00855\ }
+\DoxyCodeLine{00856\ \ \ template\ <typename\ Function>}
+\DoxyCodeLine{00857\ \ \ friend\ class\ TypedExpectation;}
+\DoxyCodeLine{00858\ }
+\DoxyCodeLine{00859\ \ \ \textcolor{comment}{//\ Implements\ the\ .Times()\ clause.}}
+\DoxyCodeLine{00860\ \ \ \textcolor{keywordtype}{void}\ UntypedTimes(const\ Cardinality\&\ a\_cardinality);}
+\DoxyCodeLine{00861\ }
+\DoxyCodeLine{00862\ \ \ \textcolor{comment}{//\ This\ group\ of\ fields\ are\ part\ of\ the\ spec\ and\ won't\ change\ after}}
+\DoxyCodeLine{00863\ \ \ \textcolor{comment}{//\ an\ EXPECT\_CALL()\ statement\ finishes.}}
+\DoxyCodeLine{00864\ \ \ const\ \textcolor{keywordtype}{char}*\ file\_;\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ The\ file\ that\ contains\ the\ expectation.}}
+\DoxyCodeLine{00865\ \ \ \textcolor{keywordtype}{int}\ line\_;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ The\ line\ number\ of\ the\ expectation.}}
+\DoxyCodeLine{00866\ \ \ const\ std::\textcolor{keywordtype}{string}\ source\_text\_;\ \ \textcolor{comment}{//\ The\ EXPECT\_CALL(...)\ source\ text.}}
+\DoxyCodeLine{00867\ \ \ \textcolor{comment}{//\ True\ if\ and\ only\ if\ the\ cardinality\ is\ specified\ explicitly.}}
+\DoxyCodeLine{00868\ \ \ \textcolor{keywordtype}{bool}\ cardinality\_specified\_;}
+\DoxyCodeLine{00869\ \ \ Cardinality\ cardinality\_;\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ The\ cardinality\ of\ the\ expectation.}}
+\DoxyCodeLine{00870\ \ \ \textcolor{comment}{//\ The\ immediate\ pre-\/requisites\ (i.e.\ expectations\ that\ must\ be}}
+\DoxyCodeLine{00871\ \ \ \textcolor{comment}{//\ satisfied\ before\ this\ expectation\ can\ be\ matched)\ of\ this}}
+\DoxyCodeLine{00872\ \ \ \textcolor{comment}{//\ expectation.\ \ We\ use\ std::shared\_ptr\ in\ the\ set\ because\ we\ want\ an}}
+\DoxyCodeLine{00873\ \ \ \textcolor{comment}{//\ Expectation\ object\ to\ be\ co-\/owned\ by\ its\ FunctionMocker\ and\ its}}
+\DoxyCodeLine{00874\ \ \ \textcolor{comment}{//\ successors.\ \ This\ allows\ multiple\ mock\ objects\ to\ be\ deleted\ at}}
+\DoxyCodeLine{00875\ \ \ \textcolor{comment}{//\ different\ times.}}
+\DoxyCodeLine{00876\ \ \ ExpectationSet\ immediate\_prerequisites\_;}
+\DoxyCodeLine{00877\ }
+\DoxyCodeLine{00878\ \ \ \textcolor{comment}{//\ This\ group\ of\ fields\ are\ the\ current\ state\ of\ the\ expectation,}}
+\DoxyCodeLine{00879\ \ \ \textcolor{comment}{//\ and\ can\ change\ as\ the\ mock\ function\ is\ called.}}
+\DoxyCodeLine{00880\ \ \ \textcolor{keywordtype}{int}\ call\_count\_;\ \ \textcolor{comment}{//\ How\ many\ times\ this\ expectation\ has\ been\ invoked.}}
+\DoxyCodeLine{00881\ \ \ \textcolor{keywordtype}{bool}\ retired\_;\ \ \ \ \textcolor{comment}{//\ True\ if\ and\ only\ if\ this\ expectation\ has\ retired.}}
+\DoxyCodeLine{00882\ \ \ UntypedActions\ untyped\_actions\_;}
+\DoxyCodeLine{00883\ \ \ \textcolor{keywordtype}{bool}\ extra\_matcher\_specified\_;}
+\DoxyCodeLine{00884\ \ \ \textcolor{keywordtype}{bool}\ repeated\_action\_specified\_;\ \ \textcolor{comment}{//\ True\ if\ a\ WillRepeatedly()\ was\ specified.}}
+\DoxyCodeLine{00885\ \ \ \textcolor{keywordtype}{bool}\ retires\_on\_saturation\_;}
+\DoxyCodeLine{00886\ \ \ Clause\ last\_clause\_;}
+\DoxyCodeLine{00887\ \ \ mutable\ \textcolor{keywordtype}{bool}\ action\_count\_checked\_;\ \ \textcolor{comment}{//\ Under\ mutex\_.}}
+\DoxyCodeLine{00888\ \ \ mutable\ Mutex\ mutex\_;\ \ \textcolor{comment}{//\ Protects\ action\_count\_checked\_.}}
+\DoxyCodeLine{00889\ \};\ \ \textcolor{comment}{//\ class\ ExpectationBase}}
+\DoxyCodeLine{00890\ }
+\DoxyCodeLine{00891\ \textcolor{comment}{//\ Implements\ an\ expectation\ for\ the\ given\ function\ type.}}
+\DoxyCodeLine{00892\ template\ <typename\ F>}
+\DoxyCodeLine{00893\ class\ TypedExpectation\ :\ public\ ExpectationBase\ \{}
+\DoxyCodeLine{00894\ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00895\ \ \ \textcolor{keyword}{typedef}\ \textcolor{keyword}{typename}\ Function<F>::ArgumentTuple\ ArgumentTuple;}
+\DoxyCodeLine{00896\ \ \ \textcolor{keyword}{typedef}\ \textcolor{keyword}{typename}\ Function<F>::ArgumentMatcherTuple\ ArgumentMatcherTuple;}
+\DoxyCodeLine{00897\ \ \ \textcolor{keyword}{typedef}\ \textcolor{keyword}{typename}\ Function<F>::Result\ Result;}
+\DoxyCodeLine{00898\ }
+\DoxyCodeLine{00899\ \ \ TypedExpectation(FunctionMocker<F>*\ owner,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ a\_file,\ \textcolor{keywordtype}{int}\ a\_line,}
+\DoxyCodeLine{00900\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\&\ a\_source\_text,}
+\DoxyCodeLine{00901\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ ArgumentMatcherTuple\&\ m)}
+\DoxyCodeLine{00902\ \ \ \ \ \ \ :\ ExpectationBase(a\_file,\ a\_line,\ a\_source\_text),}
+\DoxyCodeLine{00903\ \ \ \ \ \ \ \ \ owner\_(owner),}
+\DoxyCodeLine{00904\ \ \ \ \ \ \ \ \ matchers\_(m),}
+\DoxyCodeLine{00905\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ By\ default,\ extra\_matcher\_\ should\ match\ anything.\ \ However,}}
+\DoxyCodeLine{00906\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ we\ cannot\ initialize\ it\ with\ \_\ as\ that\ causes\ ambiguity\ between}}
+\DoxyCodeLine{00907\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Matcher's\ copy\ and\ move\ constructor\ for\ some\ argument\ types.}}
+\DoxyCodeLine{00908\ \ \ \ \ \ \ \ \ extra\_matcher\_(A<const\ ArgumentTuple\&>()),}
+\DoxyCodeLine{00909\ \ \ \ \ \ \ \ \ repeated\_action\_(DoDefault())\ \{\}}
+\DoxyCodeLine{00910\ }
+\DoxyCodeLine{00911\ \ \ \string~TypedExpectation()\textcolor{keyword}{\ override\ }\{}
+\DoxyCodeLine{00912\ \ \ \ \ \textcolor{comment}{//\ Check\ the\ validity\ of\ the\ action\ count\ if\ it\ hasn't\ been\ done}}
+\DoxyCodeLine{00913\ \ \ \ \ \textcolor{comment}{//\ yet\ (for\ example,\ if\ the\ expectation\ was\ never\ used).}}
+\DoxyCodeLine{00914\ \ \ \ \ CheckActionCountIfNotDone();}
+\DoxyCodeLine{00915\ \ \ \ \ \textcolor{keywordflow}{for}\ (UntypedActions::const\_iterator\ it\ =\ untyped\_actions\_.begin();}
+\DoxyCodeLine{00916\ \ \ \ \ \ \ \ \ \ it\ !=\ untyped\_actions\_.end();\ ++it)\ \{}
+\DoxyCodeLine{00917\ \ \ \ \ \ \ \textcolor{keyword}{delete}\ \textcolor{keyword}{static\_cast<}\textcolor{keyword}{const\ }Action<F>*\textcolor{keyword}{>}(*it);}
+\DoxyCodeLine{00918\ \ \ \ \ \}}
+\DoxyCodeLine{00919\ \ \ \}}
+\DoxyCodeLine{00920\ }
+\DoxyCodeLine{00921\ \ \ \textcolor{comment}{//\ Implements\ the\ .With()\ clause.}}
+\DoxyCodeLine{00922\ \ \ TypedExpectation\&\ With(\textcolor{keyword}{const}\ Matcher<const\ ArgumentTuple\&>\&\ m)\ \{}
+\DoxyCodeLine{00923\ \ \ \ \ \textcolor{keywordflow}{if}\ (last\_clause\_\ ==\ kWith)\ \{}
+\DoxyCodeLine{00924\ \ \ \ \ \ \ ExpectSpecProperty(\textcolor{keyword}{false},}
+\DoxyCodeLine{00925\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}.With()\ cannot\ appear\ "{}}}
+\DoxyCodeLine{00926\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}more\ than\ once\ in\ an\ EXPECT\_CALL()."{}});}
+\DoxyCodeLine{00927\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00928\ \ \ \ \ \ \ ExpectSpecProperty(last\_clause\_\ <\ kWith,}
+\DoxyCodeLine{00929\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}.With()\ must\ be\ the\ first\ "{}}}
+\DoxyCodeLine{00930\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}clause\ in\ an\ EXPECT\_CALL()."{}});}
+\DoxyCodeLine{00931\ \ \ \ \ \}}
+\DoxyCodeLine{00932\ \ \ \ \ last\_clause\_\ =\ kWith;}
+\DoxyCodeLine{00933\ }
+\DoxyCodeLine{00934\ \ \ \ \ extra\_matcher\_\ =\ m;}
+\DoxyCodeLine{00935\ \ \ \ \ extra\_matcher\_specified\_\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00936\ \ \ \ \ \textcolor{keywordflow}{return}\ *\textcolor{keyword}{this};}
+\DoxyCodeLine{00937\ \ \ \}}
+\DoxyCodeLine{00938\ }
+\DoxyCodeLine{00939\ \ \ \textcolor{comment}{//\ Implements\ the\ .Times()\ clause.}}
+\DoxyCodeLine{00940\ \ \ TypedExpectation\&\ Times(\textcolor{keyword}{const}\ Cardinality\&\ a\_cardinality)\ \{}
+\DoxyCodeLine{00941\ \ \ \ \ ExpectationBase::UntypedTimes(a\_cardinality);}
+\DoxyCodeLine{00942\ \ \ \ \ \textcolor{keywordflow}{return}\ *\textcolor{keyword}{this};}
+\DoxyCodeLine{00943\ \ \ \}}
+\DoxyCodeLine{00944\ }
+\DoxyCodeLine{00945\ \ \ \textcolor{comment}{//\ Implements\ the\ .Times()\ clause.}}
+\DoxyCodeLine{00946\ \ \ TypedExpectation\&\ Times(\textcolor{keywordtype}{int}\ n)\ \{}
+\DoxyCodeLine{00947\ \ \ \ \ \textcolor{keywordflow}{return}\ Times(Exactly(n));}
+\DoxyCodeLine{00948\ \ \ \}}
+\DoxyCodeLine{00949\ }
+\DoxyCodeLine{00950\ \ \ \textcolor{comment}{//\ Implements\ the\ .InSequence()\ clause.}}
+\DoxyCodeLine{00951\ \ \ TypedExpectation\&\ InSequence(\textcolor{keyword}{const}\ Sequence\&\ s)\ \{}
+\DoxyCodeLine{00952\ \ \ \ \ ExpectSpecProperty(last\_clause\_\ <=\ kInSequence,}
+\DoxyCodeLine{00953\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}.InSequence()\ cannot\ appear\ after\ .After(),"{}}}
+\DoxyCodeLine{00954\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}\ .WillOnce(),\ .WillRepeatedly(),\ or\ "{}}}
+\DoxyCodeLine{00955\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}.RetiresOnSaturation()."{}});}
+\DoxyCodeLine{00956\ \ \ \ \ last\_clause\_\ =\ kInSequence;}
+\DoxyCodeLine{00957\ }
+\DoxyCodeLine{00958\ \ \ \ \ s.AddExpectation(GetHandle());}
+\DoxyCodeLine{00959\ \ \ \ \ \textcolor{keywordflow}{return}\ *\textcolor{keyword}{this};}
+\DoxyCodeLine{00960\ \ \ \}}
+\DoxyCodeLine{00961\ \ \ TypedExpectation\&\ InSequence(\textcolor{keyword}{const}\ Sequence\&\ s1,\ \textcolor{keyword}{const}\ Sequence\&\ s2)\ \{}
+\DoxyCodeLine{00962\ \ \ \ \ \textcolor{keywordflow}{return}\ InSequence(s1).InSequence(s2);}
+\DoxyCodeLine{00963\ \ \ \}}
+\DoxyCodeLine{00964\ \ \ TypedExpectation\&\ InSequence(\textcolor{keyword}{const}\ Sequence\&\ s1,\ \textcolor{keyword}{const}\ Sequence\&\ s2,}
+\DoxyCodeLine{00965\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ Sequence\&\ s3)\ \{}
+\DoxyCodeLine{00966\ \ \ \ \ \textcolor{keywordflow}{return}\ InSequence(s1,\ s2).InSequence(s3);}
+\DoxyCodeLine{00967\ \ \ \}}
+\DoxyCodeLine{00968\ \ \ TypedExpectation\&\ InSequence(\textcolor{keyword}{const}\ Sequence\&\ s1,\ \textcolor{keyword}{const}\ Sequence\&\ s2,}
+\DoxyCodeLine{00969\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ Sequence\&\ s3,\ \textcolor{keyword}{const}\ Sequence\&\ s4)\ \{}
+\DoxyCodeLine{00970\ \ \ \ \ \textcolor{keywordflow}{return}\ InSequence(s1,\ s2,\ s3).InSequence(s4);}
+\DoxyCodeLine{00971\ \ \ \}}
+\DoxyCodeLine{00972\ \ \ TypedExpectation\&\ InSequence(\textcolor{keyword}{const}\ Sequence\&\ s1,\ \textcolor{keyword}{const}\ Sequence\&\ s2,}
+\DoxyCodeLine{00973\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ Sequence\&\ s3,\ \textcolor{keyword}{const}\ Sequence\&\ s4,}
+\DoxyCodeLine{00974\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ Sequence\&\ s5)\ \{}
+\DoxyCodeLine{00975\ \ \ \ \ \textcolor{keywordflow}{return}\ InSequence(s1,\ s2,\ s3,\ s4).InSequence(s5);}
+\DoxyCodeLine{00976\ \ \ \}}
+\DoxyCodeLine{00977\ }
+\DoxyCodeLine{00978\ \ \ \textcolor{comment}{//\ Implements\ that\ .After()\ clause.}}
+\DoxyCodeLine{00979\ \ \ TypedExpectation\&\ After(\textcolor{keyword}{const}\ ExpectationSet\&\ s)\ \{}
+\DoxyCodeLine{00980\ \ \ \ \ ExpectSpecProperty(last\_clause\_\ <=\ kAfter,}
+\DoxyCodeLine{00981\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}.After()\ cannot\ appear\ after\ .WillOnce(),"{}}}
+\DoxyCodeLine{00982\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}\ .WillRepeatedly(),\ or\ "{}}}
+\DoxyCodeLine{00983\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}.RetiresOnSaturation()."{}});}
+\DoxyCodeLine{00984\ \ \ \ \ last\_clause\_\ =\ kAfter;}
+\DoxyCodeLine{00985\ }
+\DoxyCodeLine{00986\ \ \ \ \ \textcolor{keywordflow}{for}\ (ExpectationSet::const\_iterator\ it\ =\ s.begin();\ it\ !=\ s.end();\ ++it)\ \{}
+\DoxyCodeLine{00987\ \ \ \ \ \ \ immediate\_prerequisites\_\ +=\ *it;}
+\DoxyCodeLine{00988\ \ \ \ \ \}}
+\DoxyCodeLine{00989\ \ \ \ \ \textcolor{keywordflow}{return}\ *\textcolor{keyword}{this};}
+\DoxyCodeLine{00990\ \ \ \}}
+\DoxyCodeLine{00991\ \ \ TypedExpectation\&\ After(\textcolor{keyword}{const}\ ExpectationSet\&\ s1,\ \textcolor{keyword}{const}\ ExpectationSet\&\ s2)\ \{}
+\DoxyCodeLine{00992\ \ \ \ \ \textcolor{keywordflow}{return}\ After(s1).After(s2);}
+\DoxyCodeLine{00993\ \ \ \}}
+\DoxyCodeLine{00994\ \ \ TypedExpectation\&\ After(\textcolor{keyword}{const}\ ExpectationSet\&\ s1,\ \textcolor{keyword}{const}\ ExpectationSet\&\ s2,}
+\DoxyCodeLine{00995\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ ExpectationSet\&\ s3)\ \{}
+\DoxyCodeLine{00996\ \ \ \ \ \textcolor{keywordflow}{return}\ After(s1,\ s2).After(s3);}
+\DoxyCodeLine{00997\ \ \ \}}
+\DoxyCodeLine{00998\ \ \ TypedExpectation\&\ After(\textcolor{keyword}{const}\ ExpectationSet\&\ s1,\ \textcolor{keyword}{const}\ ExpectationSet\&\ s2,}
+\DoxyCodeLine{00999\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ ExpectationSet\&\ s3,\ \textcolor{keyword}{const}\ ExpectationSet\&\ s4)\ \{}
+\DoxyCodeLine{01000\ \ \ \ \ \textcolor{keywordflow}{return}\ After(s1,\ s2,\ s3).After(s4);}
+\DoxyCodeLine{01001\ \ \ \}}
+\DoxyCodeLine{01002\ \ \ TypedExpectation\&\ After(\textcolor{keyword}{const}\ ExpectationSet\&\ s1,\ \textcolor{keyword}{const}\ ExpectationSet\&\ s2,}
+\DoxyCodeLine{01003\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ ExpectationSet\&\ s3,\ \textcolor{keyword}{const}\ ExpectationSet\&\ s4,}
+\DoxyCodeLine{01004\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ ExpectationSet\&\ s5)\ \{}
+\DoxyCodeLine{01005\ \ \ \ \ \textcolor{keywordflow}{return}\ After(s1,\ s2,\ s3,\ s4).After(s5);}
+\DoxyCodeLine{01006\ \ \ \}}
+\DoxyCodeLine{01007\ }
+\DoxyCodeLine{01008\ \ \ \textcolor{comment}{//\ Implements\ the\ .WillOnce()\ clause.}}
+\DoxyCodeLine{01009\ \ \ TypedExpectation\&\ WillOnce(\textcolor{keyword}{const}\ Action<F>\&\ action)\ \{}
+\DoxyCodeLine{01010\ \ \ \ \ ExpectSpecProperty(last\_clause\_\ <=\ kWillOnce,}
+\DoxyCodeLine{01011\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}.WillOnce()\ cannot\ appear\ after\ "{}}}
+\DoxyCodeLine{01012\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}.WillRepeatedly()\ or\ .RetiresOnSaturation()."{}});}
+\DoxyCodeLine{01013\ \ \ \ \ last\_clause\_\ =\ kWillOnce;}
+\DoxyCodeLine{01014\ }
+\DoxyCodeLine{01015\ \ \ \ \ untyped\_actions\_.push\_back(\textcolor{keyword}{new}\ Action<F>(action));}
+\DoxyCodeLine{01016\ \ \ \ \ \textcolor{keywordflow}{if}\ (!cardinality\_specified())\ \{}
+\DoxyCodeLine{01017\ \ \ \ \ \ \ set\_cardinality(Exactly(\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(untyped\_actions\_.size())));}
+\DoxyCodeLine{01018\ \ \ \ \ \}}
+\DoxyCodeLine{01019\ \ \ \ \ \textcolor{keywordflow}{return}\ *\textcolor{keyword}{this};}
+\DoxyCodeLine{01020\ \ \ \}}
+\DoxyCodeLine{01021\ }
+\DoxyCodeLine{01022\ \ \ \textcolor{comment}{//\ Implements\ the\ .WillRepeatedly()\ clause.}}
+\DoxyCodeLine{01023\ \ \ TypedExpectation\&\ WillRepeatedly(\textcolor{keyword}{const}\ Action<F>\&\ action)\ \{}
+\DoxyCodeLine{01024\ \ \ \ \ \textcolor{keywordflow}{if}\ (last\_clause\_\ ==\ kWillRepeatedly)\ \{}
+\DoxyCodeLine{01025\ \ \ \ \ \ \ ExpectSpecProperty(\textcolor{keyword}{false},}
+\DoxyCodeLine{01026\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}.WillRepeatedly()\ cannot\ appear\ "{}}}
+\DoxyCodeLine{01027\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}more\ than\ once\ in\ an\ EXPECT\_CALL()."{}});}
+\DoxyCodeLine{01028\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{01029\ \ \ \ \ \ \ ExpectSpecProperty(last\_clause\_\ <\ kWillRepeatedly,}
+\DoxyCodeLine{01030\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}.WillRepeatedly()\ cannot\ appear\ "{}}}
+\DoxyCodeLine{01031\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}after\ .RetiresOnSaturation()."{}});}
+\DoxyCodeLine{01032\ \ \ \ \ \}}
+\DoxyCodeLine{01033\ \ \ \ \ last\_clause\_\ =\ kWillRepeatedly;}
+\DoxyCodeLine{01034\ \ \ \ \ repeated\_action\_specified\_\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{01035\ }
+\DoxyCodeLine{01036\ \ \ \ \ repeated\_action\_\ =\ action;}
+\DoxyCodeLine{01037\ \ \ \ \ \textcolor{keywordflow}{if}\ (!cardinality\_specified())\ \{}
+\DoxyCodeLine{01038\ \ \ \ \ \ \ set\_cardinality(AtLeast(\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(untyped\_actions\_.size())));}
+\DoxyCodeLine{01039\ \ \ \ \ \}}
+\DoxyCodeLine{01040\ }
+\DoxyCodeLine{01041\ \ \ \ \ \textcolor{comment}{//\ Now\ that\ no\ more\ action\ clauses\ can\ be\ specified,\ we\ check}}
+\DoxyCodeLine{01042\ \ \ \ \ \textcolor{comment}{//\ whether\ their\ count\ makes\ sense.}}
+\DoxyCodeLine{01043\ \ \ \ \ CheckActionCountIfNotDone();}
+\DoxyCodeLine{01044\ \ \ \ \ \textcolor{keywordflow}{return}\ *\textcolor{keyword}{this};}
+\DoxyCodeLine{01045\ \ \ \}}
+\DoxyCodeLine{01046\ }
+\DoxyCodeLine{01047\ \ \ \textcolor{comment}{//\ Implements\ the\ .RetiresOnSaturation()\ clause.}}
+\DoxyCodeLine{01048\ \ \ TypedExpectation\&\ RetiresOnSaturation()\ \{}
+\DoxyCodeLine{01049\ \ \ \ \ ExpectSpecProperty(last\_clause\_\ <\ kRetiresOnSaturation,}
+\DoxyCodeLine{01050\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}.RetiresOnSaturation()\ cannot\ appear\ "{}}}
+\DoxyCodeLine{01051\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}more\ than\ once."{}});}
+\DoxyCodeLine{01052\ \ \ \ \ last\_clause\_\ =\ kRetiresOnSaturation;}
+\DoxyCodeLine{01053\ \ \ \ \ retires\_on\_saturation\_\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{01054\ }
+\DoxyCodeLine{01055\ \ \ \ \ \textcolor{comment}{//\ Now\ that\ no\ more\ action\ clauses\ can\ be\ specified,\ we\ check}}
+\DoxyCodeLine{01056\ \ \ \ \ \textcolor{comment}{//\ whether\ their\ count\ makes\ sense.}}
+\DoxyCodeLine{01057\ \ \ \ \ CheckActionCountIfNotDone();}
+\DoxyCodeLine{01058\ \ \ \ \ \textcolor{keywordflow}{return}\ *\textcolor{keyword}{this};}
+\DoxyCodeLine{01059\ \ \ \}}
+\DoxyCodeLine{01060\ }
+\DoxyCodeLine{01061\ \ \ \textcolor{comment}{//\ Returns\ the\ matchers\ for\ the\ arguments\ as\ specified\ inside\ the}}
+\DoxyCodeLine{01062\ \ \ \textcolor{comment}{//\ EXPECT\_CALL()\ macro.}}
+\DoxyCodeLine{01063\ \ \ \textcolor{keyword}{const}\ ArgumentMatcherTuple\&\ matchers()\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{01064\ \ \ \ \ \textcolor{keywordflow}{return}\ matchers\_;}
+\DoxyCodeLine{01065\ \ \ \}}
+\DoxyCodeLine{01066\ }
+\DoxyCodeLine{01067\ \ \ \textcolor{comment}{//\ Returns\ the\ matcher\ specified\ by\ the\ .With()\ clause.}}
+\DoxyCodeLine{01068\ \ \ \textcolor{keyword}{const}\ Matcher<const\ ArgumentTuple\&>\&\ extra\_matcher()\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{01069\ \ \ \ \ \textcolor{keywordflow}{return}\ extra\_matcher\_;}
+\DoxyCodeLine{01070\ \ \ \}}
+\DoxyCodeLine{01071\ }
+\DoxyCodeLine{01072\ \ \ \textcolor{comment}{//\ Returns\ the\ action\ specified\ by\ the\ .WillRepeatedly()\ clause.}}
+\DoxyCodeLine{01073\ \ \ \textcolor{keyword}{const}\ Action<F>\&\ repeated\_action()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ repeated\_action\_;\ \}}
+\DoxyCodeLine{01074\ }
+\DoxyCodeLine{01075\ \ \ \textcolor{comment}{//\ If\ this\ mock\ method\ has\ an\ extra\ matcher\ (i.e.\ .With(matcher)),}}
+\DoxyCodeLine{01076\ \ \ \textcolor{comment}{//\ describes\ it\ to\ the\ ostream.}}
+\DoxyCodeLine{01077\ \ \ \textcolor{keywordtype}{void}\ MaybeDescribeExtraMatcherTo(::std::ostream*\ os)\textcolor{keyword}{\ override\ }\{}
+\DoxyCodeLine{01078\ \ \ \ \ \textcolor{keywordflow}{if}\ (extra\_matcher\_specified\_)\ \{}
+\DoxyCodeLine{01079\ \ \ \ \ \ \ *os\ <<\ \textcolor{stringliteral}{"{}\ \ \ \ Expected\ args:\ "{}};}
+\DoxyCodeLine{01080\ \ \ \ \ \ \ extra\_matcher\_.DescribeTo(os);}
+\DoxyCodeLine{01081\ \ \ \ \ \ \ *os\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}};}
+\DoxyCodeLine{01082\ \ \ \ \ \}}
+\DoxyCodeLine{01083\ \ \ \}}
+\DoxyCodeLine{01084\ }
+\DoxyCodeLine{01085\ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{01086\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Function>}
+\DoxyCodeLine{01087\ \ \ \textcolor{keyword}{friend}\ \textcolor{keyword}{class\ }FunctionMocker;}
+\DoxyCodeLine{01088\ }
+\DoxyCodeLine{01089\ \ \ \textcolor{comment}{//\ Returns\ an\ Expectation\ object\ that\ references\ and\ co-\/owns\ this}}
+\DoxyCodeLine{01090\ \ \ \textcolor{comment}{//\ expectation.}}
+\DoxyCodeLine{01091\ \ \ Expectation\ GetHandle()\textcolor{keyword}{\ override\ }\{\ \textcolor{keywordflow}{return}\ owner\_-\/>GetHandleOf(\textcolor{keyword}{this});\ \}}
+\DoxyCodeLine{01092\ }
+\DoxyCodeLine{01093\ \ \ \textcolor{comment}{//\ The\ following\ methods\ will\ be\ called\ only\ after\ the\ EXPECT\_CALL()}}
+\DoxyCodeLine{01094\ \ \ \textcolor{comment}{//\ statement\ finishes\ and\ when\ the\ current\ thread\ holds}}
+\DoxyCodeLine{01095\ \ \ \textcolor{comment}{//\ g\_gmock\_mutex.}}
+\DoxyCodeLine{01096\ }
+\DoxyCodeLine{01097\ \ \ \textcolor{comment}{//\ Returns\ true\ if\ and\ only\ if\ this\ expectation\ matches\ the\ given\ arguments.}}
+\DoxyCodeLine{01098\ \ \ \textcolor{keywordtype}{bool}\ Matches(\textcolor{keyword}{const}\ ArgumentTuple\&\ args)\ \textcolor{keyword}{const}}
+\DoxyCodeLine{01099\ \ \ \ \ \ \ GTEST\_EXCLUSIVE\_LOCK\_REQUIRED\_(g\_gmock\_mutex)\ \{}
+\DoxyCodeLine{01100\ \ \ \ \ g\_gmock\_mutex.AssertHeld();}
+\DoxyCodeLine{01101\ \ \ \ \ \textcolor{keywordflow}{return}\ TupleMatches(matchers\_,\ args)\ \&\&\ extra\_matcher\_.Matches(args);}
+\DoxyCodeLine{01102\ \ \ \}}
+\DoxyCodeLine{01103\ }
+\DoxyCodeLine{01104\ \ \ \textcolor{comment}{//\ Returns\ true\ if\ and\ only\ if\ this\ expectation\ should\ handle\ the\ given}}
+\DoxyCodeLine{01105\ \ \ \textcolor{comment}{//\ arguments.}}
+\DoxyCodeLine{01106\ \ \ \textcolor{keywordtype}{bool}\ ShouldHandleArguments(\textcolor{keyword}{const}\ ArgumentTuple\&\ args)\ \textcolor{keyword}{const}}
+\DoxyCodeLine{01107\ \ \ \ \ \ \ GTEST\_EXCLUSIVE\_LOCK\_REQUIRED\_(g\_gmock\_mutex)\ \{}
+\DoxyCodeLine{01108\ \ \ \ \ g\_gmock\_mutex.AssertHeld();}
+\DoxyCodeLine{01109\ }
+\DoxyCodeLine{01110\ \ \ \ \ \textcolor{comment}{//\ In\ case\ the\ action\ count\ wasn't\ checked\ when\ the\ expectation}}
+\DoxyCodeLine{01111\ \ \ \ \ \textcolor{comment}{//\ was\ defined\ (e.g.\ if\ this\ expectation\ has\ no\ WillRepeatedly()}}
+\DoxyCodeLine{01112\ \ \ \ \ \textcolor{comment}{//\ or\ RetiresOnSaturation()\ clause),\ we\ check\ it\ when\ the}}
+\DoxyCodeLine{01113\ \ \ \ \ \textcolor{comment}{//\ expectation\ is\ used\ for\ the\ first\ time.}}
+\DoxyCodeLine{01114\ \ \ \ \ CheckActionCountIfNotDone();}
+\DoxyCodeLine{01115\ \ \ \ \ \textcolor{keywordflow}{return}\ !is\_retired()\ \&\&\ AllPrerequisitesAreSatisfied()\ \&\&\ Matches(args);}
+\DoxyCodeLine{01116\ \ \ \}}
+\DoxyCodeLine{01117\ }
+\DoxyCodeLine{01118\ \ \ \textcolor{comment}{//\ Describes\ the\ result\ of\ matching\ the\ arguments\ against\ this}}
+\DoxyCodeLine{01119\ \ \ \textcolor{comment}{//\ expectation\ to\ the\ given\ ostream.}}
+\DoxyCodeLine{01120\ \ \ \textcolor{keywordtype}{void}\ ExplainMatchResultTo(}
+\DoxyCodeLine{01121\ \ \ \ \ \ \ \textcolor{keyword}{const}\ ArgumentTuple\&\ args,}
+\DoxyCodeLine{01122\ \ \ \ \ \ \ ::std::ostream*\ os)\ \textcolor{keyword}{const}}
+\DoxyCodeLine{01123\ \ \ \ \ \ \ \ \ \ \ GTEST\_EXCLUSIVE\_LOCK\_REQUIRED\_(g\_gmock\_mutex)\ \{}
+\DoxyCodeLine{01124\ \ \ \ \ g\_gmock\_mutex.AssertHeld();}
+\DoxyCodeLine{01125\ }
+\DoxyCodeLine{01126\ \ \ \ \ \textcolor{keywordflow}{if}\ (is\_retired())\ \{}
+\DoxyCodeLine{01127\ \ \ \ \ \ \ *os\ <<\ \textcolor{stringliteral}{"{}\ \ \ \ \ \ \ \ \ Expected:\ the\ expectation\ is\ active\(\backslash\)n"{}}}
+\DoxyCodeLine{01128\ \ \ \ \ \ \ \ \ \ \ <<\ \textcolor{stringliteral}{"{}\ \ \ \ \ \ \ \ \ \ \ Actual:\ it\ is\ retired\(\backslash\)n"{}};}
+\DoxyCodeLine{01129\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (!Matches(args))\ \{}
+\DoxyCodeLine{01130\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!TupleMatches(matchers\_,\ args))\ \{}
+\DoxyCodeLine{01131\ \ \ \ \ \ \ \ \ ExplainMatchFailureTupleTo(matchers\_,\ args,\ os);}
+\DoxyCodeLine{01132\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01133\ \ \ \ \ \ \ StringMatchResultListener\ listener;}
+\DoxyCodeLine{01134\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!extra\_matcher\_.MatchAndExplain(args,\ \&listener))\ \{}
+\DoxyCodeLine{01135\ \ \ \ \ \ \ \ \ *os\ <<\ \textcolor{stringliteral}{"{}\ \ \ \ Expected\ args:\ "{}};}
+\DoxyCodeLine{01136\ \ \ \ \ \ \ \ \ extra\_matcher\_.DescribeTo(os);}
+\DoxyCodeLine{01137\ \ \ \ \ \ \ \ \ *os\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n\ \ \ \ \ \ \ \ \ \ \ Actual:\ don't\ match"{}};}
+\DoxyCodeLine{01138\ }
+\DoxyCodeLine{01139\ \ \ \ \ \ \ \ \ internal::PrintIfNotEmpty(listener.str(),\ os);}
+\DoxyCodeLine{01140\ \ \ \ \ \ \ \ \ *os\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}};}
+\DoxyCodeLine{01141\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01142\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (!AllPrerequisitesAreSatisfied())\ \{}
+\DoxyCodeLine{01143\ \ \ \ \ \ \ *os\ <<\ \textcolor{stringliteral}{"{}\ \ \ \ \ \ \ \ \ Expected:\ all\ pre-\/requisites\ are\ satisfied\(\backslash\)n"{}}}
+\DoxyCodeLine{01144\ \ \ \ \ \ \ \ \ \ \ <<\ \textcolor{stringliteral}{"{}\ \ \ \ \ \ \ \ \ \ \ Actual:\ the\ following\ immediate\ pre-\/requisites\ "{}}}
+\DoxyCodeLine{01145\ \ \ \ \ \ \ \ \ \ \ <<\ \textcolor{stringliteral}{"{}are\ not\ satisfied:\(\backslash\)n"{}};}
+\DoxyCodeLine{01146\ \ \ \ \ \ \ ExpectationSet\ unsatisfied\_prereqs;}
+\DoxyCodeLine{01147\ \ \ \ \ \ \ FindUnsatisfiedPrerequisites(\&unsatisfied\_prereqs);}
+\DoxyCodeLine{01148\ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ i\ =\ 0;}
+\DoxyCodeLine{01149\ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (ExpectationSet::const\_iterator\ it\ =\ unsatisfied\_prereqs.begin();}
+\DoxyCodeLine{01150\ \ \ \ \ \ \ \ \ \ \ \ it\ !=\ unsatisfied\_prereqs.end();\ ++it)\ \{}
+\DoxyCodeLine{01151\ \ \ \ \ \ \ \ \ it-\/>expectation\_base()-\/>DescribeLocationTo(os);}
+\DoxyCodeLine{01152\ \ \ \ \ \ \ \ \ *os\ <<\ \textcolor{stringliteral}{"{}pre-\/requisite\ \#"{}}\ <<\ i++\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}};}
+\DoxyCodeLine{01153\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01154\ \ \ \ \ \ \ *os\ <<\ \textcolor{stringliteral}{"{}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (end\ of\ pre-\/requisites)\(\backslash\)n"{}};}
+\DoxyCodeLine{01155\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{01156\ \ \ \ \ \ \ \textcolor{comment}{//\ This\ line\ is\ here\ just\ for\ completeness'\ sake.\ \ It\ will\ never}}
+\DoxyCodeLine{01157\ \ \ \ \ \ \ \textcolor{comment}{//\ be\ executed\ as\ currently\ the\ ExplainMatchResultTo()\ function}}
+\DoxyCodeLine{01158\ \ \ \ \ \ \ \textcolor{comment}{//\ is\ called\ only\ when\ the\ mock\ function\ call\ does\ NOT\ match\ the}}
+\DoxyCodeLine{01159\ \ \ \ \ \ \ \textcolor{comment}{//\ expectation.}}
+\DoxyCodeLine{01160\ \ \ \ \ \ \ *os\ <<\ \textcolor{stringliteral}{"{}The\ call\ matches\ the\ expectation.\(\backslash\)n"{}};}
+\DoxyCodeLine{01161\ \ \ \ \ \}}
+\DoxyCodeLine{01162\ \ \ \}}
+\DoxyCodeLine{01163\ }
+\DoxyCodeLine{01164\ \ \ \textcolor{comment}{//\ Returns\ the\ action\ that\ should\ be\ taken\ for\ the\ current\ invocation.}}
+\DoxyCodeLine{01165\ \ \ \textcolor{keyword}{const}\ Action<F>\&\ GetCurrentAction(\textcolor{keyword}{const}\ FunctionMocker<F>*\ mocker,}
+\DoxyCodeLine{01166\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ ArgumentTuple\&\ args)\ \textcolor{keyword}{const}}
+\DoxyCodeLine{01167\ \ \ \ \ \ \ GTEST\_EXCLUSIVE\_LOCK\_REQUIRED\_(g\_gmock\_mutex)\ \{}
+\DoxyCodeLine{01168\ \ \ \ \ g\_gmock\_mutex.AssertHeld();}
+\DoxyCodeLine{01169\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ count\ =\ call\_count();}
+\DoxyCodeLine{01170\ \ \ \ \ Assert(count\ >=\ 1,\ \_\_FILE\_\_,\ \_\_LINE\_\_,}
+\DoxyCodeLine{01171\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}call\_count()\ is\ <=\ 0\ when\ GetCurrentAction()\ is\ "{}}}
+\DoxyCodeLine{01172\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}called\ -\/\ this\ should\ never\ happen."{}});}
+\DoxyCodeLine{01173\ }
+\DoxyCodeLine{01174\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ action\_count\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(untyped\_actions\_.size());}
+\DoxyCodeLine{01175\ \ \ \ \ \textcolor{keywordflow}{if}\ (action\_count\ >\ 0\ \&\&\ !repeated\_action\_specified\_\ \&\&}
+\DoxyCodeLine{01176\ \ \ \ \ \ \ \ \ count\ >\ action\_count)\ \{}
+\DoxyCodeLine{01177\ \ \ \ \ \ \ \textcolor{comment}{//\ If\ there\ is\ at\ least\ one\ WillOnce()\ and\ no\ WillRepeatedly(),}}
+\DoxyCodeLine{01178\ \ \ \ \ \ \ \textcolor{comment}{//\ we\ warn\ the\ user\ when\ the\ WillOnce()\ clauses\ ran\ out.}}
+\DoxyCodeLine{01179\ \ \ \ \ \ \ ::std::stringstream\ ss;}
+\DoxyCodeLine{01180\ \ \ \ \ \ \ DescribeLocationTo(\&ss);}
+\DoxyCodeLine{01181\ \ \ \ \ \ \ ss\ <<\ \textcolor{stringliteral}{"{}Actions\ ran\ out\ in\ "{}}\ <<\ source\_text()\ <<\ \textcolor{stringliteral}{"{}...\(\backslash\)n"{}}}
+\DoxyCodeLine{01182\ \ \ \ \ \ \ \ \ \ <<\ \textcolor{stringliteral}{"{}Called\ "{}}\ <<\ count\ <<\ \textcolor{stringliteral}{"{}\ times,\ but\ only\ "{}}}
+\DoxyCodeLine{01183\ \ \ \ \ \ \ \ \ \ <<\ action\_count\ <<\ \textcolor{stringliteral}{"{}\ WillOnce()"{}}}
+\DoxyCodeLine{01184\ \ \ \ \ \ \ \ \ \ <<\ (action\_count\ ==\ 1\ ?\ \textcolor{stringliteral}{"{}\ is"{}}\ :\ \textcolor{stringliteral}{"{}s\ are"{}})\ <<\ \textcolor{stringliteral}{"{}\ specified\ -\/\ "{}};}
+\DoxyCodeLine{01185\ \ \ \ \ \ \ mocker-\/>DescribeDefaultActionTo(args,\ \&ss);}
+\DoxyCodeLine{01186\ \ \ \ \ \ \ Log(kWarning,\ ss.str(),\ 1);}
+\DoxyCodeLine{01187\ \ \ \ \ \}}
+\DoxyCodeLine{01188\ }
+\DoxyCodeLine{01189\ \ \ \ \ \textcolor{keywordflow}{return}\ count\ <=\ action\_count}
+\DoxyCodeLine{01190\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ?\ *\textcolor{keyword}{static\_cast<}\textcolor{keyword}{const\ }Action<F>*\textcolor{keyword}{>}(}
+\DoxyCodeLine{01191\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ untyped\_actions\_[\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{size\_t}\textcolor{keyword}{>}(count\ -\/\ 1)])}
+\DoxyCodeLine{01192\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ :\ repeated\_action();}
+\DoxyCodeLine{01193\ \ \ \}}
+\DoxyCodeLine{01194\ }
+\DoxyCodeLine{01195\ \ \ \textcolor{comment}{//\ Given\ the\ arguments\ of\ a\ mock\ function\ call,\ if\ the\ call\ will}}
+\DoxyCodeLine{01196\ \ \ \textcolor{comment}{//\ over-\/saturate\ this\ expectation,\ returns\ the\ default\ action;}}
+\DoxyCodeLine{01197\ \ \ \textcolor{comment}{//\ otherwise,\ returns\ the\ next\ action\ in\ this\ expectation.\ \ Also}}
+\DoxyCodeLine{01198\ \ \ \textcolor{comment}{//\ describes\ *what*\ happened\ to\ 'what',\ and\ explains\ *why*\ Google}}
+\DoxyCodeLine{01199\ \ \ \textcolor{comment}{//\ Mock\ does\ it\ to\ 'why'.\ \ This\ method\ is\ not\ const\ as\ it\ calls}}
+\DoxyCodeLine{01200\ \ \ \textcolor{comment}{//\ IncrementCallCount().\ \ A\ return\ value\ of\ NULL\ means\ the\ default}}
+\DoxyCodeLine{01201\ \ \ \textcolor{comment}{//\ action.}}
+\DoxyCodeLine{01202\ \ \ \textcolor{keyword}{const}\ Action<F>*\ GetActionForArguments(\textcolor{keyword}{const}\ FunctionMocker<F>*\ mocker,}
+\DoxyCodeLine{01203\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ ArgumentTuple\&\ args,}
+\DoxyCodeLine{01204\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ::std::ostream*\ what,}
+\DoxyCodeLine{01205\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ::std::ostream*\ why)}
+\DoxyCodeLine{01206\ \ \ \ \ \ \ GTEST\_EXCLUSIVE\_LOCK\_REQUIRED\_(g\_gmock\_mutex)\ \{}
+\DoxyCodeLine{01207\ \ \ \ \ g\_gmock\_mutex.AssertHeld();}
+\DoxyCodeLine{01208\ \ \ \ \ \textcolor{keywordflow}{if}\ (IsSaturated())\ \{}
+\DoxyCodeLine{01209\ \ \ \ \ \ \ \textcolor{comment}{//\ We\ have\ an\ excessive\ call.}}
+\DoxyCodeLine{01210\ \ \ \ \ \ \ IncrementCallCount();}
+\DoxyCodeLine{01211\ \ \ \ \ \ \ *what\ <<\ \textcolor{stringliteral}{"{}Mock\ function\ called\ more\ times\ than\ expected\ -\/\ "{}};}
+\DoxyCodeLine{01212\ \ \ \ \ \ \ mocker-\/>DescribeDefaultActionTo(args,\ what);}
+\DoxyCodeLine{01213\ \ \ \ \ \ \ DescribeCallCountTo(why);}
+\DoxyCodeLine{01214\ }
+\DoxyCodeLine{01215\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{01216\ \ \ \ \ \}}
+\DoxyCodeLine{01217\ }
+\DoxyCodeLine{01218\ \ \ \ \ IncrementCallCount();}
+\DoxyCodeLine{01219\ \ \ \ \ RetireAllPreRequisites();}
+\DoxyCodeLine{01220\ }
+\DoxyCodeLine{01221\ \ \ \ \ \textcolor{keywordflow}{if}\ (retires\_on\_saturation\_\ \&\&\ IsSaturated())\ \{}
+\DoxyCodeLine{01222\ \ \ \ \ \ \ Retire();}
+\DoxyCodeLine{01223\ \ \ \ \ \}}
+\DoxyCodeLine{01224\ }
+\DoxyCodeLine{01225\ \ \ \ \ \textcolor{comment}{//\ Must\ be\ done\ after\ IncrementCount()!}}
+\DoxyCodeLine{01226\ \ \ \ \ *what\ <<\ \textcolor{stringliteral}{"{}Mock\ function\ call\ matches\ "{}}\ <<\ source\_text()\ <<\textcolor{stringliteral}{"{}...\(\backslash\)n"{}};}
+\DoxyCodeLine{01227\ \ \ \ \ \textcolor{keywordflow}{return}\ \&(GetCurrentAction(mocker,\ args));}
+\DoxyCodeLine{01228\ \ \ \}}
+\DoxyCodeLine{01229\ }
+\DoxyCodeLine{01230\ \ \ \textcolor{comment}{//\ All\ the\ fields\ below\ won't\ change\ once\ the\ EXPECT\_CALL()}}
+\DoxyCodeLine{01231\ \ \ \textcolor{comment}{//\ statement\ finishes.}}
+\DoxyCodeLine{01232\ \ \ FunctionMocker<F>*\ \textcolor{keyword}{const}\ owner\_;}
+\DoxyCodeLine{01233\ \ \ ArgumentMatcherTuple\ matchers\_;}
+\DoxyCodeLine{01234\ \ \ Matcher<const\ ArgumentTuple\&>\ extra\_matcher\_;}
+\DoxyCodeLine{01235\ \ \ Action<F>\ repeated\_action\_;}
+\DoxyCodeLine{01236\ }
+\DoxyCodeLine{01237\ \ \ GTEST\_DISALLOW\_COPY\_AND\_ASSIGN\_(TypedExpectation);}
+\DoxyCodeLine{01238\ \};\ \ \textcolor{comment}{//\ class\ TypedExpectation}}
+\DoxyCodeLine{01239\ }
+\DoxyCodeLine{01240\ \textcolor{comment}{//\ A\ MockSpec\ object\ is\ used\ by\ ON\_CALL()\ or\ EXPECT\_CALL()\ for}}
+\DoxyCodeLine{01241\ \textcolor{comment}{//\ specifying\ the\ default\ behavior\ of,\ or\ expectation\ on,\ a\ mock}}
+\DoxyCodeLine{01242\ \textcolor{comment}{//\ function.}}
+\DoxyCodeLine{01243\ }
+\DoxyCodeLine{01244\ \textcolor{comment}{//\ Note:\ class\ MockSpec\ really\ belongs\ to\ the\ ::testing\ namespace.}}
+\DoxyCodeLine{01245\ \textcolor{comment}{//\ However\ if\ we\ define\ it\ in\ ::testing,\ MSVC\ will\ complain\ when}}
+\DoxyCodeLine{01246\ \textcolor{comment}{//\ classes\ in\ ::testing::internal\ declare\ it\ as\ a\ friend\ class}}
+\DoxyCodeLine{01247\ \textcolor{comment}{//\ template.\ \ To\ workaround\ this\ compiler\ bug,\ we\ define\ MockSpec\ in}}
+\DoxyCodeLine{01248\ \textcolor{comment}{//\ ::testing::internal\ and\ import\ it\ into\ ::testing.}}
+\DoxyCodeLine{01249\ }
+\DoxyCodeLine{01250\ \textcolor{comment}{//\ Logs\ a\ message\ including\ file\ and\ line\ number\ information.}}
+\DoxyCodeLine{01251\ GTEST\_API\_\ \textcolor{keywordtype}{void}\ LogWithLocation(testing::internal::LogSeverity\ severity,}
+\DoxyCodeLine{01252\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ file,\ \textcolor{keywordtype}{int}\ line,}
+\DoxyCodeLine{01253\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\&\ message);}
+\DoxyCodeLine{01254\ }
+\DoxyCodeLine{01255\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ F>}
+\DoxyCodeLine{01256\ \textcolor{keyword}{class\ }MockSpec\ \{}
+\DoxyCodeLine{01257\ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{01258\ \ \ \textcolor{keyword}{typedef}\ \textcolor{keyword}{typename}\ internal::Function<F>::ArgumentTuple\ ArgumentTuple;}
+\DoxyCodeLine{01259\ \ \ \textcolor{keyword}{typedef}\ \textcolor{keyword}{typename}\ internal::Function<F>::ArgumentMatcherTuple}
+\DoxyCodeLine{01260\ \ \ \ \ \ \ ArgumentMatcherTuple;}
+\DoxyCodeLine{01261\ }
+\DoxyCodeLine{01262\ \ \ \textcolor{comment}{//\ Constructs\ a\ MockSpec\ object,\ given\ the\ function\ mocker\ object}}
+\DoxyCodeLine{01263\ \ \ \textcolor{comment}{//\ that\ the\ spec\ is\ associated\ with.}}
+\DoxyCodeLine{01264\ \ \ MockSpec(internal::FunctionMocker<F>*\ function\_mocker,}
+\DoxyCodeLine{01265\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ ArgumentMatcherTuple\&\ matchers)}
+\DoxyCodeLine{01266\ \ \ \ \ \ \ :\ function\_mocker\_(function\_mocker),\ matchers\_(matchers)\ \{\}}
+\DoxyCodeLine{01267\ }
+\DoxyCodeLine{01268\ \ \ \textcolor{comment}{//\ Adds\ a\ new\ default\ action\ spec\ to\ the\ function\ mocker\ and\ returns}}
+\DoxyCodeLine{01269\ \ \ \textcolor{comment}{//\ the\ newly\ created\ spec.}}
+\DoxyCodeLine{01270\ \ \ internal::OnCallSpec<F>\&\ InternalDefaultActionSetAt(}
+\DoxyCodeLine{01271\ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ file,\ \textcolor{keywordtype}{int}\ line,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ obj,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ call)\ \{}
+\DoxyCodeLine{01272\ \ \ \ \ LogWithLocation(internal::kInfo,\ file,\ line,}
+\DoxyCodeLine{01273\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::string(\textcolor{stringliteral}{"{}ON\_CALL("{}})\ +\ obj\ +\ \textcolor{stringliteral}{"{},\ "{}}\ +\ call\ +\ \textcolor{stringliteral}{"{})\ invoked"{}});}
+\DoxyCodeLine{01274\ \ \ \ \ \textcolor{keywordflow}{return}\ function\_mocker\_-\/>AddNewOnCallSpec(file,\ line,\ matchers\_);}
+\DoxyCodeLine{01275\ \ \ \}}
+\DoxyCodeLine{01276\ }
+\DoxyCodeLine{01277\ \ \ \textcolor{comment}{//\ Adds\ a\ new\ expectation\ spec\ to\ the\ function\ mocker\ and\ returns}}
+\DoxyCodeLine{01278\ \ \ \textcolor{comment}{//\ the\ newly\ created\ spec.}}
+\DoxyCodeLine{01279\ \ \ internal::TypedExpectation<F>\&\ InternalExpectedAt(}
+\DoxyCodeLine{01280\ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ file,\ \textcolor{keywordtype}{int}\ line,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ obj,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ call)\ \{}
+\DoxyCodeLine{01281\ \ \ \ \ \textcolor{keyword}{const}\ std::string\ source\_text(std::string(\textcolor{stringliteral}{"{}EXPECT\_CALL("{}})\ +\ obj\ +\ \textcolor{stringliteral}{"{},\ "{}}\ +}
+\DoxyCodeLine{01282\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ call\ +\ \textcolor{stringliteral}{"{})"{}});}
+\DoxyCodeLine{01283\ \ \ \ \ LogWithLocation(internal::kInfo,\ file,\ line,\ source\_text\ +\ \textcolor{stringliteral}{"{}\ invoked"{}});}
+\DoxyCodeLine{01284\ \ \ \ \ \textcolor{keywordflow}{return}\ function\_mocker\_-\/>AddNewExpectation(}
+\DoxyCodeLine{01285\ \ \ \ \ \ \ \ \ file,\ line,\ source\_text,\ matchers\_);}
+\DoxyCodeLine{01286\ \ \ \}}
+\DoxyCodeLine{01287\ }
+\DoxyCodeLine{01288\ \ \ \textcolor{comment}{//\ This\ operator\ overload\ is\ used\ to\ swallow\ the\ superfluous\ parameter\ list}}
+\DoxyCodeLine{01289\ \ \ \textcolor{comment}{//\ introduced\ by\ the\ ON/EXPECT\_CALL\ macros.\ See\ the\ macro\ comments\ for\ more}}
+\DoxyCodeLine{01290\ \ \ \textcolor{comment}{//\ explanation.}}
+\DoxyCodeLine{01291\ \ \ MockSpec<F>\&\ operator()(\textcolor{keyword}{const}\ internal::WithoutMatchers\&,\ \textcolor{keywordtype}{void}*\ \textcolor{keyword}{const})\ \{}
+\DoxyCodeLine{01292\ \ \ \ \ \textcolor{keywordflow}{return}\ *\textcolor{keyword}{this};}
+\DoxyCodeLine{01293\ \ \ \}}
+\DoxyCodeLine{01294\ }
+\DoxyCodeLine{01295\ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{01296\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Function>}
+\DoxyCodeLine{01297\ \ \ \textcolor{keyword}{friend}\ \textcolor{keyword}{class\ }internal::FunctionMocker;}
+\DoxyCodeLine{01298\ }
+\DoxyCodeLine{01299\ \ \ \textcolor{comment}{//\ The\ function\ mocker\ that\ owns\ this\ spec.}}
+\DoxyCodeLine{01300\ \ \ internal::FunctionMocker<F>*\ \textcolor{keyword}{const}\ function\_mocker\_;}
+\DoxyCodeLine{01301\ \ \ \textcolor{comment}{//\ The\ argument\ matchers\ specified\ in\ the\ spec.}}
+\DoxyCodeLine{01302\ \ \ ArgumentMatcherTuple\ matchers\_;}
+\DoxyCodeLine{01303\ \};\ \ \textcolor{comment}{//\ class\ MockSpec}}
+\DoxyCodeLine{01304\ }
+\DoxyCodeLine{01305\ \textcolor{comment}{//\ Wrapper\ type\ for\ generically\ holding\ an\ ordinary\ value\ or\ lvalue\ reference.}}
+\DoxyCodeLine{01306\ \textcolor{comment}{//\ If\ T\ is\ not\ a\ reference\ type,\ it\ must\ be\ copyable\ or\ movable.}}
+\DoxyCodeLine{01307\ \textcolor{comment}{//\ ReferenceOrValueWrapper<T>\ is\ movable,\ and\ will\ also\ be\ copyable\ unless}}
+\DoxyCodeLine{01308\ \textcolor{comment}{//\ T\ is\ a\ move-\/only\ value\ type\ (which\ means\ that\ it\ will\ always\ be\ copyable}}
+\DoxyCodeLine{01309\ \textcolor{comment}{//\ if\ the\ current\ platform\ does\ not\ support\ move\ semantics).}}
+\DoxyCodeLine{01310\ \textcolor{comment}{//}}
+\DoxyCodeLine{01311\ \textcolor{comment}{//\ The\ primary\ template\ defines\ handling\ for\ values,\ but\ function\ header}}
+\DoxyCodeLine{01312\ \textcolor{comment}{//\ comments\ describe\ the\ contract\ for\ the\ whole\ template\ (including}}
+\DoxyCodeLine{01313\ \textcolor{comment}{//\ specializations).}}
+\DoxyCodeLine{01314\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{01315\ \textcolor{keyword}{class\ }ReferenceOrValueWrapper\ \{}
+\DoxyCodeLine{01316\ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{01317\ \ \ \textcolor{comment}{//\ Constructs\ a\ wrapper\ from\ the\ given\ value/reference.}}
+\DoxyCodeLine{01318\ \ \ \textcolor{keyword}{explicit}\ ReferenceOrValueWrapper(T\ value)}
+\DoxyCodeLine{01319\ \ \ \ \ \ \ :\ value\_(std::move(value))\ \{}
+\DoxyCodeLine{01320\ \ \ \}}
+\DoxyCodeLine{01321\ }
+\DoxyCodeLine{01322\ \ \ \textcolor{comment}{//\ Unwraps\ and\ returns\ the\ underlying\ value/reference,\ exactly\ as}}
+\DoxyCodeLine{01323\ \ \ \textcolor{comment}{//\ originally\ passed.\ The\ behavior\ of\ calling\ this\ more\ than\ once\ on}}
+\DoxyCodeLine{01324\ \ \ \textcolor{comment}{//\ the\ same\ object\ is\ unspecified.}}
+\DoxyCodeLine{01325\ \ \ T\ Unwrap()\ \{\ \textcolor{keywordflow}{return}\ std::move(value\_);\ \}}
+\DoxyCodeLine{01326\ }
+\DoxyCodeLine{01327\ \ \ \textcolor{comment}{//\ Provides\ nondestructive\ access\ to\ the\ underlying\ value/reference.}}
+\DoxyCodeLine{01328\ \ \ \textcolor{comment}{//\ Always\ returns\ a\ const\ reference\ (more\ precisely,}}
+\DoxyCodeLine{01329\ \ \ \textcolor{comment}{//\ const\ std::add\_lvalue\_reference<T>::type).\ The\ behavior\ of\ calling\ this}}
+\DoxyCodeLine{01330\ \ \ \textcolor{comment}{//\ after\ calling\ Unwrap\ on\ the\ same\ object\ is\ unspecified.}}
+\DoxyCodeLine{01331\ \ \ \textcolor{keyword}{const}\ T\&\ Peek()\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{01332\ \ \ \ \ \textcolor{keywordflow}{return}\ value\_;}
+\DoxyCodeLine{01333\ \ \ \}}
+\DoxyCodeLine{01334\ }
+\DoxyCodeLine{01335\ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{01336\ \ \ T\ value\_;}
+\DoxyCodeLine{01337\ \};}
+\DoxyCodeLine{01338\ }
+\DoxyCodeLine{01339\ \textcolor{comment}{//\ Specialization\ for\ lvalue\ reference\ types.\ See\ primary\ template}}
+\DoxyCodeLine{01340\ \textcolor{comment}{//\ for\ documentation.}}
+\DoxyCodeLine{01341\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{01342\ \textcolor{keyword}{class\ }ReferenceOrValueWrapper<T\&>\ \{}
+\DoxyCodeLine{01343\ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{01344\ \ \ \textcolor{comment}{//\ Workaround\ for\ debatable\ pass-\/by-\/reference\ lint\ warning\ (c-\/library-\/team}}
+\DoxyCodeLine{01345\ \ \ \textcolor{comment}{//\ policy\ precludes\ NOLINT\ in\ this\ context)}}
+\DoxyCodeLine{01346\ \ \ \textcolor{keyword}{typedef}\ T\&\ reference;}
+\DoxyCodeLine{01347\ \ \ \textcolor{keyword}{explicit}\ ReferenceOrValueWrapper(reference\ ref)}
+\DoxyCodeLine{01348\ \ \ \ \ \ \ :\ value\_ptr\_(\&ref)\ \{\}}
+\DoxyCodeLine{01349\ \ \ T\&\ Unwrap()\ \{\ \textcolor{keywordflow}{return}\ *value\_ptr\_;\ \}}
+\DoxyCodeLine{01350\ \ \ \textcolor{keyword}{const}\ T\&\ Peek()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ *value\_ptr\_;\ \}}
+\DoxyCodeLine{01351\ }
+\DoxyCodeLine{01352\ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{01353\ \ \ T*\ value\_ptr\_;}
+\DoxyCodeLine{01354\ \};}
+\DoxyCodeLine{01355\ }
+\DoxyCodeLine{01356\ \textcolor{comment}{//\ C++\ treats\ the\ void\ type\ specially.\ \ For\ example,\ you\ cannot\ define}}
+\DoxyCodeLine{01357\ \textcolor{comment}{//\ a\ void-\/typed\ variable\ or\ pass\ a\ void\ value\ to\ a\ function.}}
+\DoxyCodeLine{01358\ \textcolor{comment}{//\ ActionResultHolder<T>\ holds\ a\ value\ of\ type\ T,\ where\ T\ must\ be\ a}}
+\DoxyCodeLine{01359\ \textcolor{comment}{//\ copyable\ type\ or\ void\ (T\ doesn't\ need\ to\ be\ default-\/constructable).}}
+\DoxyCodeLine{01360\ \textcolor{comment}{//\ It\ hides\ the\ syntactic\ difference\ between\ void\ and\ other\ types,\ and}}
+\DoxyCodeLine{01361\ \textcolor{comment}{//\ is\ used\ to\ unify\ the\ code\ for\ invoking\ both\ void-\/returning\ and}}
+\DoxyCodeLine{01362\ \textcolor{comment}{//\ non-\/void-\/returning\ mock\ functions.}}
+\DoxyCodeLine{01363\ }
+\DoxyCodeLine{01364\ \textcolor{comment}{//\ Untyped\ base\ class\ for\ ActionResultHolder<T>.}}
+\DoxyCodeLine{01365\ \textcolor{keyword}{class\ }UntypedActionResultHolderBase\ \{}
+\DoxyCodeLine{01366\ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{01367\ \ \ \textcolor{keyword}{virtual}\ \string~UntypedActionResultHolderBase()\ \{\}}
+\DoxyCodeLine{01368\ }
+\DoxyCodeLine{01369\ \ \ \textcolor{comment}{//\ Prints\ the\ held\ value\ as\ an\ action's\ result\ to\ os.}}
+\DoxyCodeLine{01370\ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ PrintAsActionResult(::std::ostream*\ os)\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{01371\ \};}
+\DoxyCodeLine{01372\ }
+\DoxyCodeLine{01373\ \textcolor{comment}{//\ This\ generic\ definition\ is\ used\ when\ T\ is\ not\ void.}}
+\DoxyCodeLine{01374\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{01375\ \textcolor{keyword}{class\ }ActionResultHolder\ :\ \textcolor{keyword}{public}\ UntypedActionResultHolderBase\ \{}
+\DoxyCodeLine{01376\ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{01377\ \ \ \textcolor{comment}{//\ Returns\ the\ held\ value.\ Must\ not\ be\ called\ more\ than\ once.}}
+\DoxyCodeLine{01378\ \ \ T\ Unwrap()\ \{}
+\DoxyCodeLine{01379\ \ \ \ \ \textcolor{keywordflow}{return}\ result\_.Unwrap();}
+\DoxyCodeLine{01380\ \ \ \}}
+\DoxyCodeLine{01381\ }
+\DoxyCodeLine{01382\ \ \ \textcolor{comment}{//\ Prints\ the\ held\ value\ as\ an\ action's\ result\ to\ os.}}
+\DoxyCodeLine{01383\ \ \ \textcolor{keywordtype}{void}\ PrintAsActionResult(::std::ostream*\ os)\textcolor{keyword}{\ const\ override\ }\{}
+\DoxyCodeLine{01384\ \ \ \ \ *os\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n\ \ \ \ \ \ \ \ \ \ Returns:\ "{}};}
+\DoxyCodeLine{01385\ \ \ \ \ \textcolor{comment}{//\ T\ may\ be\ a\ reference\ type,\ so\ we\ don't\ use\ UniversalPrint().}}
+\DoxyCodeLine{01386\ \ \ \ \ UniversalPrinter<T>::Print(result\_.Peek(),\ os);}
+\DoxyCodeLine{01387\ \ \ \}}
+\DoxyCodeLine{01388\ }
+\DoxyCodeLine{01389\ \ \ \textcolor{comment}{//\ Performs\ the\ given\ mock\ function's\ default\ action\ and\ returns\ the}}
+\DoxyCodeLine{01390\ \ \ \textcolor{comment}{//\ result\ in\ a\ new-\/ed\ ActionResultHolder.}}
+\DoxyCodeLine{01391\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ F>}
+\DoxyCodeLine{01392\ \ \ \textcolor{keyword}{static}\ ActionResultHolder*\ PerformDefaultAction(}
+\DoxyCodeLine{01393\ \ \ \ \ \ \ \textcolor{keyword}{const}\ FunctionMocker<F>*\ func\_mocker,}
+\DoxyCodeLine{01394\ \ \ \ \ \ \ \textcolor{keyword}{typename}\ Function<F>::ArgumentTuple\&\&\ args,}
+\DoxyCodeLine{01395\ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\&\ call\_description)\ \{}
+\DoxyCodeLine{01396\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{new}\ ActionResultHolder(Wrapper(func\_mocker-\/>PerformDefaultAction(}
+\DoxyCodeLine{01397\ \ \ \ \ \ \ \ \ std::move(args),\ call\_description)));}
+\DoxyCodeLine{01398\ \ \ \}}
+\DoxyCodeLine{01399\ }
+\DoxyCodeLine{01400\ \ \ \textcolor{comment}{//\ Performs\ the\ given\ action\ and\ returns\ the\ result\ in\ a\ new-\/ed}}
+\DoxyCodeLine{01401\ \ \ \textcolor{comment}{//\ ActionResultHolder.}}
+\DoxyCodeLine{01402\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ F>}
+\DoxyCodeLine{01403\ \ \ \textcolor{keyword}{static}\ ActionResultHolder*\ PerformAction(}
+\DoxyCodeLine{01404\ \ \ \ \ \ \ \textcolor{keyword}{const}\ Action<F>\&\ action,\ \textcolor{keyword}{typename}\ Function<F>::ArgumentTuple\&\&\ args)\ \{}
+\DoxyCodeLine{01405\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{new}\ ActionResultHolder(}
+\DoxyCodeLine{01406\ \ \ \ \ \ \ \ \ Wrapper(action.Perform(std::move(args))));}
+\DoxyCodeLine{01407\ \ \ \}}
+\DoxyCodeLine{01408\ }
+\DoxyCodeLine{01409\ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{01410\ \ \ \textcolor{keyword}{typedef}\ ReferenceOrValueWrapper<T>\ Wrapper;}
+\DoxyCodeLine{01411\ }
+\DoxyCodeLine{01412\ \ \ \textcolor{keyword}{explicit}\ ActionResultHolder(Wrapper\ result)}
+\DoxyCodeLine{01413\ \ \ \ \ \ \ :\ result\_(std::move(result))\ \{}
+\DoxyCodeLine{01414\ \ \ \}}
+\DoxyCodeLine{01415\ }
+\DoxyCodeLine{01416\ \ \ Wrapper\ result\_;}
+\DoxyCodeLine{01417\ }
+\DoxyCodeLine{01418\ \ \ GTEST\_DISALLOW\_COPY\_AND\_ASSIGN\_(ActionResultHolder);}
+\DoxyCodeLine{01419\ \};}
+\DoxyCodeLine{01420\ }
+\DoxyCodeLine{01421\ \textcolor{comment}{//\ Specialization\ for\ T\ =\ void.}}
+\DoxyCodeLine{01422\ \textcolor{keyword}{template}\ <>}
+\DoxyCodeLine{01423\ \textcolor{keyword}{class\ }ActionResultHolder<void>\ :\ \textcolor{keyword}{public}\ UntypedActionResultHolderBase\ \{}
+\DoxyCodeLine{01424\ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{01425\ \ \ \textcolor{keywordtype}{void}\ Unwrap()\ \{\ \}}
+\DoxyCodeLine{01426\ }
+\DoxyCodeLine{01427\ \ \ \textcolor{keywordtype}{void}\ PrintAsActionResult(::std::ostream*\ \textcolor{comment}{/*\ os\ */})\textcolor{keyword}{\ const\ override\ }\{\}}
+\DoxyCodeLine{01428\ }
+\DoxyCodeLine{01429\ \ \ \textcolor{comment}{//\ Performs\ the\ given\ mock\ function's\ default\ action\ and\ returns\ ownership}}
+\DoxyCodeLine{01430\ \ \ \textcolor{comment}{//\ of\ an\ empty\ ActionResultHolder*.}}
+\DoxyCodeLine{01431\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ F>}
+\DoxyCodeLine{01432\ \ \ \textcolor{keyword}{static}\ ActionResultHolder*\ PerformDefaultAction(}
+\DoxyCodeLine{01433\ \ \ \ \ \ \ \textcolor{keyword}{const}\ FunctionMocker<F>*\ func\_mocker,}
+\DoxyCodeLine{01434\ \ \ \ \ \ \ \textcolor{keyword}{typename}\ Function<F>::ArgumentTuple\&\&\ args,}
+\DoxyCodeLine{01435\ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\&\ call\_description)\ \{}
+\DoxyCodeLine{01436\ \ \ \ \ func\_mocker-\/>PerformDefaultAction(std::move(args),\ call\_description);}
+\DoxyCodeLine{01437\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{new}\ ActionResultHolder;}
+\DoxyCodeLine{01438\ \ \ \}}
+\DoxyCodeLine{01439\ }
+\DoxyCodeLine{01440\ \ \ \textcolor{comment}{//\ Performs\ the\ given\ action\ and\ returns\ ownership\ of\ an\ empty}}
+\DoxyCodeLine{01441\ \ \ \textcolor{comment}{//\ ActionResultHolder*.}}
+\DoxyCodeLine{01442\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ F>}
+\DoxyCodeLine{01443\ \ \ \textcolor{keyword}{static}\ ActionResultHolder*\ PerformAction(}
+\DoxyCodeLine{01444\ \ \ \ \ \ \ \textcolor{keyword}{const}\ Action<F>\&\ action,\ \textcolor{keyword}{typename}\ Function<F>::ArgumentTuple\&\&\ args)\ \{}
+\DoxyCodeLine{01445\ \ \ \ \ action.Perform(std::move(args));}
+\DoxyCodeLine{01446\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{new}\ ActionResultHolder;}
+\DoxyCodeLine{01447\ \ \ \}}
+\DoxyCodeLine{01448\ }
+\DoxyCodeLine{01449\ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{01450\ \ \ ActionResultHolder()\ \{\}}
+\DoxyCodeLine{01451\ \ \ GTEST\_DISALLOW\_COPY\_AND\_ASSIGN\_(ActionResultHolder);}
+\DoxyCodeLine{01452\ \};}
+\DoxyCodeLine{01453\ }
+\DoxyCodeLine{01454\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ F>}
+\DoxyCodeLine{01455\ \textcolor{keyword}{class\ }FunctionMocker;}
+\DoxyCodeLine{01456\ }
+\DoxyCodeLine{01457\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ R,\ \textcolor{keyword}{typename}...\ Args>}
+\DoxyCodeLine{01458\ \textcolor{keyword}{class\ }FunctionMocker<R(Args...)>\ final\ :\ \textcolor{keyword}{public}\ UntypedFunctionMockerBase\ \{}
+\DoxyCodeLine{01459\ \ \ \textcolor{keyword}{using\ }F\ =\ R(Args...);}
+\DoxyCodeLine{01460\ }
+\DoxyCodeLine{01461\ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{01462\ \ \ \textcolor{keyword}{using\ }Result\ =\ R;}
+\DoxyCodeLine{01463\ \ \ \textcolor{keyword}{using\ }ArgumentTuple\ =\ std::tuple<Args...>;}
+\DoxyCodeLine{01464\ \ \ \textcolor{keyword}{using\ }ArgumentMatcherTuple\ =\ std::tuple<Matcher<Args>...>;}
+\DoxyCodeLine{01465\ }
+\DoxyCodeLine{01466\ \ \ FunctionMocker()\ \{\}}
+\DoxyCodeLine{01467\ }
+\DoxyCodeLine{01468\ \ \ \textcolor{comment}{//\ There\ is\ no\ generally\ useful\ and\ implementable\ semantics\ of}}
+\DoxyCodeLine{01469\ \ \ \textcolor{comment}{//\ copying\ a\ mock\ object,\ so\ copying\ a\ mock\ is\ usually\ a\ user\ error.}}
+\DoxyCodeLine{01470\ \ \ \textcolor{comment}{//\ Thus\ we\ disallow\ copying\ function\ mockers.\ \ If\ the\ user\ really}}
+\DoxyCodeLine{01471\ \ \ \textcolor{comment}{//\ wants\ to\ copy\ a\ mock\ object,\ they\ should\ implement\ their\ own\ copy}}
+\DoxyCodeLine{01472\ \ \ \textcolor{comment}{//\ operation,\ for\ example:}}
+\DoxyCodeLine{01473\ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{01474\ \ \ \textcolor{comment}{//\ \ \ class\ MockFoo\ :\ public\ Foo\ \{}}
+\DoxyCodeLine{01475\ \ \ \textcolor{comment}{//\ \ \ \ public:}}
+\DoxyCodeLine{01476\ \ \ \textcolor{comment}{//\ \ \ \ \ //\ Defines\ a\ copy\ constructor\ explicitly.}}
+\DoxyCodeLine{01477\ \ \ \textcolor{comment}{//\ \ \ \ \ MockFoo(const\ MockFoo\&\ src)\ \{\}}}
+\DoxyCodeLine{01478\ \ \ \textcolor{comment}{//\ \ \ \ \ ...}}
+\DoxyCodeLine{01479\ \ \ \textcolor{comment}{//\ \ \ \};}}
+\DoxyCodeLine{01480\ \ \ FunctionMocker(\textcolor{keyword}{const}\ FunctionMocker\&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{01481\ \ \ FunctionMocker\&\ operator=(\textcolor{keyword}{const}\ FunctionMocker\&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{01482\ }
+\DoxyCodeLine{01483\ \ \ \textcolor{comment}{//\ The\ destructor\ verifies\ that\ all\ expectations\ on\ this\ mock}}
+\DoxyCodeLine{01484\ \ \ \textcolor{comment}{//\ function\ have\ been\ satisfied.\ \ If\ not,\ it\ will\ report\ Google\ Test}}
+\DoxyCodeLine{01485\ \ \ \textcolor{comment}{//\ non-\/fatal\ failures\ for\ the\ violations.}}
+\DoxyCodeLine{01486\ \ \ \string~FunctionMocker()\ override\ GTEST\_LOCK\_EXCLUDED\_(g\_gmock\_mutex)\ \{}
+\DoxyCodeLine{01487\ \ \ \ \ MutexLock\ l(\&g\_gmock\_mutex);}
+\DoxyCodeLine{01488\ \ \ \ \ VerifyAndClearExpectationsLocked();}
+\DoxyCodeLine{01489\ \ \ \ \ Mock::UnregisterLocked(\textcolor{keyword}{this});}
+\DoxyCodeLine{01490\ \ \ \ \ ClearDefaultActionsLocked();}
+\DoxyCodeLine{01491\ \ \ \}}
+\DoxyCodeLine{01492\ }
+\DoxyCodeLine{01493\ \ \ \textcolor{comment}{//\ Returns\ the\ ON\_CALL\ spec\ that\ matches\ this\ mock\ function\ with\ the}}
+\DoxyCodeLine{01494\ \ \ \textcolor{comment}{//\ given\ arguments;\ returns\ NULL\ if\ no\ matching\ ON\_CALL\ is\ found.}}
+\DoxyCodeLine{01495\ \ \ \textcolor{comment}{//\ L\ =\ *}}
+\DoxyCodeLine{01496\ \ \ \textcolor{keyword}{const}\ OnCallSpec<F>*\ FindOnCallSpec(}
+\DoxyCodeLine{01497\ \ \ \ \ \ \ \textcolor{keyword}{const}\ ArgumentTuple\&\ args)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{01498\ \ \ \ \ \textcolor{keywordflow}{for}\ (UntypedOnCallSpecs::const\_reverse\_iterator\ it}
+\DoxyCodeLine{01499\ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ untyped\_on\_call\_specs\_.rbegin();}
+\DoxyCodeLine{01500\ \ \ \ \ \ \ \ \ \ it\ !=\ untyped\_on\_call\_specs\_.rend();\ ++it)\ \{}
+\DoxyCodeLine{01501\ \ \ \ \ \ \ \textcolor{keyword}{const}\ OnCallSpec<F>*\ spec\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keyword}{const\ }OnCallSpec<F>*\textcolor{keyword}{>}(*it);}
+\DoxyCodeLine{01502\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (spec-\/>Matches(args))}
+\DoxyCodeLine{01503\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ spec;}
+\DoxyCodeLine{01504\ \ \ \ \ \}}
+\DoxyCodeLine{01505\ }
+\DoxyCodeLine{01506\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{01507\ \ \ \}}
+\DoxyCodeLine{01508\ }
+\DoxyCodeLine{01509\ \ \ \textcolor{comment}{//\ Performs\ the\ default\ action\ of\ this\ mock\ function\ on\ the\ given}}
+\DoxyCodeLine{01510\ \ \ \textcolor{comment}{//\ arguments\ and\ returns\ the\ result.\ Asserts\ (or\ throws\ if}}
+\DoxyCodeLine{01511\ \ \ \textcolor{comment}{//\ exceptions\ are\ enabled)\ with\ a\ helpful\ call\ description\ if\ there}}
+\DoxyCodeLine{01512\ \ \ \textcolor{comment}{//\ is\ no\ valid\ return\ value.\ This\ method\ doesn't\ depend\ on\ the}}
+\DoxyCodeLine{01513\ \ \ \textcolor{comment}{//\ mutable\ state\ of\ this\ object,\ and\ thus\ can\ be\ called\ concurrently}}
+\DoxyCodeLine{01514\ \ \ \textcolor{comment}{//\ without\ locking.}}
+\DoxyCodeLine{01515\ \ \ \textcolor{comment}{//\ L\ =\ *}}
+\DoxyCodeLine{01516\ \ \ Result\ PerformDefaultAction(ArgumentTuple\&\&\ args,}
+\DoxyCodeLine{01517\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\&\ call\_description)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{01518\ \ \ \ \ \textcolor{keyword}{const}\ OnCallSpec<F>*\ \textcolor{keyword}{const}\ spec\ =}
+\DoxyCodeLine{01519\ \ \ \ \ \ \ \ \ this-\/>FindOnCallSpec(args);}
+\DoxyCodeLine{01520\ \ \ \ \ \textcolor{keywordflow}{if}\ (spec\ !=\ \textcolor{keyword}{nullptr})\ \{}
+\DoxyCodeLine{01521\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ spec-\/>GetAction().Perform(std::move(args));}
+\DoxyCodeLine{01522\ \ \ \ \ \}}
+\DoxyCodeLine{01523\ \ \ \ \ \textcolor{keyword}{const}\ std::string\ message\ =}
+\DoxyCodeLine{01524\ \ \ \ \ \ \ \ \ call\_description\ +}
+\DoxyCodeLine{01525\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}\(\backslash\)n\ \ \ \ The\ mock\ function\ has\ no\ default\ action\ "{}}}
+\DoxyCodeLine{01526\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}set,\ and\ its\ return\ type\ has\ no\ default\ value\ set."{}};}
+\DoxyCodeLine{01527\ \textcolor{preprocessor}{\#if\ GTEST\_HAS\_EXCEPTIONS}}
+\DoxyCodeLine{01528\ \ \ \ \ \textcolor{keywordflow}{if}\ (!DefaultValue<Result>::Exists())\ \{}
+\DoxyCodeLine{01529\ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ std::runtime\_error(message);}
+\DoxyCodeLine{01530\ \ \ \ \ \}}
+\DoxyCodeLine{01531\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{01532\ \ \ \ \ Assert(DefaultValue<Result>::Exists(),\ \textcolor{stringliteral}{"{}"{}},\ -\/1,\ message);}
+\DoxyCodeLine{01533\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01534\ \ \ \ \ \textcolor{keywordflow}{return}\ DefaultValue<Result>::Get();}
+\DoxyCodeLine{01535\ \ \ \}}
+\DoxyCodeLine{01536\ }
+\DoxyCodeLine{01537\ \ \ \textcolor{comment}{//\ Performs\ the\ default\ action\ with\ the\ given\ arguments\ and\ returns}}
+\DoxyCodeLine{01538\ \ \ \textcolor{comment}{//\ the\ action's\ result.\ \ The\ call\ description\ string\ will\ be\ used\ in}}
+\DoxyCodeLine{01539\ \ \ \textcolor{comment}{//\ the\ error\ message\ to\ describe\ the\ call\ in\ the\ case\ the\ default}}
+\DoxyCodeLine{01540\ \ \ \textcolor{comment}{//\ action\ fails.\ \ The\ caller\ is\ responsible\ for\ deleting\ the\ result.}}
+\DoxyCodeLine{01541\ \ \ \textcolor{comment}{//\ L\ =\ *}}
+\DoxyCodeLine{01542\ \ \ UntypedActionResultHolderBase*\ UntypedPerformDefaultAction(}
+\DoxyCodeLine{01543\ \ \ \ \ \ \ \textcolor{keywordtype}{void}*\ untyped\_args,\ \ \textcolor{comment}{//\ must\ point\ to\ an\ ArgumentTuple}}
+\DoxyCodeLine{01544\ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\&\ call\_description)\textcolor{keyword}{\ const\ override\ }\{}
+\DoxyCodeLine{01545\ \ \ \ \ ArgumentTuple*\ args\ =\ \textcolor{keyword}{static\_cast<}ArgumentTuple*\textcolor{keyword}{>}(untyped\_args);}
+\DoxyCodeLine{01546\ \ \ \ \ \textcolor{keywordflow}{return}\ ResultHolder::PerformDefaultAction(\textcolor{keyword}{this},\ std::move(*args),}
+\DoxyCodeLine{01547\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ call\_description);}
+\DoxyCodeLine{01548\ \ \ \}}
+\DoxyCodeLine{01549\ }
+\DoxyCodeLine{01550\ \ \ \textcolor{comment}{//\ Performs\ the\ given\ action\ with\ the\ given\ arguments\ and\ returns}}
+\DoxyCodeLine{01551\ \ \ \textcolor{comment}{//\ the\ action's\ result.\ \ The\ caller\ is\ responsible\ for\ deleting\ the}}
+\DoxyCodeLine{01552\ \ \ \textcolor{comment}{//\ result.}}
+\DoxyCodeLine{01553\ \ \ \textcolor{comment}{//\ L\ =\ *}}
+\DoxyCodeLine{01554\ \ \ UntypedActionResultHolderBase*\ UntypedPerformAction(}
+\DoxyCodeLine{01555\ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}*\ untyped\_action,\ \textcolor{keywordtype}{void}*\ untyped\_args)\textcolor{keyword}{\ const\ override\ }\{}
+\DoxyCodeLine{01556\ \ \ \ \ \textcolor{comment}{//\ Make\ a\ copy\ of\ the\ action\ before\ performing\ it,\ in\ case\ the}}
+\DoxyCodeLine{01557\ \ \ \ \ \textcolor{comment}{//\ action\ deletes\ the\ mock\ object\ (and\ thus\ deletes\ itself).}}
+\DoxyCodeLine{01558\ \ \ \ \ \textcolor{keyword}{const}\ Action<F>\ action\ =\ *\textcolor{keyword}{static\_cast<}\textcolor{keyword}{const\ }Action<F>*\textcolor{keyword}{>}(untyped\_action);}
+\DoxyCodeLine{01559\ \ \ \ \ ArgumentTuple*\ args\ =\ \textcolor{keyword}{static\_cast<}ArgumentTuple*\textcolor{keyword}{>}(untyped\_args);}
+\DoxyCodeLine{01560\ \ \ \ \ \textcolor{keywordflow}{return}\ ResultHolder::PerformAction(action,\ std::move(*args));}
+\DoxyCodeLine{01561\ \ \ \}}
+\DoxyCodeLine{01562\ }
+\DoxyCodeLine{01563\ \ \ \textcolor{comment}{//\ Implements\ UntypedFunctionMockerBase::ClearDefaultActionsLocked():}}
+\DoxyCodeLine{01564\ \ \ \textcolor{comment}{//\ clears\ the\ ON\_CALL()s\ set\ on\ this\ mock\ function.}}
+\DoxyCodeLine{01565\ \ \ \textcolor{keywordtype}{void}\ ClearDefaultActionsLocked()\ override}
+\DoxyCodeLine{01566\ \ \ \ \ \ \ GTEST\_EXCLUSIVE\_LOCK\_REQUIRED\_(g\_gmock\_mutex)\ \{}
+\DoxyCodeLine{01567\ \ \ \ \ g\_gmock\_mutex.AssertHeld();}
+\DoxyCodeLine{01568\ }
+\DoxyCodeLine{01569\ \ \ \ \ \textcolor{comment}{//\ Deleting\ our\ default\ actions\ may\ trigger\ other\ mock\ objects\ to\ be}}
+\DoxyCodeLine{01570\ \ \ \ \ \textcolor{comment}{//\ deleted,\ for\ example\ if\ an\ action\ contains\ a\ reference\ counted\ smart}}
+\DoxyCodeLine{01571\ \ \ \ \ \textcolor{comment}{//\ pointer\ to\ that\ mock\ object,\ and\ that\ is\ the\ last\ reference.\ So\ if\ we}}
+\DoxyCodeLine{01572\ \ \ \ \ \textcolor{comment}{//\ delete\ our\ actions\ within\ the\ context\ of\ the\ global\ mutex\ we\ may\ deadlock}}
+\DoxyCodeLine{01573\ \ \ \ \ \textcolor{comment}{//\ when\ this\ method\ is\ called\ again.\ Instead,\ make\ a\ copy\ of\ the\ set\ of}}
+\DoxyCodeLine{01574\ \ \ \ \ \textcolor{comment}{//\ actions\ to\ delete,\ clear\ our\ set\ within\ the\ mutex,\ and\ then\ delete\ the}}
+\DoxyCodeLine{01575\ \ \ \ \ \textcolor{comment}{//\ actions\ outside\ of\ the\ mutex.}}
+\DoxyCodeLine{01576\ \ \ \ \ UntypedOnCallSpecs\ specs\_to\_delete;}
+\DoxyCodeLine{01577\ \ \ \ \ untyped\_on\_call\_specs\_.swap(specs\_to\_delete);}
+\DoxyCodeLine{01578\ }
+\DoxyCodeLine{01579\ \ \ \ \ g\_gmock\_mutex.Unlock();}
+\DoxyCodeLine{01580\ \ \ \ \ \textcolor{keywordflow}{for}\ (UntypedOnCallSpecs::const\_iterator\ it\ =}
+\DoxyCodeLine{01581\ \ \ \ \ \ \ \ \ \ \ \ \ \ specs\_to\_delete.begin();}
+\DoxyCodeLine{01582\ \ \ \ \ \ \ \ \ \ it\ !=\ specs\_to\_delete.end();\ ++it)\ \{}
+\DoxyCodeLine{01583\ \ \ \ \ \ \ \textcolor{keyword}{delete}\ \textcolor{keyword}{static\_cast<}\textcolor{keyword}{const\ }OnCallSpec<F>*\textcolor{keyword}{>}(*it);}
+\DoxyCodeLine{01584\ \ \ \ \ \}}
+\DoxyCodeLine{01585\ }
+\DoxyCodeLine{01586\ \ \ \ \ \textcolor{comment}{//\ Lock\ the\ mutex\ again,\ since\ the\ caller\ expects\ it\ to\ be\ locked\ when\ we}}
+\DoxyCodeLine{01587\ \ \ \ \ \textcolor{comment}{//\ return.}}
+\DoxyCodeLine{01588\ \ \ \ \ g\_gmock\_mutex.Lock();}
+\DoxyCodeLine{01589\ \ \ \}}
+\DoxyCodeLine{01590\ }
+\DoxyCodeLine{01591\ \ \ \textcolor{comment}{//\ Returns\ the\ result\ of\ invoking\ this\ mock\ function\ with\ the\ given}}
+\DoxyCodeLine{01592\ \ \ \textcolor{comment}{//\ arguments.\ \ This\ function\ can\ be\ safely\ called\ from\ multiple}}
+\DoxyCodeLine{01593\ \ \ \textcolor{comment}{//\ threads\ concurrently.}}
+\DoxyCodeLine{01594\ \ \ Result\ Invoke(Args...\ args)\ GTEST\_LOCK\_EXCLUDED\_(g\_gmock\_mutex)\ \{}
+\DoxyCodeLine{01595\ \ \ \ \ ArgumentTuple\ tuple(std::forward<Args>(args)...);}
+\DoxyCodeLine{01596\ \ \ \ \ std::unique\_ptr<ResultHolder>\ holder(DownCast\_<ResultHolder*>(}
+\DoxyCodeLine{01597\ \ \ \ \ \ \ \ \ this-\/>UntypedInvokeWith(\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{void}*\textcolor{keyword}{>}(\&tuple))));}
+\DoxyCodeLine{01598\ \ \ \ \ \textcolor{keywordflow}{return}\ holder-\/>Unwrap();}
+\DoxyCodeLine{01599\ \ \ \}}
+\DoxyCodeLine{01600\ }
+\DoxyCodeLine{01601\ \ \ MockSpec<F>\ With(Matcher<Args>...\ m)\ \{}
+\DoxyCodeLine{01602\ \ \ \ \ \textcolor{keywordflow}{return}\ MockSpec<F>(\textcolor{keyword}{this},\ ::std::make\_tuple(std::move(m)...));}
+\DoxyCodeLine{01603\ \ \ \}}
+\DoxyCodeLine{01604\ }
+\DoxyCodeLine{01605\ \ \textcolor{keyword}{protected}:}
+\DoxyCodeLine{01606\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Function>}
+\DoxyCodeLine{01607\ \ \ \textcolor{keyword}{friend}\ \textcolor{keyword}{class\ }MockSpec;}
+\DoxyCodeLine{01608\ }
+\DoxyCodeLine{01609\ \ \ \textcolor{keyword}{typedef}\ ActionResultHolder<Result>\ ResultHolder;}
+\DoxyCodeLine{01610\ }
+\DoxyCodeLine{01611\ \ \ \textcolor{comment}{//\ Adds\ and\ returns\ a\ default\ action\ spec\ for\ this\ mock\ function.}}
+\DoxyCodeLine{01612\ \ \ OnCallSpec<F>\&\ AddNewOnCallSpec(}
+\DoxyCodeLine{01613\ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ file,\ \textcolor{keywordtype}{int}\ line,}
+\DoxyCodeLine{01614\ \ \ \ \ \ \ \textcolor{keyword}{const}\ ArgumentMatcherTuple\&\ m)}
+\DoxyCodeLine{01615\ \ \ \ \ \ \ \ \ \ \ GTEST\_LOCK\_EXCLUDED\_(g\_gmock\_mutex)\ \{}
+\DoxyCodeLine{01616\ \ \ \ \ Mock::RegisterUseByOnCallOrExpectCall(MockObject(),\ file,\ line);}
+\DoxyCodeLine{01617\ \ \ \ \ OnCallSpec<F>*\ \textcolor{keyword}{const}\ on\_call\_spec\ =\ \textcolor{keyword}{new}\ OnCallSpec<F>(file,\ line,\ m);}
+\DoxyCodeLine{01618\ \ \ \ \ untyped\_on\_call\_specs\_.push\_back(on\_call\_spec);}
+\DoxyCodeLine{01619\ \ \ \ \ \textcolor{keywordflow}{return}\ *on\_call\_spec;}
+\DoxyCodeLine{01620\ \ \ \}}
+\DoxyCodeLine{01621\ }
+\DoxyCodeLine{01622\ \ \ \textcolor{comment}{//\ Adds\ and\ returns\ an\ expectation\ spec\ for\ this\ mock\ function.}}
+\DoxyCodeLine{01623\ \ \ TypedExpectation<F>\&\ AddNewExpectation(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ file,\ \textcolor{keywordtype}{int}\ line,}
+\DoxyCodeLine{01624\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\&\ source\_text,}
+\DoxyCodeLine{01625\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ ArgumentMatcherTuple\&\ m)}
+\DoxyCodeLine{01626\ \ \ \ \ \ \ GTEST\_LOCK\_EXCLUDED\_(g\_gmock\_mutex)\ \{}
+\DoxyCodeLine{01627\ \ \ \ \ Mock::RegisterUseByOnCallOrExpectCall(MockObject(),\ file,\ line);}
+\DoxyCodeLine{01628\ \ \ \ \ TypedExpectation<F>*\ \textcolor{keyword}{const}\ expectation\ =}
+\DoxyCodeLine{01629\ \ \ \ \ \ \ \ \ \textcolor{keyword}{new}\ TypedExpectation<F>(\textcolor{keyword}{this},\ file,\ line,\ source\_text,\ m);}
+\DoxyCodeLine{01630\ \ \ \ \ \textcolor{keyword}{const}\ std::shared\_ptr<ExpectationBase>\ untyped\_expectation(expectation);}
+\DoxyCodeLine{01631\ \ \ \ \ \textcolor{comment}{//\ See\ the\ definition\ of\ untyped\_expectations\_\ for\ why\ access\ to}}
+\DoxyCodeLine{01632\ \ \ \ \ \textcolor{comment}{//\ it\ is\ unprotected\ here.}}
+\DoxyCodeLine{01633\ \ \ \ \ untyped\_expectations\_.push\_back(untyped\_expectation);}
+\DoxyCodeLine{01634\ }
+\DoxyCodeLine{01635\ \ \ \ \ \textcolor{comment}{//\ Adds\ this\ expectation\ into\ the\ implicit\ sequence\ if\ there\ is\ one.}}
+\DoxyCodeLine{01636\ \ \ \ \ Sequence*\ \textcolor{keyword}{const}\ implicit\_sequence\ =\ g\_gmock\_implicit\_sequence.get();}
+\DoxyCodeLine{01637\ \ \ \ \ \textcolor{keywordflow}{if}\ (implicit\_sequence\ !=\ \textcolor{keyword}{nullptr})\ \{}
+\DoxyCodeLine{01638\ \ \ \ \ \ \ implicit\_sequence-\/>AddExpectation(Expectation(untyped\_expectation));}
+\DoxyCodeLine{01639\ \ \ \ \ \}}
+\DoxyCodeLine{01640\ }
+\DoxyCodeLine{01641\ \ \ \ \ \textcolor{keywordflow}{return}\ *expectation;}
+\DoxyCodeLine{01642\ \ \ \}}
+\DoxyCodeLine{01643\ }
+\DoxyCodeLine{01644\ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{01645\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Func>\ \textcolor{keyword}{friend}\ \textcolor{keyword}{class\ }TypedExpectation;}
+\DoxyCodeLine{01646\ }
+\DoxyCodeLine{01647\ \ \ \textcolor{comment}{//\ Some\ utilities\ needed\ for\ implementing\ UntypedInvokeWith().}}
+\DoxyCodeLine{01648\ }
+\DoxyCodeLine{01649\ \ \ \textcolor{comment}{//\ Describes\ what\ default\ action\ will\ be\ performed\ for\ the\ given}}
+\DoxyCodeLine{01650\ \ \ \textcolor{comment}{//\ arguments.}}
+\DoxyCodeLine{01651\ \ \ \textcolor{comment}{//\ L\ =\ *}}
+\DoxyCodeLine{01652\ \ \ \textcolor{keywordtype}{void}\ DescribeDefaultActionTo(\textcolor{keyword}{const}\ ArgumentTuple\&\ args,}
+\DoxyCodeLine{01653\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ::std::ostream*\ os)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{01654\ \ \ \ \ \textcolor{keyword}{const}\ OnCallSpec<F>*\ \textcolor{keyword}{const}\ spec\ =\ FindOnCallSpec(args);}
+\DoxyCodeLine{01655\ }
+\DoxyCodeLine{01656\ \ \ \ \ \textcolor{keywordflow}{if}\ (spec\ ==\ \textcolor{keyword}{nullptr})\ \{}
+\DoxyCodeLine{01657\ \ \ \ \ \ \ *os\ <<\ (std::is\_void<Result>::value\ ?\ \textcolor{stringliteral}{"{}returning\ directly.\(\backslash\)n"{}}}
+\DoxyCodeLine{01658\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ :\ \textcolor{stringliteral}{"{}returning\ default\ value.\(\backslash\)n"{}});}
+\DoxyCodeLine{01659\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{01660\ \ \ \ \ \ \ *os\ <<\ \textcolor{stringliteral}{"{}taking\ default\ action\ specified\ at:\(\backslash\)n"{}}}
+\DoxyCodeLine{01661\ \ \ \ \ \ \ \ \ \ \ <<\ FormatFileLocation(spec-\/>file(),\ spec-\/>line())\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}};}
+\DoxyCodeLine{01662\ \ \ \ \ \}}
+\DoxyCodeLine{01663\ \ \ \}}
+\DoxyCodeLine{01664\ }
+\DoxyCodeLine{01665\ \ \ \textcolor{comment}{//\ Writes\ a\ message\ that\ the\ call\ is\ uninteresting\ (i.e.\ neither}}
+\DoxyCodeLine{01666\ \ \ \textcolor{comment}{//\ explicitly\ expected\ nor\ explicitly\ unexpected)\ to\ the\ given}}
+\DoxyCodeLine{01667\ \ \ \textcolor{comment}{//\ ostream.}}
+\DoxyCodeLine{01668\ \ \ \textcolor{keywordtype}{void}\ UntypedDescribeUninterestingCall(\textcolor{keyword}{const}\ \textcolor{keywordtype}{void}*\ untyped\_args,}
+\DoxyCodeLine{01669\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ::std::ostream*\ os)\ \textcolor{keyword}{const}\ \textcolor{keyword}{override}}
+\DoxyCodeLine{01670\ \ \ \ \ \ \ GTEST\_LOCK\_EXCLUDED\_(g\_gmock\_mutex)\ \{}
+\DoxyCodeLine{01671\ \ \ \ \ \textcolor{keyword}{const}\ ArgumentTuple\&\ args\ =}
+\DoxyCodeLine{01672\ \ \ \ \ \ \ \ \ *\textcolor{keyword}{static\_cast<}\textcolor{keyword}{const\ }ArgumentTuple*\textcolor{keyword}{>}(untyped\_args);}
+\DoxyCodeLine{01673\ \ \ \ \ *os\ <<\ \textcolor{stringliteral}{"{}Uninteresting\ mock\ function\ call\ -\/\ "{}};}
+\DoxyCodeLine{01674\ \ \ \ \ DescribeDefaultActionTo(args,\ os);}
+\DoxyCodeLine{01675\ \ \ \ \ *os\ <<\ \textcolor{stringliteral}{"{}\ \ \ \ Function\ call:\ "{}}\ <<\ Name();}
+\DoxyCodeLine{01676\ \ \ \ \ UniversalPrint(args,\ os);}
+\DoxyCodeLine{01677\ \ \ \}}
+\DoxyCodeLine{01678\ }
+\DoxyCodeLine{01679\ \ \ \textcolor{comment}{//\ Returns\ the\ expectation\ that\ matches\ the\ given\ function\ arguments}}
+\DoxyCodeLine{01680\ \ \ \textcolor{comment}{//\ (or\ NULL\ is\ there's\ no\ match);\ when\ a\ match\ is\ found,}}
+\DoxyCodeLine{01681\ \ \ \textcolor{comment}{//\ untyped\_action\ is\ set\ to\ point\ to\ the\ action\ that\ should\ be}}
+\DoxyCodeLine{01682\ \ \ \textcolor{comment}{//\ performed\ (or\ NULL\ if\ the\ action\ is\ "{}do\ default"{}),\ and}}
+\DoxyCodeLine{01683\ \ \ \textcolor{comment}{//\ is\_excessive\ is\ modified\ to\ indicate\ whether\ the\ call\ exceeds\ the}}
+\DoxyCodeLine{01684\ \ \ \textcolor{comment}{//\ expected\ number.}}
+\DoxyCodeLine{01685\ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{01686\ \ \ \textcolor{comment}{//\ Critical\ section:\ We\ must\ find\ the\ matching\ expectation\ and\ the}}
+\DoxyCodeLine{01687\ \ \ \textcolor{comment}{//\ corresponding\ action\ that\ needs\ to\ be\ taken\ in\ an\ ATOMIC}}
+\DoxyCodeLine{01688\ \ \ \textcolor{comment}{//\ transaction.\ \ Otherwise\ another\ thread\ may\ call\ this\ mock}}
+\DoxyCodeLine{01689\ \ \ \textcolor{comment}{//\ method\ in\ the\ middle\ and\ mess\ up\ the\ state.}}
+\DoxyCodeLine{01690\ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{01691\ \ \ \textcolor{comment}{//\ However,\ performing\ the\ action\ has\ to\ be\ left\ out\ of\ the\ critical}}
+\DoxyCodeLine{01692\ \ \ \textcolor{comment}{//\ section.\ \ The\ reason\ is\ that\ we\ have\ no\ control\ on\ what\ the}}
+\DoxyCodeLine{01693\ \ \ \textcolor{comment}{//\ action\ does\ (it\ can\ invoke\ an\ arbitrary\ user\ function\ or\ even\ a}}
+\DoxyCodeLine{01694\ \ \ \textcolor{comment}{//\ mock\ function)\ and\ excessive\ locking\ could\ cause\ a\ dead\ lock.}}
+\DoxyCodeLine{01695\ \ \ \textcolor{keyword}{const}\ ExpectationBase*\ UntypedFindMatchingExpectation(}
+\DoxyCodeLine{01696\ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}*\ untyped\_args,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}**\ untyped\_action,\ \textcolor{keywordtype}{bool}*\ is\_excessive,}
+\DoxyCodeLine{01697\ \ \ \ \ \ \ ::std::ostream*\ what,\ ::std::ostream*\ why)\ \textcolor{keyword}{override}}
+\DoxyCodeLine{01698\ \ \ \ \ \ \ GTEST\_LOCK\_EXCLUDED\_(g\_gmock\_mutex)\ \{}
+\DoxyCodeLine{01699\ \ \ \ \ \textcolor{keyword}{const}\ ArgumentTuple\&\ args\ =}
+\DoxyCodeLine{01700\ \ \ \ \ \ \ \ \ *\textcolor{keyword}{static\_cast<}\textcolor{keyword}{const\ }ArgumentTuple*\textcolor{keyword}{>}(untyped\_args);}
+\DoxyCodeLine{01701\ \ \ \ \ MutexLock\ l(\&g\_gmock\_mutex);}
+\DoxyCodeLine{01702\ \ \ \ \ TypedExpectation<F>*\ exp\ =\ this-\/>FindMatchingExpectationLocked(args);}
+\DoxyCodeLine{01703\ \ \ \ \ \textcolor{keywordflow}{if}\ (exp\ ==\ \textcolor{keyword}{nullptr})\ \{\ \ \textcolor{comment}{//\ A\ match\ wasn't\ found.}}
+\DoxyCodeLine{01704\ \ \ \ \ \ \ this-\/>FormatUnexpectedCallMessageLocked(args,\ what,\ why);}
+\DoxyCodeLine{01705\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{01706\ \ \ \ \ \}}
+\DoxyCodeLine{01707\ }
+\DoxyCodeLine{01708\ \ \ \ \ \textcolor{comment}{//\ This\ line\ must\ be\ done\ before\ calling\ GetActionForArguments(),}}
+\DoxyCodeLine{01709\ \ \ \ \ \textcolor{comment}{//\ which\ will\ increment\ the\ call\ count\ for\ *exp\ and\ thus\ affect}}
+\DoxyCodeLine{01710\ \ \ \ \ \textcolor{comment}{//\ its\ saturation\ status.}}
+\DoxyCodeLine{01711\ \ \ \ \ *is\_excessive\ =\ exp-\/>IsSaturated();}
+\DoxyCodeLine{01712\ \ \ \ \ \textcolor{keyword}{const}\ Action<F>*\ action\ =\ exp-\/>GetActionForArguments(\textcolor{keyword}{this},\ args,\ what,\ why);}
+\DoxyCodeLine{01713\ \ \ \ \ \textcolor{keywordflow}{if}\ (action\ !=\ \textcolor{keyword}{nullptr}\ \&\&\ action-\/>IsDoDefault())}
+\DoxyCodeLine{01714\ \ \ \ \ \ \ action\ =\ \textcolor{keyword}{nullptr};\ \ \textcolor{comment}{//\ Normalize\ "{}do\ default"{}\ to\ NULL.}}
+\DoxyCodeLine{01715\ \ \ \ \ *untyped\_action\ =\ action;}
+\DoxyCodeLine{01716\ \ \ \ \ \textcolor{keywordflow}{return}\ exp;}
+\DoxyCodeLine{01717\ \ \ \}}
+\DoxyCodeLine{01718\ }
+\DoxyCodeLine{01719\ \ \ \textcolor{comment}{//\ Prints\ the\ given\ function\ arguments\ to\ the\ ostream.}}
+\DoxyCodeLine{01720\ \ \ \textcolor{keywordtype}{void}\ UntypedPrintArgs(\textcolor{keyword}{const}\ \textcolor{keywordtype}{void}*\ untyped\_args,}
+\DoxyCodeLine{01721\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ::std::ostream*\ os)\textcolor{keyword}{\ const\ override\ }\{}
+\DoxyCodeLine{01722\ \ \ \ \ \textcolor{keyword}{const}\ ArgumentTuple\&\ args\ =}
+\DoxyCodeLine{01723\ \ \ \ \ \ \ \ \ *\textcolor{keyword}{static\_cast<}\textcolor{keyword}{const\ }ArgumentTuple*\textcolor{keyword}{>}(untyped\_args);}
+\DoxyCodeLine{01724\ \ \ \ \ UniversalPrint(args,\ os);}
+\DoxyCodeLine{01725\ \ \ \}}
+\DoxyCodeLine{01726\ }
+\DoxyCodeLine{01727\ \ \ \textcolor{comment}{//\ Returns\ the\ expectation\ that\ matches\ the\ arguments,\ or\ NULL\ if\ no}}
+\DoxyCodeLine{01728\ \ \ \textcolor{comment}{//\ expectation\ matches\ them.}}
+\DoxyCodeLine{01729\ \ \ TypedExpectation<F>*\ FindMatchingExpectationLocked(}
+\DoxyCodeLine{01730\ \ \ \ \ \ \ \textcolor{keyword}{const}\ ArgumentTuple\&\ args)\ \textcolor{keyword}{const}}
+\DoxyCodeLine{01731\ \ \ \ \ \ \ \ \ \ \ GTEST\_EXCLUSIVE\_LOCK\_REQUIRED\_(g\_gmock\_mutex)\ \{}
+\DoxyCodeLine{01732\ \ \ \ \ g\_gmock\_mutex.AssertHeld();}
+\DoxyCodeLine{01733\ \ \ \ \ \textcolor{comment}{//\ See\ the\ definition\ of\ untyped\_expectations\_\ for\ why\ access\ to}}
+\DoxyCodeLine{01734\ \ \ \ \ \textcolor{comment}{//\ it\ is\ unprotected\ here.}}
+\DoxyCodeLine{01735\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{typename}\ UntypedExpectations::const\_reverse\_iterator\ it\ =}
+\DoxyCodeLine{01736\ \ \ \ \ \ \ \ \ \ \ \ \ \ untyped\_expectations\_.rbegin();}
+\DoxyCodeLine{01737\ \ \ \ \ \ \ \ \ \ it\ !=\ untyped\_expectations\_.rend();\ ++it)\ \{}
+\DoxyCodeLine{01738\ \ \ \ \ \ \ TypedExpectation<F>*\ \textcolor{keyword}{const}\ exp\ =}
+\DoxyCodeLine{01739\ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_cast<}TypedExpectation<F>*\textcolor{keyword}{>}(it-\/>get());}
+\DoxyCodeLine{01740\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (exp-\/>ShouldHandleArguments(args))\ \{}
+\DoxyCodeLine{01741\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ exp;}
+\DoxyCodeLine{01742\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01743\ \ \ \ \ \}}
+\DoxyCodeLine{01744\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{01745\ \ \ \}}
+\DoxyCodeLine{01746\ }
+\DoxyCodeLine{01747\ \ \ \textcolor{comment}{//\ Returns\ a\ message\ that\ the\ arguments\ don't\ match\ any\ expectation.}}
+\DoxyCodeLine{01748\ \ \ \textcolor{keywordtype}{void}\ FormatUnexpectedCallMessageLocked(}
+\DoxyCodeLine{01749\ \ \ \ \ \ \ \textcolor{keyword}{const}\ ArgumentTuple\&\ args,}
+\DoxyCodeLine{01750\ \ \ \ \ \ \ ::std::ostream*\ os,}
+\DoxyCodeLine{01751\ \ \ \ \ \ \ ::std::ostream*\ why)\ \textcolor{keyword}{const}}
+\DoxyCodeLine{01752\ \ \ \ \ \ \ \ \ \ \ GTEST\_EXCLUSIVE\_LOCK\_REQUIRED\_(g\_gmock\_mutex)\ \{}
+\DoxyCodeLine{01753\ \ \ \ \ g\_gmock\_mutex.AssertHeld();}
+\DoxyCodeLine{01754\ \ \ \ \ *os\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)nUnexpected\ mock\ function\ call\ -\/\ "{}};}
+\DoxyCodeLine{01755\ \ \ \ \ DescribeDefaultActionTo(args,\ os);}
+\DoxyCodeLine{01756\ \ \ \ \ PrintTriedExpectationsLocked(args,\ why);}
+\DoxyCodeLine{01757\ \ \ \}}
+\DoxyCodeLine{01758\ }
+\DoxyCodeLine{01759\ \ \ \textcolor{comment}{//\ Prints\ a\ list\ of\ expectations\ that\ have\ been\ tried\ against\ the}}
+\DoxyCodeLine{01760\ \ \ \textcolor{comment}{//\ current\ mock\ function\ call.}}
+\DoxyCodeLine{01761\ \ \ \textcolor{keywordtype}{void}\ PrintTriedExpectationsLocked(}
+\DoxyCodeLine{01762\ \ \ \ \ \ \ \textcolor{keyword}{const}\ ArgumentTuple\&\ args,}
+\DoxyCodeLine{01763\ \ \ \ \ \ \ ::std::ostream*\ why)\ \textcolor{keyword}{const}}
+\DoxyCodeLine{01764\ \ \ \ \ \ \ \ \ \ \ GTEST\_EXCLUSIVE\_LOCK\_REQUIRED\_(g\_gmock\_mutex)\ \{}
+\DoxyCodeLine{01765\ \ \ \ \ g\_gmock\_mutex.AssertHeld();}
+\DoxyCodeLine{01766\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\ count\ =\ untyped\_expectations\_.size();}
+\DoxyCodeLine{01767\ \ \ \ \ *why\ <<\ \textcolor{stringliteral}{"{}Google\ Mock\ tried\ the\ following\ "{}}\ <<\ count\ <<\ \textcolor{stringliteral}{"{}\ "{}}}
+\DoxyCodeLine{01768\ \ \ \ \ \ \ \ \ \ <<\ (count\ ==\ 1\ ?\ \textcolor{stringliteral}{"{}expectation,\ but\ it\ didn't\ match"{}}\ :}
+\DoxyCodeLine{01769\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}expectations,\ but\ none\ matched"{}})}
+\DoxyCodeLine{01770\ \ \ \ \ \ \ \ \ \ <<\ \textcolor{stringliteral}{"{}:\(\backslash\)n"{}};}
+\DoxyCodeLine{01771\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{size\_t}\ i\ =\ 0;\ i\ <\ count;\ i++)\ \{}
+\DoxyCodeLine{01772\ \ \ \ \ \ \ TypedExpectation<F>*\ \textcolor{keyword}{const}\ expectation\ =}
+\DoxyCodeLine{01773\ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_cast<}TypedExpectation<F>*\textcolor{keyword}{>}(untyped\_expectations\_[i].get());}
+\DoxyCodeLine{01774\ \ \ \ \ \ \ *why\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}};}
+\DoxyCodeLine{01775\ \ \ \ \ \ \ expectation-\/>DescribeLocationTo(why);}
+\DoxyCodeLine{01776\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (count\ >\ 1)\ \{}
+\DoxyCodeLine{01777\ \ \ \ \ \ \ \ \ *why\ <<\ \textcolor{stringliteral}{"{}tried\ expectation\ \#"{}}\ <<\ i\ <<\ \textcolor{stringliteral}{"{}:\ "{}};}
+\DoxyCodeLine{01778\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01779\ \ \ \ \ \ \ *why\ <<\ expectation-\/>source\_text()\ <<\ \textcolor{stringliteral}{"{}...\(\backslash\)n"{}};}
+\DoxyCodeLine{01780\ \ \ \ \ \ \ expectation-\/>ExplainMatchResultTo(args,\ why);}
+\DoxyCodeLine{01781\ \ \ \ \ \ \ expectation-\/>DescribeCallCountTo(why);}
+\DoxyCodeLine{01782\ \ \ \ \ \}}
+\DoxyCodeLine{01783\ \ \ \}}
+\DoxyCodeLine{01784\ \};\ \ \textcolor{comment}{//\ class\ FunctionMocker}}
+\DoxyCodeLine{01785\ }
+\DoxyCodeLine{01786\ \textcolor{comment}{//\ Reports\ an\ uninteresting\ call\ (whose\ description\ is\ in\ msg)\ in\ the}}
+\DoxyCodeLine{01787\ \textcolor{comment}{//\ manner\ specified\ by\ 'reaction'.}}
+\DoxyCodeLine{01788\ \textcolor{keywordtype}{void}\ ReportUninterestingCall(CallReaction\ reaction,\ \textcolor{keyword}{const}\ std::string\&\ msg);}
+\DoxyCodeLine{01789\ }
+\DoxyCodeLine{01790\ \}\ \ \textcolor{comment}{//\ namespace\ internal}}
+\DoxyCodeLine{01791\ }
+\DoxyCodeLine{01792\ \textcolor{keyword}{namespace\ }internal\ \{}
+\DoxyCodeLine{01793\ }
+\DoxyCodeLine{01794\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ F>}
+\DoxyCodeLine{01795\ \textcolor{keyword}{class\ }MockFunction;}
+\DoxyCodeLine{01796\ }
+\DoxyCodeLine{01797\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ R,\ \textcolor{keyword}{typename}...\ Args>}
+\DoxyCodeLine{01798\ \textcolor{keyword}{class\ }MockFunction<R(Args...)>\ \{}
+\DoxyCodeLine{01799\ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{01800\ \ \ MockFunction(\textcolor{keyword}{const}\ MockFunction\&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{01801\ \ \ MockFunction\&\ operator=(\textcolor{keyword}{const}\ MockFunction\&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{01802\ }
+\DoxyCodeLine{01803\ \ \ std::function<R(Args...)>\ AsStdFunction()\ \{}
+\DoxyCodeLine{01804\ \ \ \ \ \textcolor{keywordflow}{return}\ [\textcolor{keyword}{this}](Args...\ args)\ -\/>\ R\ \{}
+\DoxyCodeLine{01805\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ this-\/>Call(std::forward<Args>(args)...);}
+\DoxyCodeLine{01806\ \ \ \ \ \};}
+\DoxyCodeLine{01807\ \ \ \}}
+\DoxyCodeLine{01808\ }
+\DoxyCodeLine{01809\ \ \ \textcolor{comment}{//\ Implementation\ detail:\ the\ expansion\ of\ the\ MOCK\_METHOD\ macro.}}
+\DoxyCodeLine{01810\ \ \ R\ Call(Args...\ args)\ \{}
+\DoxyCodeLine{01811\ \ \ \ \ mock\_.SetOwnerAndName(\textcolor{keyword}{this},\ \textcolor{stringliteral}{"{}Call"{}});}
+\DoxyCodeLine{01812\ \ \ \ \ \textcolor{keywordflow}{return}\ mock\_.Invoke(std::forward<Args>(args)...);}
+\DoxyCodeLine{01813\ \ \ \}}
+\DoxyCodeLine{01814\ }
+\DoxyCodeLine{01815\ \ \ MockSpec<R(Args...)>\ gmock\_Call(Matcher<Args>...\ m)\ \{}
+\DoxyCodeLine{01816\ \ \ \ \ mock\_.RegisterOwner(\textcolor{keyword}{this});}
+\DoxyCodeLine{01817\ \ \ \ \ \textcolor{keywordflow}{return}\ mock\_.With(std::move(m)...);}
+\DoxyCodeLine{01818\ \ \ \}}
+\DoxyCodeLine{01819\ }
+\DoxyCodeLine{01820\ \ \ MockSpec<R(Args...)>\ gmock\_Call(\textcolor{keyword}{const}\ WithoutMatchers\&,\ R\ (*)(Args...))\ \{}
+\DoxyCodeLine{01821\ \ \ \ \ \textcolor{keywordflow}{return}\ this-\/>gmock\_Call(::testing::A<Args>()...);}
+\DoxyCodeLine{01822\ \ \ \}}
+\DoxyCodeLine{01823\ }
+\DoxyCodeLine{01824\ \ \textcolor{keyword}{protected}:}
+\DoxyCodeLine{01825\ \ \ MockFunction()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{01826\ \ \ \string~MockFunction()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{01827\ }
+\DoxyCodeLine{01828\ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{01829\ \ \ FunctionMocker<R(Args...)>\ mock\_;}
+\DoxyCodeLine{01830\ \};}
+\DoxyCodeLine{01831\ }
+\DoxyCodeLine{01832\ \textcolor{comment}{/*}}
+\DoxyCodeLine{01833\ \textcolor{comment}{The\ SignatureOf<F>\ struct\ is\ a\ meta-\/function\ returning\ function\ signature}}
+\DoxyCodeLine{01834\ \textcolor{comment}{corresponding\ to\ the\ provided\ F\ argument.}}
+\DoxyCodeLine{01835\ \textcolor{comment}{}}
+\DoxyCodeLine{01836\ \textcolor{comment}{It\ makes\ use\ of\ MockFunction\ easier\ by\ allowing\ it\ to\ accept\ more\ F\ arguments}}
+\DoxyCodeLine{01837\ \textcolor{comment}{than\ just\ function\ signatures.}}
+\DoxyCodeLine{01838\ \textcolor{comment}{}}
+\DoxyCodeLine{01839\ \textcolor{comment}{Specializations\ provided\ here\ cover\ a\ signature\ type\ itself\ and\ any\ template}}
+\DoxyCodeLine{01840\ \textcolor{comment}{that\ can\ be\ parameterized\ with\ a\ signature,\ including\ std::function\ and}}
+\DoxyCodeLine{01841\ \textcolor{comment}{boost::function.}}
+\DoxyCodeLine{01842\ \textcolor{comment}{*/}}
+\DoxyCodeLine{01843\ }
+\DoxyCodeLine{01844\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ F,\ \textcolor{keyword}{typename}\ =\ \textcolor{keywordtype}{void}>}
+\DoxyCodeLine{01845\ \textcolor{keyword}{struct\ }SignatureOf;}
+\DoxyCodeLine{01846\ }
+\DoxyCodeLine{01847\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ R,\ \textcolor{keyword}{typename}...\ Args>}
+\DoxyCodeLine{01848\ \textcolor{keyword}{struct\ }SignatureOf<R(Args...)>\ \{}
+\DoxyCodeLine{01849\ \ \ \textcolor{keyword}{using\ }type\ =\ R(Args...);}
+\DoxyCodeLine{01850\ \};}
+\DoxyCodeLine{01851\ }
+\DoxyCodeLine{01852\ \textcolor{keyword}{template}\ <\textcolor{keyword}{template}\ <\textcolor{keyword}{typename}>\ \textcolor{keyword}{class\ }C,\ \textcolor{keyword}{typename}\ F>}
+\DoxyCodeLine{01853\ \textcolor{keyword}{struct\ }SignatureOf<C<F>,}
+\DoxyCodeLine{01854\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ typename\ std::enable\_if<std::is\_function<F>::value>::type>}
+\DoxyCodeLine{01855\ \ \ \ \ :\ SignatureOf<F>\ \{\};}
+\DoxyCodeLine{01856\ }
+\DoxyCodeLine{01857\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ F>}
+\DoxyCodeLine{01858\ \textcolor{keyword}{using\ }SignatureOfT\ =\ \textcolor{keyword}{typename}\ SignatureOf<F>::type;}
+\DoxyCodeLine{01859\ }
+\DoxyCodeLine{01860\ \}\ \ \textcolor{comment}{//\ namespace\ internal}}
+\DoxyCodeLine{01861\ }
+\DoxyCodeLine{01862\ \textcolor{comment}{//\ A\ MockFunction<F>\ type\ has\ one\ mock\ method\ whose\ type\ is}}
+\DoxyCodeLine{01863\ \textcolor{comment}{//\ internal::SignatureOfT<F>.\ \ It\ is\ useful\ when\ you\ just\ want\ your}}
+\DoxyCodeLine{01864\ \textcolor{comment}{//\ test\ code\ to\ emit\ some\ messages\ and\ have\ Google\ Mock\ verify\ the}}
+\DoxyCodeLine{01865\ \textcolor{comment}{//\ right\ messages\ are\ sent\ (and\ perhaps\ at\ the\ right\ times).\ \ For}}
+\DoxyCodeLine{01866\ \textcolor{comment}{//\ example,\ if\ you\ are\ exercising\ code:}}
+\DoxyCodeLine{01867\ \textcolor{comment}{//}}
+\DoxyCodeLine{01868\ \textcolor{comment}{//\ \ \ Foo(1);}}
+\DoxyCodeLine{01869\ \textcolor{comment}{//\ \ \ Foo(2);}}
+\DoxyCodeLine{01870\ \textcolor{comment}{//\ \ \ Foo(3);}}
+\DoxyCodeLine{01871\ \textcolor{comment}{//}}
+\DoxyCodeLine{01872\ \textcolor{comment}{//\ and\ want\ to\ verify\ that\ Foo(1)\ and\ Foo(3)\ both\ invoke}}
+\DoxyCodeLine{01873\ \textcolor{comment}{//\ mock.Bar("{}a"{}),\ but\ Foo(2)\ doesn't\ invoke\ anything,\ you\ can\ write:}}
+\DoxyCodeLine{01874\ \textcolor{comment}{//}}
+\DoxyCodeLine{01875\ \textcolor{comment}{//\ TEST(FooTest,\ InvokesBarCorrectly)\ \{}}
+\DoxyCodeLine{01876\ \textcolor{comment}{//\ \ \ MyMock\ mock;}}
+\DoxyCodeLine{01877\ \textcolor{comment}{//\ \ \ MockFunction<void(string\ check\_point\_name)>\ check;}}
+\DoxyCodeLine{01878\ \textcolor{comment}{//\ \ \ \{}}
+\DoxyCodeLine{01879\ \textcolor{comment}{//\ \ \ \ \ InSequence\ s;}}
+\DoxyCodeLine{01880\ \textcolor{comment}{//}}
+\DoxyCodeLine{01881\ \textcolor{comment}{//\ \ \ \ \ EXPECT\_CALL(mock,\ Bar("{}a"{}));}}
+\DoxyCodeLine{01882\ \textcolor{comment}{//\ \ \ \ \ EXPECT\_CALL(check,\ Call("{}1"{}));}}
+\DoxyCodeLine{01883\ \textcolor{comment}{//\ \ \ \ \ EXPECT\_CALL(check,\ Call("{}2"{}));}}
+\DoxyCodeLine{01884\ \textcolor{comment}{//\ \ \ \ \ EXPECT\_CALL(mock,\ Bar("{}a"{}));}}
+\DoxyCodeLine{01885\ \textcolor{comment}{//\ \ \ \}}}
+\DoxyCodeLine{01886\ \textcolor{comment}{//\ \ \ Foo(1);}}
+\DoxyCodeLine{01887\ \textcolor{comment}{//\ \ \ check.Call("{}1"{});}}
+\DoxyCodeLine{01888\ \textcolor{comment}{//\ \ \ Foo(2);}}
+\DoxyCodeLine{01889\ \textcolor{comment}{//\ \ \ check.Call("{}2"{});}}
+\DoxyCodeLine{01890\ \textcolor{comment}{//\ \ \ Foo(3);}}
+\DoxyCodeLine{01891\ \textcolor{comment}{//\ \}}}
+\DoxyCodeLine{01892\ \textcolor{comment}{//}}
+\DoxyCodeLine{01893\ \textcolor{comment}{//\ The\ expectation\ spec\ says\ that\ the\ first\ Bar("{}a"{})\ must\ happen}}
+\DoxyCodeLine{01894\ \textcolor{comment}{//\ before\ check\ point\ "{}1"{},\ the\ second\ Bar("{}a"{})\ must\ happen\ after\ check}}
+\DoxyCodeLine{01895\ \textcolor{comment}{//\ point\ "{}2"{},\ and\ nothing\ should\ happen\ between\ the\ two\ check}}
+\DoxyCodeLine{01896\ \textcolor{comment}{//\ points.\ The\ explicit\ check\ points\ make\ it\ easy\ to\ tell\ which}}
+\DoxyCodeLine{01897\ \textcolor{comment}{//\ Bar("{}a"{})\ is\ called\ by\ which\ call\ to\ Foo().}}
+\DoxyCodeLine{01898\ \textcolor{comment}{//}}
+\DoxyCodeLine{01899\ \textcolor{comment}{//\ MockFunction<F>\ can\ also\ be\ used\ to\ exercise\ code\ that\ accepts}}
+\DoxyCodeLine{01900\ \textcolor{comment}{//\ std::function<internal::SignatureOfT<F>>\ callbacks.\ To\ do\ so,\ use}}
+\DoxyCodeLine{01901\ \textcolor{comment}{//\ AsStdFunction()\ method\ to\ create\ std::function\ proxy\ forwarding\ to}}
+\DoxyCodeLine{01902\ \textcolor{comment}{//\ original\ object's\ Call.\ Example:}}
+\DoxyCodeLine{01903\ \textcolor{comment}{//}}
+\DoxyCodeLine{01904\ \textcolor{comment}{//\ TEST(FooTest,\ RunsCallbackWithBarArgument)\ \{}}
+\DoxyCodeLine{01905\ \textcolor{comment}{//\ \ \ MockFunction<int(string)>\ callback;}}
+\DoxyCodeLine{01906\ \textcolor{comment}{//\ \ \ EXPECT\_CALL(callback,\ Call("{}bar"{})).WillOnce(Return(1));}}
+\DoxyCodeLine{01907\ \textcolor{comment}{//\ \ \ Foo(callback.AsStdFunction());}}
+\DoxyCodeLine{01908\ \textcolor{comment}{//\ \}}}
+\DoxyCodeLine{01909\ \textcolor{comment}{//}}
+\DoxyCodeLine{01910\ \textcolor{comment}{//\ The\ internal::SignatureOfT<F>\ indirection\ allows\ to\ use\ other\ types}}
+\DoxyCodeLine{01911\ \textcolor{comment}{//\ than\ just\ function\ signature\ type.\ This\ is\ typically\ useful\ when}}
+\DoxyCodeLine{01912\ \textcolor{comment}{//\ providing\ a\ mock\ for\ a\ predefined\ std::function\ type.\ Example:}}
+\DoxyCodeLine{01913\ \textcolor{comment}{//}}
+\DoxyCodeLine{01914\ \textcolor{comment}{//\ using\ FilterPredicate\ =\ std::function<bool(string)>;}}
+\DoxyCodeLine{01915\ \textcolor{comment}{//\ void\ MyFilterAlgorithm(FilterPredicate\ predicate);}}
+\DoxyCodeLine{01916\ \textcolor{comment}{//}}
+\DoxyCodeLine{01917\ \textcolor{comment}{//\ TEST(FooTest,\ FilterPredicateAlwaysAccepts)\ \{}}
+\DoxyCodeLine{01918\ \textcolor{comment}{//\ \ \ MockFunction<FilterPredicate>\ predicateMock;}}
+\DoxyCodeLine{01919\ \textcolor{comment}{//\ \ \ EXPECT\_CALL(predicateMock,\ Call(\_)).WillRepeatedly(Return(true));}}
+\DoxyCodeLine{01920\ \textcolor{comment}{//\ \ \ MyFilterAlgorithm(predicateMock.AsStdFunction());}}
+\DoxyCodeLine{01921\ \textcolor{comment}{//\ \}}}
+\DoxyCodeLine{01922\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ F>}
+\DoxyCodeLine{01923\ \textcolor{keyword}{class\ }MockFunction\ :\ \textcolor{keyword}{public}\ internal::MockFunction<internal::SignatureOfT<F>>\ \{}
+\DoxyCodeLine{01924\ \ \ \textcolor{keyword}{using\ }Base\ =\ internal::MockFunction<internal::SignatureOfT<F>>;}
+\DoxyCodeLine{01925\ }
+\DoxyCodeLine{01926\ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{01927\ \ \ \textcolor{keyword}{using\ }Base::Base;}
+\DoxyCodeLine{01928\ \};}
+\DoxyCodeLine{01929\ }
+\DoxyCodeLine{01930\ \textcolor{comment}{//\ The\ style\ guide\ prohibits\ "{}using"{}\ statements\ in\ a\ namespace\ scope}}
+\DoxyCodeLine{01931\ \textcolor{comment}{//\ inside\ a\ header\ file.\ \ However,\ the\ MockSpec\ class\ template\ is}}
+\DoxyCodeLine{01932\ \textcolor{comment}{//\ meant\ to\ be\ defined\ in\ the\ ::testing\ namespace.\ \ The\ following\ line}}
+\DoxyCodeLine{01933\ \textcolor{comment}{//\ is\ just\ a\ trick\ for\ working\ around\ a\ bug\ in\ MSVC\ 8.0,\ which\ cannot}}
+\DoxyCodeLine{01934\ \textcolor{comment}{//\ handle\ it\ if\ we\ define\ MockSpec\ in\ ::testing.}}
+\DoxyCodeLine{01935\ \textcolor{keyword}{using\ }internal::MockSpec;}
+\DoxyCodeLine{01936\ }
+\DoxyCodeLine{01937\ \textcolor{comment}{//\ Const(x)\ is\ a\ convenient\ function\ for\ obtaining\ a\ const\ reference}}
+\DoxyCodeLine{01938\ \textcolor{comment}{//\ to\ x.\ \ This\ is\ useful\ for\ setting\ expectations\ on\ an\ overloaded}}
+\DoxyCodeLine{01939\ \textcolor{comment}{//\ const\ mock\ method,\ e.g.}}
+\DoxyCodeLine{01940\ \textcolor{comment}{//}}
+\DoxyCodeLine{01941\ \textcolor{comment}{//\ \ \ class\ MockFoo\ :\ public\ FooInterface\ \{}}
+\DoxyCodeLine{01942\ \textcolor{comment}{//\ \ \ \ public:}}
+\DoxyCodeLine{01943\ \textcolor{comment}{//\ \ \ \ \ MOCK\_METHOD0(Bar,\ int());}}
+\DoxyCodeLine{01944\ \textcolor{comment}{//\ \ \ \ \ MOCK\_CONST\_METHOD0(Bar,\ int\&());}}
+\DoxyCodeLine{01945\ \textcolor{comment}{//\ \ \ \};}}
+\DoxyCodeLine{01946\ \textcolor{comment}{//}}
+\DoxyCodeLine{01947\ \textcolor{comment}{//\ \ \ MockFoo\ foo;}}
+\DoxyCodeLine{01948\ \textcolor{comment}{//\ \ \ //\ Expects\ a\ call\ to\ non-\/const\ MockFoo::Bar().}}
+\DoxyCodeLine{01949\ \textcolor{comment}{//\ \ \ EXPECT\_CALL(foo,\ Bar());}}
+\DoxyCodeLine{01950\ \textcolor{comment}{//\ \ \ //\ Expects\ a\ call\ to\ const\ MockFoo::Bar().}}
+\DoxyCodeLine{01951\ \textcolor{comment}{//\ \ \ EXPECT\_CALL(Const(foo),\ Bar());}}
+\DoxyCodeLine{01952\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{01953\ \textcolor{keyword}{inline}\ \textcolor{keyword}{const}\ T\&\ Const(\textcolor{keyword}{const}\ T\&\ x)\ \{\ \textcolor{keywordflow}{return}\ x;\ \}}
+\DoxyCodeLine{01954\ }
+\DoxyCodeLine{01955\ \textcolor{comment}{//\ Constructs\ an\ Expectation\ object\ that\ references\ and\ co-\/owns\ exp.}}
+\DoxyCodeLine{01956\ \textcolor{keyword}{inline}\ Expectation::Expectation(internal::ExpectationBase\&\ exp)\ \ \textcolor{comment}{//\ NOLINT}}
+\DoxyCodeLine{01957\ \ \ \ \ :\ expectation\_base\_(exp.GetHandle().expectation\_base())\ \{\}}
+\DoxyCodeLine{01958\ }
+\DoxyCodeLine{01959\ \}\ \ \textcolor{comment}{//\ namespace\ testing}}
+\DoxyCodeLine{01960\ }
+\DoxyCodeLine{01961\ GTEST\_DISABLE\_MSC\_WARNINGS\_POP\_()\ \ \textcolor{comment}{//\ \ 4251}}
+\DoxyCodeLine{01962\ }
+\DoxyCodeLine{01963\ \textcolor{comment}{//\ Implementation\ for\ ON\_CALL\ and\ EXPECT\_CALL\ macros.\ A\ separate\ macro\ is}}
+\DoxyCodeLine{01964\ \textcolor{comment}{//\ required\ to\ avoid\ compile\ errors\ when\ the\ name\ of\ the\ method\ used\ in\ call\ is}}
+\DoxyCodeLine{01965\ \textcolor{comment}{//\ a\ result\ of\ macro\ expansion.\ See\ CompilesWithMethodNameExpandedFromMacro}}
+\DoxyCodeLine{01966\ \textcolor{comment}{//\ tests\ in\ internal/gmock-\/spec-\/builders\_test.cc\ for\ more\ details.}}
+\DoxyCodeLine{01967\ \textcolor{comment}{//}}
+\DoxyCodeLine{01968\ \textcolor{comment}{//\ This\ macro\ supports\ statements\ both\ with\ and\ without\ parameter\ matchers.\ If}}
+\DoxyCodeLine{01969\ \textcolor{comment}{//\ the\ parameter\ list\ is\ omitted,\ gMock\ will\ accept\ any\ parameters,\ which\ allows}}
+\DoxyCodeLine{01970\ \textcolor{comment}{//\ tests\ to\ be\ written\ that\ don't\ need\ to\ encode\ the\ number\ of\ method}}
+\DoxyCodeLine{01971\ \textcolor{comment}{//\ parameter.\ This\ technique\ may\ only\ be\ used\ for\ non-\/overloaded\ methods.}}
+\DoxyCodeLine{01972\ \textcolor{comment}{//}}
+\DoxyCodeLine{01973\ \textcolor{comment}{//\ \ \ //\ These\ are\ the\ same:}}
+\DoxyCodeLine{01974\ \textcolor{comment}{//\ \ \ ON\_CALL(mock,\ NoArgsMethod()).WillByDefault(...);}}
+\DoxyCodeLine{01975\ \textcolor{comment}{//\ \ \ ON\_CALL(mock,\ NoArgsMethod).WillByDefault(...);}}
+\DoxyCodeLine{01976\ \textcolor{comment}{//}}
+\DoxyCodeLine{01977\ \textcolor{comment}{//\ \ \ //\ As\ are\ these:}}
+\DoxyCodeLine{01978\ \textcolor{comment}{//\ \ \ ON\_CALL(mock,\ TwoArgsMethod(\_,\ \_)).WillByDefault(...);}}
+\DoxyCodeLine{01979\ \textcolor{comment}{//\ \ \ ON\_CALL(mock,\ TwoArgsMethod).WillByDefault(...);}}
+\DoxyCodeLine{01980\ \textcolor{comment}{//}}
+\DoxyCodeLine{01981\ \textcolor{comment}{//\ \ \ //\ Can\ also\ specify\ args\ if\ you\ want,\ of\ course:}}
+\DoxyCodeLine{01982\ \textcolor{comment}{//\ \ \ ON\_CALL(mock,\ TwoArgsMethod(\_,\ 45)).WillByDefault(...);}}
+\DoxyCodeLine{01983\ \textcolor{comment}{//}}
+\DoxyCodeLine{01984\ \textcolor{comment}{//\ \ \ //\ Overloads\ work\ as\ long\ as\ you\ specify\ parameters:}}
+\DoxyCodeLine{01985\ \textcolor{comment}{//\ \ \ ON\_CALL(mock,\ OverloadedMethod(\_)).WillByDefault(...);}}
+\DoxyCodeLine{01986\ \textcolor{comment}{//\ \ \ ON\_CALL(mock,\ OverloadedMethod(\_,\ \_)).WillByDefault(...);}}
+\DoxyCodeLine{01987\ \textcolor{comment}{//}}
+\DoxyCodeLine{01988\ \textcolor{comment}{//\ \ \ //\ Oops!\ Which\ overload\ did\ you\ want?}}
+\DoxyCodeLine{01989\ \textcolor{comment}{//\ \ \ ON\_CALL(mock,\ OverloadedMethod).WillByDefault(...);}}
+\DoxyCodeLine{01990\ \textcolor{comment}{//\ \ \ \ \ =>\ ERROR:\ call\ to\ member\ function\ 'gmock\_OverloadedMethod'\ is\ ambiguous}}
+\DoxyCodeLine{01991\ \textcolor{comment}{//}}
+\DoxyCodeLine{01992\ \textcolor{comment}{//\ How\ this\ works:\ The\ mock\ class\ uses\ two\ overloads\ of\ the\ gmock\_Method}}
+\DoxyCodeLine{01993\ \textcolor{comment}{//\ expectation\ setter\ method\ plus\ an\ operator()\ overload\ on\ the\ MockSpec\ object.}}
+\DoxyCodeLine{01994\ \textcolor{comment}{//\ In\ the\ matcher\ list\ form,\ the\ macro\ expands\ to:}}
+\DoxyCodeLine{01995\ \textcolor{comment}{//}}
+\DoxyCodeLine{01996\ \textcolor{comment}{//\ \ \ //\ This\ statement:}}
+\DoxyCodeLine{01997\ \textcolor{comment}{//\ \ \ ON\_CALL(mock,\ TwoArgsMethod(\_,\ 45))...}}
+\DoxyCodeLine{01998\ \textcolor{comment}{//}}
+\DoxyCodeLine{01999\ \textcolor{comment}{//\ \ \ //\ ...expands\ to:}}
+\DoxyCodeLine{02000\ \textcolor{comment}{//\ \ \ mock.gmock\_TwoArgsMethod(\_,\ 45)(WithoutMatchers(),\ nullptr)...}}
+\DoxyCodeLine{02001\ \textcolor{comment}{//\ \ \ |-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/v-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/||-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/v-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/|}}
+\DoxyCodeLine{02002\ \textcolor{comment}{//\ \ \ \ \ \ \ invokes\ first\ overload\ \ \ \ \ \ \ \ swallowed\ by\ operator()}}
+\DoxyCodeLine{02003\ \textcolor{comment}{//}}
+\DoxyCodeLine{02004\ \textcolor{comment}{//\ \ \ //\ ...which\ is\ essentially:}}
+\DoxyCodeLine{02005\ \textcolor{comment}{//\ \ \ mock.gmock\_TwoArgsMethod(\_,\ 45)...}}
+\DoxyCodeLine{02006\ \textcolor{comment}{//}}
+\DoxyCodeLine{02007\ \textcolor{comment}{//\ Whereas\ the\ form\ without\ a\ matcher\ list:}}
+\DoxyCodeLine{02008\ \textcolor{comment}{//}}
+\DoxyCodeLine{02009\ \textcolor{comment}{//\ \ \ //\ This\ statement:}}
+\DoxyCodeLine{02010\ \textcolor{comment}{//\ \ \ ON\_CALL(mock,\ TwoArgsMethod)...}}
+\DoxyCodeLine{02011\ \textcolor{comment}{//}}
+\DoxyCodeLine{02012\ \textcolor{comment}{//\ \ \ //\ ...expands\ to:}}
+\DoxyCodeLine{02013\ \textcolor{comment}{//\ \ \ mock.gmock\_TwoArgsMethod(WithoutMatchers(),\ nullptr)...}}
+\DoxyCodeLine{02014\ \textcolor{comment}{//\ \ \ |-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/v-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/|}}
+\DoxyCodeLine{02015\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ invokes\ second\ overload}}
+\DoxyCodeLine{02016\ \textcolor{comment}{//}}
+\DoxyCodeLine{02017\ \textcolor{comment}{//\ \ \ //\ ...which\ is\ essentially:}}
+\DoxyCodeLine{02018\ \textcolor{comment}{//\ \ \ mock.gmock\_TwoArgsMethod(\_,\ \_)...}}
+\DoxyCodeLine{02019\ \textcolor{comment}{//}}
+\DoxyCodeLine{02020\ \textcolor{comment}{//\ The\ WithoutMatchers()\ argument\ is\ used\ to\ disambiguate\ overloads\ and\ to}}
+\DoxyCodeLine{02021\ \textcolor{comment}{//\ block\ the\ caller\ from\ accidentally\ invoking\ the\ second\ overload\ directly.\ The}}
+\DoxyCodeLine{02022\ \textcolor{comment}{//\ second\ argument\ is\ an\ internal\ type\ derived\ from\ the\ method\ signature.\ The}}
+\DoxyCodeLine{02023\ \textcolor{comment}{//\ failure\ to\ disambiguate\ two\ overloads\ of\ this\ method\ in\ the\ ON\_CALL\ statement}}
+\DoxyCodeLine{02024\ \textcolor{comment}{//\ is\ how\ we\ block\ callers\ from\ setting\ expectations\ on\ overloaded\ methods.}}
+\DoxyCodeLine{02025\ \textcolor{preprocessor}{\#define\ GMOCK\_ON\_CALL\_IMPL\_(mock\_expr,\ Setter,\ call)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{02026\ \textcolor{preprocessor}{\ \ ((mock\_expr).gmock\_\#\#call)(::testing::internal::GetWithoutMatchers(),\ \(\backslash\)}}
+\DoxyCodeLine{02027\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ nullptr)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{02028\ \textcolor{preprocessor}{\ \ \ \ \ \ .Setter(\_\_FILE\_\_,\ \_\_LINE\_\_,\ \#mock\_expr,\ \#call)}}
+\DoxyCodeLine{02029\ }
+\DoxyCodeLine{02030\ \textcolor{preprocessor}{\#define\ ON\_CALL(obj,\ call)\ \(\backslash\)}}
+\DoxyCodeLine{02031\ \textcolor{preprocessor}{\ \ GMOCK\_ON\_CALL\_IMPL\_(obj,\ InternalDefaultActionSetAt,\ call)}}
+\DoxyCodeLine{02032\ }
+\DoxyCodeLine{02033\ \textcolor{preprocessor}{\#define\ EXPECT\_CALL(obj,\ call)\ \(\backslash\)}}
+\DoxyCodeLine{02034\ \textcolor{preprocessor}{\ \ GMOCK\_ON\_CALL\_IMPL\_(obj,\ InternalExpectedAt,\ call)}}
+\DoxyCodeLine{02035\ }
+\DoxyCodeLine{02036\ \textcolor{preprocessor}{\#endif\ \ }\textcolor{comment}{//\ GOOGLEMOCK\_INCLUDE\_GMOCK\_GMOCK\_SPEC\_BUILDERS\_H\_}}
+
+\end{DoxyCode}

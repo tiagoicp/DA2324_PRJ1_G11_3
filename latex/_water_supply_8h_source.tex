@@ -1,0 +1,64 @@
+\doxysection{Water\+Supply.\+h}
+\hypertarget{_water_supply_8h_source}{}\label{_water_supply_8h_source}\index{classes/WaterSupply.h@{classes/WaterSupply.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ DA2324\_PRJ1\_G11\_3\_WATERSUPPLY\_H}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ DA2324\_PRJ1\_G11\_3\_WATERSUPPLY\_H}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}Graph.h"{}}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}Reservoir.h"{}}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}PumpingStation.h"{}}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}City.h"{}}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <unordered\_map>}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <utility>}}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{keyword}{using\ namespace\ }std;}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_water_supply}{WaterSupply}}\ :\ \mbox{\hyperlink{class_graph}{Graph}}<string>\ \{}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00016\ \ \ \ \ \mbox{\hyperlink{class_edge}{unordered\_map<string,Reservoir>}}\ reservoirs;}
+\DoxyCodeLine{00017\ \ \ \ \ \mbox{\hyperlink{class_edge}{unordered\_map<string,PumpingStation>}}\ pumpingStations;}
+\DoxyCodeLine{00018\ \ \ \ \ \mbox{\hyperlink{class_edge}{unordered\_map<string,City>}}\ cities;}
+\DoxyCodeLine{00019\ \ \ \ \ \mbox{\hyperlink{class_edge}{vector<Vertex<string>}}*>\ srcVertexSet;}
+\DoxyCodeLine{00020\ \ \ \ \ \mbox{\hyperlink{class_edge}{vector<Vertex<string>}}*>\ dstVertexSet;}
+\DoxyCodeLine{00021\ \ \ \ \ \mbox{\hyperlink{class_edge}{vector<Vertex<string>}}*>\ psVertexSet;}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00024\ \ \ \ \ \mbox{\hyperlink{class_water_supply}{WaterSupply}}()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00025\ \ \ \ \ \mbox{\hyperlink{class_water_supply}{WaterSupply}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_water_supply}{WaterSupply}}\&\ \mbox{\hyperlink{class_edge}{other}});}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{keywordtype}{void}\ addNode(\textcolor{keyword}{const}\ \textcolor{keywordtype}{string}\ \&code);}
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{keywordtype}{void}\ removeNode(\textcolor{keyword}{const}\ \textcolor{keywordtype}{string}\ \&code);}
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keywordtype}{void}\ addReservoir(\textcolor{keyword}{const}\ \textcolor{keywordtype}{string}\ \&code,\textcolor{keyword}{const}\ \mbox{\hyperlink{class_reservoir}{Reservoir}}\&\ \mbox{\hyperlink{class_edge}{reservoir}});}
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{keywordtype}{void}\ removeReservoir(\textcolor{keyword}{const}\ \textcolor{keywordtype}{string}\&\ code);}
+\DoxyCodeLine{00031\ \ \ \ \ \textcolor{keywordtype}{void}\ addPumpingStation(\textcolor{keyword}{const}\ \textcolor{keywordtype}{string}\ \&code,\textcolor{keyword}{const}\ \mbox{\hyperlink{class_pumping_station}{PumpingStation}}\&\ \mbox{\hyperlink{class_edge}{ps}});}
+\DoxyCodeLine{00032\ \ \ \ \ \textcolor{keywordtype}{void}\ removePumpingStation(\textcolor{keyword}{const}\ \textcolor{keywordtype}{string}\&\ code);}
+\DoxyCodeLine{00033\ \ \ \ \ \textcolor{keywordtype}{void}\ addCity(\textcolor{keyword}{const}\ \textcolor{keywordtype}{string}\ \&code,\textcolor{keyword}{const}\ \mbox{\hyperlink{class_city}{City}}\&\ city);}
+\DoxyCodeLine{00034\ \ \ \ \ \textcolor{keywordtype}{void}\ removeCity(\textcolor{keyword}{const}\ \textcolor{keywordtype}{string}\&\ code);}
+\DoxyCodeLine{00035\ \ \ \ \ \textcolor{keywordtype}{void}\ addPipe(\textcolor{keyword}{const}\ \textcolor{keywordtype}{string}\&\ \mbox{\hyperlink{class_edge}{servicePointA}},\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{string}\&\ \mbox{\hyperlink{class_edge}{servicePointB}},\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{class_edge}{capacity}},\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{class_edge}{direction}});}
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{keywordtype}{void}\ removePipe(\textcolor{keyword}{const}\ \textcolor{keywordtype}{string}\&\ \mbox{\hyperlink{class_edge}{servicePointA}},\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{string}\&\ \mbox{\hyperlink{class_edge}{servicePointB}},\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{class_edge}{direction}});}
+\DoxyCodeLine{00037\ \ \ \ \ \mbox{\hyperlink{class_edge}{Vertex<string>}}*\ findNode(\textcolor{keyword}{const}\ \textcolor{keywordtype}{string}\ \&\mbox{\hyperlink{class_edge}{in}})\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00038\ \ \ \ \ \textcolor{keywordtype}{void}\ addSrc(\mbox{\hyperlink{class_edge}{Vertex<string>}}*\ \mbox{\hyperlink{class_edge}{src}});}
+\DoxyCodeLine{00039\ \ \ \ \ \textcolor{keywordtype}{void}\ addDst(\mbox{\hyperlink{class_edge}{Vertex<string>}}*\ \mbox{\hyperlink{class_edge}{dst}});}
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{keywordtype}{void}\ addPS(\mbox{\hyperlink{class_edge}{Vertex<string>}}*\ \mbox{\hyperlink{class_edge}{ps}});}
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{keywordtype}{void}\ resetGraphFlow();}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{comment}{//\ Getters}}
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{class_edge}{unordered\_map<string,Reservoir>}}\&\ getReservoirs()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ reservoirs;\ \}}
+\DoxyCodeLine{00045\ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{class_edge}{unordered\_map<string,PumpingStation>}}\&\ getPumpingStations()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ pumpingStations;\ \}}
+\DoxyCodeLine{00046\ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{class_edge}{unordered\_map<string,City>}}\&\ getCities()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ cities;\ \}}
+\DoxyCodeLine{00047\ \ \ \ \ \mbox{\hyperlink{class_edge}{vector<Vertex<string>}}\ *>\ getNodeSet()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ getVertexSet();\ \}}
+\DoxyCodeLine{00048\ \ \ \ \ \mbox{\hyperlink{class_edge}{vector<Vertex<string>}}\ *>\ getSrcSet()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ srcVertexSet;\ \}}
+\DoxyCodeLine{00049\ \ \ \ \ \mbox{\hyperlink{class_edge}{vector<Vertex<string>}}\ *>\ getDstSet()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ dstVertexSet;\ \}}
+\DoxyCodeLine{00050\ \ \ \ \ \mbox{\hyperlink{class_edge}{vector<Vertex<string>}}\ *>\ getPSSet()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ psVertexSet;\ \}}
+\DoxyCodeLine{00051\ \ \ \ \ \textcolor{keywordtype}{void}\ connectedReservoirsDfsVisit(\mbox{\hyperlink{class_edge}{Vertex<string>}}*\ \mbox{\hyperlink{class_edge}{src}},\ \textcolor{keywordtype}{string}\&\ dest,\ \textcolor{keywordtype}{bool}\&\ \mbox{\hyperlink{class_edge}{found}});}
+\DoxyCodeLine{00052\ \ \ \ \ \textcolor{keywordtype}{void}\ connectedReservoirsDfs(\mbox{\hyperlink{class_edge}{Vertex<string>}}*\ \mbox{\hyperlink{class_edge}{src}},\ \textcolor{keywordtype}{string}\&\ dest,\ \mbox{\hyperlink{class_edge}{vector}}<\mbox{\hyperlink{class_edge}{Vertex<string>}}*>\&\ \mbox{\hyperlink{class_edge}{res}});}
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{keywordtype}{double}\ getTotalSinkFlow();}
+\DoxyCodeLine{00054\ \ \ \ \ \textcolor{keywordtype}{double}\ getCityFlow(\mbox{\hyperlink{class_edge}{Vertex<string>}}*\ \mbox{\hyperlink{class_edge}{cityVertex}});}
+\DoxyCodeLine{00055\ \ \ \ \ \mbox{\hyperlink{class_edge}{vector<double>}}\ getNetworkBalanceStats()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00056\ \};}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ DA2324\_PRJ1\_G11\_3\_WATERSUPPLY\_H}}
+
+\end{DoxyCode}

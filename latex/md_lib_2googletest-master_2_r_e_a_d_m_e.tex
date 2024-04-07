@@ -1,0 +1,82 @@
+\chapter{Google\+Test}
+\hypertarget{md_lib_2googletest-master_2_r_e_a_d_m_e}{}\label{md_lib_2googletest-master_2_r_e_a_d_m_e}\index{GoogleTest@{GoogleTest}}
+\label{md_lib_2googletest-master_2_r_e_a_d_m_e_autotoc_md38}%
+\Hypertarget{md_lib_2googletest-master_2_r_e_a_d_m_e_autotoc_md38}%
+ \hypertarget{md_lib_2googletest-master_2_r_e_a_d_m_e_autotoc_md39}{}\doxysubsection{\texorpdfstring{Announcements}{Announcements}}\label{md_lib_2googletest-master_2_r_e_a_d_m_e_autotoc_md39}
+\hypertarget{md_lib_2googletest-master_2_r_e_a_d_m_e_autotoc_md40}{}\doxysubsubsection{\texorpdfstring{Live at Head}{Live at Head}}\label{md_lib_2googletest-master_2_r_e_a_d_m_e_autotoc_md40}
+Google\+Test now follows the \href{https://abseil.io/about/philosophy\#upgrade-support}{\texttt{ Abseil Live at Head philosophy}}. We recommend using the latest commit in the {\ttfamily master} branch in your projects.\hypertarget{md_lib_2googletest-master_2_r_e_a_d_m_e_autotoc_md41}{}\doxysubsubsection{\texorpdfstring{Documentation Updates}{Documentation Updates}}\label{md_lib_2googletest-master_2_r_e_a_d_m_e_autotoc_md41}
+Our documentation is now live on Git\+Hub Pages at \href{https://google.github.io/googletest/}{\texttt{ https\+://google.\+github.\+io/googletest/}}. We recommend browsing the documentation on Git\+Hub Pages rather than directly in the repository.\hypertarget{md_lib_2googletest-master_2_r_e_a_d_m_e_autotoc_md42}{}\doxysubsubsection{\texorpdfstring{Release 1.\+11.\+0}{Release 1.\+11.\+0}}\label{md_lib_2googletest-master_2_r_e_a_d_m_e_autotoc_md42}
+\href{https://github.com/google/googletest/releases/tag/release-1.11.0}{\texttt{ Release 1.\+11.\+0}} is now available.\hypertarget{md_lib_2googletest-master_2_r_e_a_d_m_e_autotoc_md43}{}\doxysubsubsection{\texorpdfstring{Coming Soon}{Coming Soon}}\label{md_lib_2googletest-master_2_r_e_a_d_m_e_autotoc_md43}
+
+\begin{DoxyItemize}
+\item We are planning to take a dependency on \href{https://github.com/abseil/abseil-cpp}{\texttt{ Abseil}}.
+\item More documentation improvements are planned.
+\end{DoxyItemize}\hypertarget{md_lib_2googletest-master_2_r_e_a_d_m_e_autotoc_md44}{}\doxysection{\texorpdfstring{Welcome to {\bfseries{Google\+Test}}, Google\textquotesingle{}s C++ test framework!}{Welcome to {\bfseries{Google\+Test}}, Google\textquotesingle{}s C++ test framework!}}\label{md_lib_2googletest-master_2_r_e_a_d_m_e_autotoc_md44}
+This repository is a merger of the formerly separate Google\+Test and Google\+Mock projects. These were so closely related that it makes sense to maintain and release them together.\hypertarget{md_lib_2googletest-master_2_r_e_a_d_m_e_autotoc_md45}{}\doxysubsection{\texorpdfstring{Getting Started}{Getting Started}}\label{md_lib_2googletest-master_2_r_e_a_d_m_e_autotoc_md45}
+See the \href{https://google.github.io/googletest/}{\texttt{ Google\+Test User\textquotesingle{}s Guide}} for documentation. We recommend starting with the \href{https://google.github.io/googletest/primer.html}{\texttt{ Google\+Test Primer}}.
+
+More information about building Google\+Test can be found at \doxysectlink{md_lib_2googletest-master_2googletest_2_r_e_a_d_m_e}{googletest/\+README.md}{0}.\hypertarget{md_lib_2googletest-master_2_r_e_a_d_m_e_autotoc_md46}{}\doxysection{\texorpdfstring{Features}{Features}}\label{md_lib_2googletest-master_2_r_e_a_d_m_e_autotoc_md46}
+
+\begin{DoxyItemize}
+\item An \href{https://en.wikipedia.org/wiki/XUnit}{\texttt{ x\+Unit}} test framework.
+\item Test discovery.
+\item A rich set of assertions.
+\item User-\/defined assertions.
+\item Death tests.
+\item Fatal and non-\/fatal failures.
+\item Value-\/parameterized tests.
+\item Type-\/parameterized tests.
+\item Various options for running the tests.
+\item XML test report generation.
+\end{DoxyItemize}\hypertarget{md_lib_2googletest-master_2_r_e_a_d_m_e_autotoc_md47}{}\doxysection{\texorpdfstring{Supported Platforms}{Supported Platforms}}\label{md_lib_2googletest-master_2_r_e_a_d_m_e_autotoc_md47}
+Google\+Test requires a codebase and compiler compliant with the C++11 standard or newer.
+
+The Google\+Test code is officially supported on the following platforms. Operating systems or tools not listed below are community-\/supported. For community-\/supported platforms, patches that do not complicate the code may be considered.
+
+If you notice any problems on your platform, please file an issue on the \href{https://github.com/google/googletest/issues}{\texttt{ Google\+Test Git\+Hub Issue Tracker}}. Pull requests containing fixes are welcome!\hypertarget{md_lib_2googletest-master_2_r_e_a_d_m_e_autotoc_md48}{}\doxysubsection{\texorpdfstring{Operating Systems}{Operating Systems}}\label{md_lib_2googletest-master_2_r_e_a_d_m_e_autotoc_md48}
+
+\begin{DoxyItemize}
+\item Linux
+\item mac\+OS
+\item Windows
+\end{DoxyItemize}\hypertarget{md_lib_2googletest-master_2_r_e_a_d_m_e_autotoc_md49}{}\doxysubsection{\texorpdfstring{Compilers}{Compilers}}\label{md_lib_2googletest-master_2_r_e_a_d_m_e_autotoc_md49}
+
+\begin{DoxyItemize}
+\item gcc 5.\+0+
+\item clang 5.\+0+
+\item MSVC 2015+
+\end{DoxyItemize}
+
+{\bfseries{mac\+OS users\+:}} Xcode 9.\+3+ provides clang 5.\+0+.\hypertarget{md_lib_2googletest-master_2_r_e_a_d_m_e_autotoc_md50}{}\doxysubsection{\texorpdfstring{Build Systems}{Build Systems}}\label{md_lib_2googletest-master_2_r_e_a_d_m_e_autotoc_md50}
+
+\begin{DoxyItemize}
+\item \href{https://bazel.build/}{\texttt{ Bazel}}
+\item \href{https://cmake.org/}{\texttt{ CMake}}
+\end{DoxyItemize}
+
+{\bfseries{Note\+:}} Bazel is the build system used by the team internally and in tests. CMake is supported on a best-\/effort basis and by the community.\hypertarget{md_lib_2googletest-master_2_r_e_a_d_m_e_autotoc_md51}{}\doxysection{\texorpdfstring{Who Is Using Google\+Test?}{Who Is Using Google\+Test?}}\label{md_lib_2googletest-master_2_r_e_a_d_m_e_autotoc_md51}
+In addition to many internal projects at Google, Google\+Test is also used by the following notable projects\+:
+
+
+\begin{DoxyItemize}
+\item The \href{http://www.chromium.org/}{\texttt{ Chromium projects}} (behind the Chrome browser and Chrome OS).
+\item The \href{http://llvm.org/}{\texttt{ LLVM}} compiler.
+\item \href{https://github.com/google/protobuf}{\texttt{ Protocol Buffers}}, Google\textquotesingle{}s data interchange format.
+\item The \href{http://opencv.org/}{\texttt{ Open\+CV}} computer vision library.
+\end{DoxyItemize}\hypertarget{md_lib_2googletest-master_2_r_e_a_d_m_e_autotoc_md52}{}\doxysection{\texorpdfstring{Related Open Source Projects}{Related Open Source Projects}}\label{md_lib_2googletest-master_2_r_e_a_d_m_e_autotoc_md52}
+\href{https://github.com/nholthaus/gtest-runner}{\texttt{ GTest Runner}} is a Qt5 based automated test-\/runner and Graphical User \doxylink{class_interface}{Interface} with powerful features for Windows and Linux platforms.
+
+\href{https://github.com/ospector/gtest-gbar}{\texttt{ Google\+Test UI}} is a test runner that runs your test binary, allows you to track its progress via a progress bar, and displays a list of test failures. Clicking on one shows failure text. Google\+Test UI is written in C\#.
+
+\href{https://github.com/kinow/gtest-tap-listener}{\texttt{ GTest TAP Listener}} is an event listener for Google\+Test that implements the \href{https://en.wikipedia.org/wiki/Test_Anything_Protocol}{\texttt{ TAP protocol}} for test result output. If your test runner understands TAP, you may find it useful.
+
+\href{https://github.com/google/gtest-parallel}{\texttt{ gtest-\/parallel}} is a test runner that runs tests from your binary in parallel to provide significant speed-\/up.
+
+\href{https://marketplace.visualstudio.com/items?itemName=DavidSchuldenfrei.gtest-adapter}{\texttt{ Google\+Test Adapter}} is a VS Code extension allowing to view Google\+Test in a tree view, and run/debug your tests.
+
+\href{https://github.com/matepek/vscode-catch2-test-adapter}{\texttt{ C++ Test\+Mate}} is a VS Code extension allowing to view Google\+Test in a tree view, and run/debug your tests.
+
+\href{https://pypi.org/project/cornichon/}{\texttt{ Cornichon}} is a small Gherkin DSL parser that generates stub code for Google\+Test.\hypertarget{md_lib_2googletest-master_2_r_e_a_d_m_e_autotoc_md53}{}\doxysection{\texorpdfstring{Contributing Changes}{Contributing Changes}}\label{md_lib_2googletest-master_2_r_e_a_d_m_e_autotoc_md53}
+Please read \href{https://github.com/google/googletest/blob/master/CONTRIBUTING.md}{\texttt{ {\ttfamily CONTRIBUTING.\+md}}} for details on how to contribute to this project.
+
+Happy testing! 

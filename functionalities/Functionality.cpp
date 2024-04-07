@@ -131,6 +131,10 @@ void rejectChildFlowChanges(Vertex<string> *node, double maxAmount) {
     rejectChildFlowChanges(pipe->getDest(), maxAmount);
 }
 
+/* This function generates two alternatives and then attempts to reconcile their differences,
+ * trying to pick the best alternative from each "splitting node" and rejecting the worst
+ * Time Complexity = O(V*E^2)
+ * We need to run EdmondsKarp twice, then do several linear operations */
 void Functionality::balanceMaxFlowGraph(WaterSupply &graph) {
     // run normal order / strategy
     maxFlowGraph(graph, false);

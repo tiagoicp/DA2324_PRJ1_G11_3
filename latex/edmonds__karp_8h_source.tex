@@ -1,0 +1,84 @@
+\doxysection{edmonds\+\_\+karp.\+h}
+\hypertarget{edmonds__karp_8h_source}{}\label{edmonds__karp_8h_source}\index{classes/edmonds\_karp.h@{classes/edmonds\_karp.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//\ Created\ by\ jonas\ on\ 27/03/2024.}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#ifndef\ DA2324\_PRJ1\_G11\_3\_EDMONDS\_KARP\_H}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#define\ DA2324\_PRJ1\_G11\_3\_EDMONDS\_KARP\_H}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}WaterSupply.h"{}}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{keyword}{using\ namespace\ }std;}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{comment}{/*\ This\ file\ contains\ an\ adapted\ Edmonds\ Karp\ algorithm\ for\ our\ graph.}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ *\ It\ also\ allows\ for\ reversing\ the\ order\ of\ adj\ and\ incoming\ vectors.}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ *\ Time\ Complexity\ =\ O(V*E\string^2)\ */}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{keywordtype}{bool}\ findAugmentingPath(\mbox{\hyperlink{class_water_supply}{WaterSupply}}\ \&g,\ \mbox{\hyperlink{class_vertex}{Vertex<string>}}\ *source,\ \mbox{\hyperlink{class_vertex}{Vertex<string>}}\ *target,\ \textcolor{keywordtype}{bool}\ inverse\_order)\ \{}
+\DoxyCodeLine{00017\ \ \ \ \ \textcolor{keywordflow}{for}\ (\mbox{\hyperlink{class_vertex}{Vertex<string>}}\ *v:\ g.getNodeSet())\ \{}
+\DoxyCodeLine{00018\ \ \ \ \ \ \ \ \ v-\/>setVisited(\textcolor{keyword}{false});}
+\DoxyCodeLine{00019\ \ \ \ \ \}}
+\DoxyCodeLine{00020\ \ \ \ \ source-\/>setVisited(\textcolor{keyword}{true});}
+\DoxyCodeLine{00021\ \ \ \ \ std::queue<Vertex<string>\ *>\ q;}
+\DoxyCodeLine{00022\ \ \ \ \ q.push(source);}
+\DoxyCodeLine{00023\ \ \ \ \ \textcolor{keywordflow}{while}\ (!q.empty())\ \{}
+\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_vertex}{Vertex<string>}}\ *v\ =\ q.front();}
+\DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ q.pop();}
+\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (inverse\_order)\ v-\/>reverseAdj();}
+\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\mbox{\hyperlink{class_edge}{Edge<string>}}\ *e:\ v-\/>getAdj())\ \{}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_vertex}{Vertex<string>}}\ *w\ =\ e-\/>getDest();}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!w-\/>isVisited()\ \&\&\ e-\/>getWeight()\ >\ e-\/>getFlow())\ \{}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ q.push(w);}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ w-\/>setPath(e);}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ w-\/>setVisited(\textcolor{keyword}{true});}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (inverse\_order)\ v-\/>reverseIncoming();}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\mbox{\hyperlink{class_edge}{Edge<string>}}\ *e:\ v-\/>getIncoming())\ \{}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_vertex}{Vertex<string>}}\ *w\ =\ e-\/>getOrig();}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!w-\/>isVisited()\ \&\&\ e-\/>getFlow()\ >\ 0)\ \{}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ q.push(w);}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ w-\/>setPath(e);}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ w-\/>setVisited(\textcolor{keyword}{true});}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00044\ \ \ \ \ \}}
+\DoxyCodeLine{00045\ \ \ \ \ \textcolor{keywordflow}{return}\ (target-\/>isVisited());}
+\DoxyCodeLine{00046\ \}}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \textcolor{keywordtype}{void}\ edmondsKarp(\mbox{\hyperlink{class_water_supply}{WaterSupply}}\ \&g,\ \mbox{\hyperlink{class_vertex}{Vertex<string>}}\ *s,\ \mbox{\hyperlink{class_vertex}{Vertex<string>}}\ *t,\ \textcolor{keywordtype}{bool}\ inverse\_order)\ \{}
+\DoxyCodeLine{00049\ \ \ \ \ \textcolor{keywordflow}{while}\ (findAugmentingPath(g,\ s,\ t,\ inverse\_order))\ \{}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ minFlow\ =\ INF;}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\mbox{\hyperlink{class_vertex}{Vertex<string>}}\ *v\ =\ t;\ v\ !=\ s;)\ \{}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_edge}{Edge<string>}}\ *e\ =\ v-\/>getPath();}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (e-\/>getDest()\ ==\ v)\ \{}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ minFlow\ =\ std::min(e-\/>getWeight()\ -\/\ e-\/>getFlow(),\ minFlow);}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ v\ =\ e-\/>getOrig();}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ minFlow\ =\ std::min(e-\/>getFlow(),\ minFlow);}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ v\ =\ e-\/>getDest();}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\mbox{\hyperlink{class_vertex}{Vertex<string>}}\ *v\ =\ t;\ v\ !=\ s;)\ \{}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_edge}{Edge<string>}}\ *e\ =\ v-\/>getPath();}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (e-\/>getDest()\ ==\ v)\ \{}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ e-\/>setFlow(e-\/>getFlow()\ +\ minFlow);}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ v\ =\ e-\/>getOrig();}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ e-\/>setFlow(e-\/>getFlow()\ -\/\ minFlow);}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ v\ =\ e-\/>getDest();}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00071\ \ \ \ \ \}}
+\DoxyCodeLine{00072\ \}}
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00074\ \textcolor{keywordtype}{void}\ edmondsKarp(\mbox{\hyperlink{class_water_supply}{WaterSupply}}\ \&g,\ \mbox{\hyperlink{class_vertex}{Vertex<string>}}\ *s,\ \mbox{\hyperlink{class_vertex}{Vertex<string>}}\ *t)\ \{}
+\DoxyCodeLine{00075\ \ \ \ \ edmondsKarp(g,\ s,\ t,\ \textcolor{keyword}{false});}
+\DoxyCodeLine{00076\ \}}
+\DoxyCodeLine{00077\ }
+\DoxyCodeLine{00078\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//DA2324\_PRJ1\_G11\_3\_EDMONDS\_KARP\_H}}
+
+\end{DoxyCode}

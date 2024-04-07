@@ -1,3 +1,7 @@
+/**
+@file main.cpp
+*/
+
 #include "gtest/gtest.h"
 #include "gmock/gmock.h"
 #include "terminal/TerminalFlow.h"

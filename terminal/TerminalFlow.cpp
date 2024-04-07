@@ -183,6 +183,7 @@ void TerminalFlow::getReadDataMenu(WaterSupply &ws) {
             break;
         default:
             cout << "Invalid choice. Please try again." << endl;
+            getReadDataMenu(ws);
     }
     FileReader::addReservoirs(reservoir_file_path, ws);
     FileReader::addPumpingStations(station_file_path, ws);

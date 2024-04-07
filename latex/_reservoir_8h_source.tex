@@ -1,0 +1,35 @@
+\doxysection{Reservoir.\+h}
+\hypertarget{_reservoir_8h_source}{}\label{_reservoir_8h_source}\index{classes/Reservoir.h@{classes/Reservoir.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ DA2324\_PRJ1\_G11\_3\_RESERVOIR\_H}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ DA2324\_PRJ1\_G11\_3\_RESERVOIR\_H}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}Graph.h"{}}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_reservoir}{Reservoir}}\ \{}
+\DoxyCodeLine{00008\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00009\ \ \ \ \ std::string\ name;}
+\DoxyCodeLine{00010\ \ \ \ \ std::string\ municipality;}
+\DoxyCodeLine{00011\ \ \ \ \ \textcolor{keywordtype}{int}\ id;}
+\DoxyCodeLine{00012\ \ \ \ \ std::string\ code;}
+\DoxyCodeLine{00013\ \ \ \ \ \textcolor{keywordtype}{int}\ maxDelivery;\ \textcolor{comment}{//\ maximum\ delivery\ capacity\ in\ m3/s}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00016\ \ \ \ \ \textcolor{comment}{//\ Constructor}}
+\DoxyCodeLine{00017\ \ \ \ \ \mbox{\hyperlink{class_reservoir}{Reservoir}}();}
+\DoxyCodeLine{00018\ \ \ \ \ \mbox{\hyperlink{class_reservoir}{Reservoir}}(\textcolor{keyword}{const}\ std::string\&\ \mbox{\hyperlink{class_edge}{\_name}},\ \textcolor{keyword}{const}\ std::string\&\ \mbox{\hyperlink{class_edge}{\_municipality}},\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{class_edge}{\_id}},}
+\DoxyCodeLine{00019\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\&\ \mbox{\hyperlink{class_edge}{\_code}},\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{class_edge}{\_maxDelivery}});}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \ \ \ \ \textcolor{comment}{//\ Getters}}
+\DoxyCodeLine{00022\ \ \ \ \ std::string\ getName()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00023\ \ \ \ \ std::string\ getMunicipality()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00024\ \ \ \ \ \textcolor{keywordtype}{int}\ getId()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00025\ \ \ \ \ std::string\ getCode()\ \textcolor{keyword}{const};\ \textcolor{comment}{//\ Vertex\ getInfo()}}
+\DoxyCodeLine{00026\ \ \ \ \ \textcolor{keywordtype}{int}\ getMaxDelivery()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00027\ \};}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ DA2324\_PRJ1\_G11\_3\_RESERVOIR\_H}}
+
+\end{DoxyCode}
